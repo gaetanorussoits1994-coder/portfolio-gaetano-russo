@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>VPN aziendali e cybersecurity: garantire accessi sicuri - Gaetano Russo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="index.html">Gaetano Russo</a>
+      <nav class="nav">
+        <a href="index.html#chi-sono">Chi sono</a>
+        <a href="index.html#competenze">Competenze</a>
+        <a href="index.html#servizi">Servizi</a>
+        <a href="blog.html">Blog</a>
+        <a href="contatti.html">Contatti</a>
+      </nav>
+      <button id="darkToggle" class="dark-toggle" title="Modalita chiara" aria-pressed="false" aria-label="Cambia tema">&#9788;</button>
+    </div>
+  </div>
+
+  <main class="section">
+    <div class="container">
+      <article class="card">
+        <header>
+          <span class="section__tag">VPN & Cybersecurity</span>
+          <h1>VPN aziendali e cybersecurity: garantire accessi sicuri e continuità operativa</h1>
+          <p class="hero__text">Analizziamo il ruolo delle VPN nelle infrastrutture aziendali moderne, le minacce principali e le best practice per mantenere la continuità operativa e la sicurezza.</p>
+          <div style="margin-top:0.8rem;"><a class="button button--secondary" href="blog.html">Torna al Blog</a></div>
+        </header>
+
+        <section class="reveal">
+          <h2>Introduzione</h2>
+          <p>Le VPN rimangono uno strumento chiave per proteggere il traffico tra sedi, dispositivi remoti e risorse aziendali. Con la diffusione del lavoro ibrido e l'integrazione di servizi cloud, progettare VPN resilienti e integrate con le policy di sicurezza è essenziale per ridurre rischi e garantire accesso sicuro alle risorse.</p>
+        </section>
+
+        <section class="reveal">
+          <h2>Perché le VPN sono fondamentali nelle aziende moderne</h2>
+          <ul>
+            <li>Proteggono la confidenzialità e integrità del traffico su reti pubbliche e non fidate.</li>
+            <li>Consentono accesso sicuro a risorse interne senza esporre servizi direttamente su Internet.</li>
+            <li>Abilitano segmentazione e policy di accesso differenziate per utenti e dispositivi.</li>
+            <li>Supportano connettività affidabile tra filiali, cloud e data center critici.</li>
+          </ul>
+        </section>
+
+        <section class="reveal">
+          <h2>Principali minacce informatiche</h2>
+          <p>Le VPN possono ancora essere bersaglio di attacchi mirati: credenziali compromesse, configurazioni sbagliate, vulnerabilità nei protocolli o nei dispositivi VPN. Tra le minacce comuni troviamo:</p>
+          <ul>
+            <li>Attacchi di credential stuffing e phishing mirato agli amministratori.</li>
+            <li>Sfruttamento di vulnerabilità note nei concentratori VPN o appliance obsolete.</li>
+            <li>Movimenti laterali interni dopo compromissione di un endpoint con accesso VPN.</li>
+            <li>Intercettazione del traffico se non si utilizzano protocolli e cifrature aggiornate.</li>
+          </ul>
+        </section>
+
+        <section class="reveal">
+          <h2>Best practice per la sicurezza</h2>
+          <ul>
+            <li><strong>MFA obbligatoria:</strong> estendere l'autenticazione multifattore a tutti gli accessi VPN, soprattutto per account con privilegi.</li>
+            <li><strong>Zero Trust e policy basate su identità:</strong> applicare controllo degli accessi minimale e micro-segmentazione.</li>
+            <li><strong>Aggiornamenti e hardening:</strong> mantenere appliance e concentratori aggiornati, con configurazioni di cifratura moderne (IKEv2, WireGuard, TLS1.3 dove possibile).</li>
+            <li><strong>Logging e monitoraggio:</strong> centralizzare i log VPN e correlare eventi con un SIEM per individuare attività anomale.</li>
+            <li><strong>Accesso condizionale:</strong> valutare posture di sicurezza dell'endpoint (patch, antivirus, conformità) prima di concedere accesso.</li>
+            <li><strong>Rotazione e gestione sicura delle chiavi:</strong> utilizzare secret manager e rotazione automatica per credenziali e certificati.</li>
+          </ul>
+        </section>
+
+        <section class="reveal">
+          <h2>Esperienza pratica in ambienti enterprise</h2>
+          <p>In contesti enterprise ho condotto progetti di consolidamento VPN che prevedevano: valutazione del parco hardware, migrazione a concentratori virtuali in cloud, introduzione di accesso condizionale e MFA, e creazione di una topologia ridondata per garantire continuità. Un risultato tipico è stato la riduzione del tempo medio di ripristino e una significativa diminuzione degli alert di sicurezza legati a accessi non autorizzati.</p>
+          <p class="text-muted">Esempio: migrazione da appliance legacy a soluzione cloud-native con WireGuard per filiali, integrata con autenticazione via SAML e MFA, e monitoraggio su SIEM centralizzato.</p>
+        </section>
+
+        <section class="reveal">
+          <h2>Conclusioni</h2>
+          <p>Le VPN restano una componente critica dell'architettura di sicurezza aziendale, ma devono evolvere insieme alle pratiche di cybersecurity: MFA, Zero Trust, accesso condizionale e monitoraggio continuo sono elementi imprescindibili. Progettare la connettività con attenzione alla sicurezza e alla resilienza garantisce accessi protetti e continuità operativa.</p>
+          <p>Se desideri, posso valutare la tua infrastruttura VPN e proporre un piano operativo per migliorarne sicurezza e resilienza.</p>
+        </section>
+      </article>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>Gaetano Russo | IT Specialist</p>
+      <div class="footer__links">
+        <div class="footer__btns">
+          <a class="footer-button" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4.98 3.5C4.98 4.88 3.9 6 2.49 6S0 4.88 0 3.5 1.08 1 2.49 1 4.98 2.12 4.98 3.5zM0 8.98h4.98V24H0V8.98zM8.21 8.98h4.78v2.05h.07c.67-1.27 2.31-2.6 4.76-2.6 5.09 0 6.03 3.35 6.03 7.69V24h-4.98v-7.43c0-1.77-.03-4.05-2.47-4.05-2.48 0-2.86 1.93-2.86 3.92V24H8.21V8.98z"/></svg>
+            <span>LinkedIn</span>
+          </a>
+          <a class="footer-button" href="mailto:gaetano.russoits1994@gmail.com" aria-label="Invia Email">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5L4 8V6l8 5 8-5v2z"/></svg>
+            <span>Email</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Dark toggle + reveal (reused)
+    (function(){
+      var root = document.documentElement;
+      var toggle = document.getElementById('darkToggle');
+      var key = 'site-theme';
+      function applyTheme(theme){ if(theme==='dark') root.classList.add('dark'); else root.classList.remove('dark'); if(toggle) { toggle.textContent = theme==='dark' ? '\u263E' : '\u2600'; toggle.title = theme === 'dark' ? 'Modalita scura' : 'Modalita chiara'; toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false'); } }
+      var saved = localStorage.getItem(key) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); applyTheme(saved);
+      if(toggle) toggle.addEventListener('click', function(){ var now = root.classList.contains('dark') ? 'light' : 'dark'; localStorage.setItem(key, now); applyTheme(now); });
+      var observer = new IntersectionObserver(function(entries){ entries.forEach(function(entry){ if(entry.isIntersecting){ entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } }); },{threshold:0.12}); document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+    })();
+  </script>
+</body>
+</html>

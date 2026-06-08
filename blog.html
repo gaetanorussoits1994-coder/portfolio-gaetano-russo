@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Blog - IT Specialist | Gaetano Russo</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <a class="brand" href="index.html">Gaetano Russo</a>
+      <nav class="nav">
+        <a href="index.html#chi-sono">Chi sono</a>
+        <a href="index.html#competenze">Competenze</a>
+        <a href="index.html#servizi">Servizi</a>
+        <a href="blog.html">Blog</a>
+        <a href="index.html#projects">Portfolio</a>
+        <a href="contatti.html">Contatti</a>
+      </nav>
+      <button id="darkToggle" class="dark-toggle" title="Modalita chiara" aria-pressed="false" aria-label="Cambia tema">&#9788;</button>
+    </div>
+  </div>
+
+  <header class="hero" style="padding:5rem 1.5rem 2rem;">
+    <div class="container">
+      <h1>Blog professionale IT</h1>
+      <p class="hero__text">Approfondimenti su infrastrutture enterprise, reti, SAP e cybersecurity per recruiter e professionisti del settore.</p>
+    </div>
+  </header>
+
+  <main class="section">
+    <div class="container">
+      <div class="section__heading">
+        <span class="section__tag">Categorie</span>
+        <h2>Filtra per argomento</h2>
+      </div>
+
+      <div class="categories" style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:1rem 0 2rem;">
+        <button class="button category-btn" data-cat="all">Tutte</button>
+        <button class="button category-btn" data-cat="Active Directory">Active Directory</button>
+        <button class="button category-btn" data-cat="Networking">Networking</button>
+        <button class="button category-btn" data-cat="Cybersecurity">Cybersecurity</button>
+        <button class="button category-btn" data-cat="VPN">VPN</button>
+        <button class="button category-btn" data-cat="SAP">SAP</button>
+        <button class="button category-btn" data-cat="Industry 4.0">Industry 4.0</button>
+        <button class="button category-btn" data-cat="WiFi Industriale">WiFi Industriale</button>
+      </div>
+
+      <section class="blog-grid" id="articles">
+        <article class="blog-card" data-category="Active Directory">
+          <div class="blog-card__meta">Active Directory</div>
+          <h3>Guida pratica a Active Directory</h3>
+          <p>Principi fondamentali per progettare e mantenere domini sicuri ed efficienti.</p>
+          <a href="articolo1.html">Leggi</a>
+        </article>
+
+        <article class="blog-card" data-category="Networking">
+          <div class="blog-card__meta">Networking</div>
+          <h3>Architetture di rete per imprese distribuite</h3>
+          <p>Strategie per garantire connettività affidabile e scalabile tra sedi.</p>
+          <a href="#">Leggi</a>
+        </article>
+
+        <article class="blog-card" data-category="Cybersecurity">
+          <div class="blog-card__meta">Cybersecurity</div>
+          <h3>Difesa multilivello: approccio pratico</h3>
+          <p>Implementare controlli e monitoraggio per ridurre la superficie d'attacco.</p>
+          <a href="articolo2.html">Leggi</a>
+        </article>
+
+        <article class="blog-card" data-category="VPN">
+          <div class="blog-card__meta">VPN</div>
+          <h3>VPN moderne per accesso sicuro</h3>
+          <p>Confronto tra protocolli e consigli per l'accesso remoto sicuro.</p>
+          <a href="#">Leggi</a>
+        </article>
+
+        <article class="blog-card" data-category="SAP">
+          <div class="blog-card__meta">SAP</div>
+          <h3>Integrazione SAP in infrastrutture complesse</h3>
+          <p>Best practice per garantire performance e continuità per sistemi ERP.</p>
+          <a href="#">Leggi</a>
+        </article>
+
+        <article class="blog-card" data-category="Industry 4.0">
+          <div class="blog-card__meta">Industry 4.0</div>
+          <h3>Digitalizzazione dei processi produttivi</h3>
+          <p>Casi d'uso e architetture per connettere macchine e sistemi di controllo.</p>
+          <a href="#">Leggi</a>
+        </article>
+
+        <article class="blog-card" data-category="WiFi Industriale">
+          <div class="blog-card__meta">WiFi Industriale</div>
+          <h3>Progettare WiFi per ambienti industriali</h3>
+          <p>Linee guida per copertura, interferenze e sicurezza in fabbrica.</p>
+          <a href="#">Leggi</a>
+        </article>
+      </section>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container footer__inner">
+      <p>Gaetano Russo | IT Specialist</p>
+      <div class="footer__links">
+        <div class="footer__btns">
+          <a class="footer-button" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M4.98 3.5C4.98 4.88 3.9 6 2.49 6S0 4.88 0 3.5 1.08 1 2.49 1 4.98 2.12 4.98 3.5zM0 8.98h4.98V24H0V8.98zM8.21 8.98h4.78v2.05h.07c.67-1.27 2.31-2.6 4.76-2.6 5.09 0 6.03 3.35 6.03 7.69V24h-4.98v-7.43c0-1.77-.03-4.05-2.47-4.05-2.48 0-2.86 1.93-2.86 3.92V24H8.21V8.98z"/></svg>
+            <span>LinkedIn</span>
+          </a>
+
+          <a class="footer-button" href="mailto:gaetano.russoits1994@gmail.com" aria-label="Invia Email">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5L4 8V6l8 5 8-5v2z"/></svg>
+            <span>Email</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Filter articles by category
+    (function(){
+      var buttons = document.querySelectorAll('.category-btn');
+      var articles = document.querySelectorAll('#articles .blog-card');
+      function showCategory(cat) {
+        articles.forEach(function(a){
+          if (cat === 'all' || a.dataset.category === cat) {
+            a.style.display = '';
+          } else {
+            a.style.display = 'none';
+          }
+        });
+      }
+      buttons.forEach(function(b){
+        b.addEventListener('click', function(){
+          var cat = b.dataset.cat;
+          showCategory(cat);
+          buttons.forEach(function(x){ x.classList.remove('active'); });
+          b.classList.add('active');
+        });
+      });
+      // default show all
+      showCategory('all');
+    })();
+  </script>
+  <script>
+    // Dark mode & reveal for blog
+    (function(){
+      var root = document.documentElement;
+      var toggle = document.getElementById('darkToggle');
+      var key = 'site-theme';
+      function applyTheme(theme){
+        if(theme === 'dark') root.classList.add('dark'); else root.classList.remove('dark');
+        if(toggle) {
+          toggle.textContent = theme === 'dark' ? '\u263E' : '\u2600';
+          toggle.title = theme === 'dark' ? 'Modalita scura' : 'Modalita chiara';
+          toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
+        }
+      }
+      var saved = localStorage.getItem(key) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+      applyTheme(saved);
+      if(toggle){ toggle.addEventListener('click', function(){ var now = root.classList.contains('dark') ? 'light' : 'dark'; localStorage.setItem(key, now); applyTheme(now); }); }
+      var observer = new IntersectionObserver(function(entries){ entries.forEach(function(entry){ if(entry.isIntersecting){ entry.target.classList.add('is-visible'); observer.unobserve(entry.target); } }); }, {threshold:0.12});
+      document.querySelectorAll('.reveal').forEach(function(el){ observer.observe(el); });
+    })();
+  </script>
+</body>
+</html>
