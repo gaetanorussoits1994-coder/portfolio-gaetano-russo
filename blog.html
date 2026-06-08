@@ -10,6 +10,8 @@
   <div class="topbar">
     <div class="container topbar__inner">
       <a class="brand" href="index.html">Gaetano Russo</a>
+      <input class="nav-toggle__checkbox" type="checkbox" id="navToggle" aria-label="Apri menu" />
+      <label class="nav-toggle" for="navToggle" aria-hidden="true"><span></span></label>
       <nav class="nav">
         <a href="index.html#chi-sono">Chi sono</a>
         <a href="index.html#competenze">Competenze</a>
@@ -22,7 +24,7 @@
     </div>
   </div>
 
-  <header class="hero" style="padding:5rem 1.5rem 2rem;">
+  <header class="hero blog-hero">
     <div class="container">
       <h1>Blog professionale IT</h1>
       <p class="hero__text">Approfondimenti su infrastrutture enterprise, reti, SAP e cybersecurity per recruiter e professionisti del settore.</p>
@@ -36,7 +38,7 @@
         <h2>Filtra per argomento</h2>
       </div>
 
-      <div class="categories" style="display:flex;gap:0.6rem;flex-wrap:wrap;margin:1rem 0 2rem;">
+      <div class="categories">
         <button class="button category-btn" data-cat="all">Tutte</button>
         <button class="button category-btn" data-cat="Active Directory">Active Directory</button>
         <button class="button category-btn" data-cat="Networking">Networking</button>
