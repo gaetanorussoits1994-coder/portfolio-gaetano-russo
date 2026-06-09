@@ -6,7 +6,15 @@
   <title>Gaetano Russo | IT Specialist</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
+<body class="intro-active">
+  <section id="videoIntro" class="video-intro" aria-label="Intro video">
+    <video id="introVideo" class="video-intro__media" autoplay muted playsinline loop preload="auto">
+      <source src="video/intro.mp4.mp4" type="video/mp4" />
+    </video>
+    <button id="enterSiteBtn" class="video-intro__button" type="button">Learn More</button>
+  </section>
+
+  <div id="siteContent" class="site-content" aria-hidden="true">
   <div class="topbar">
     <div class="container topbar__inner">
       <a class="brand" href="#home">Gaetano Russo</a>
@@ -291,6 +299,7 @@
       <img id="certificateLightboxImage" src="" alt="" />
       <figcaption id="certificateLightboxCaption"></figcaption>
     </figure>
+  </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>

@@ -146,6 +146,59 @@ async function handleContactFormSubmit(event) {
   }
 }
 
+function setupVideoIntro() {
+  var intro = document.getElementById('videoIntro');
+  var video = document.getElementById('introVideo');
+  var enterButton = document.getElementById('enterSiteBtn');
+  var siteContent = document.getElementById('siteContent');
+  var homeSection = document.getElementById('home');
+  var introSeenKey = 'portfolioIntroSeen';
+
+  if (!intro || !video || !enterButton || !siteContent) {
+    document.body.classList.remove('intro-active');
+    return;
+  }
+
+  function showPortfolio(scrollToHome) {
+    document.body.classList.remove('intro-active');
+    siteContent.setAttribute('aria-hidden', 'false');
+    intro.classList.add('is-hidden');
+    video.pause();
+
+    if (scrollToHome && homeSection) {
+      homeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  }
+
+  if (sessionStorage.getItem(introSeenKey) === 'true') {
+    showPortfolio(false);
+    return;
+  }
+
+  video.muted = true;
+  video.removeAttribute('controls');
+  siteContent.setAttribute('aria-hidden', 'true');
+
+  var playPromise = video.play();
+  if (playPromise && typeof playPromise.catch === 'function') {
+    playPromise.catch(function(error) {
+      console.warn('Autoplay intro video non avviato automaticamente:', error);
+    });
+  }
+
+  video.addEventListener('timeupdate', function() {
+    if (video.currentTime >= 6) {
+      video.currentTime = 0;
+      video.play();
+    }
+  });
+
+  enterButton.addEventListener('click', function() {
+    sessionStorage.setItem(introSeenKey, 'true');
+    showPortfolio(true);
+  });
+}
+
 function setupDarkModeAndReveal() {
   var root = document.documentElement;
   var toggle = document.getElementById('darkToggle');
@@ -236,6 +289,7 @@ function setupCertificateLightbox() {
 
 window.addEventListener('DOMContentLoaded', function() {
   console.log('DOMContentLoaded');
+  setupVideoIntro();
 
   const contactForm = document.getElementById('contactForm');
   if (!contactForm) {

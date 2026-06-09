@@ -36,6 +36,90 @@ body {
   -webkit-text-size-adjust: 100%;
 }
 
+body.intro-active {
+  overflow: hidden;
+}
+
+.site-content {
+  transition: opacity 0.45s ease;
+}
+
+body.intro-active .site-content {
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  opacity: 0;
+  visibility: hidden;
+}
+
+.video-intro {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  background: #05070d;
+  transition: opacity 0.65s ease, visibility 0.65s ease;
+}
+
+.video-intro.is-hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.video-intro__media {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: center;
+}
+
+.video-intro__button {
+  position: absolute;
+  left: 50%;
+  bottom: clamp(28px, 7vh, 72px);
+  transform: translateX(-50%);
+  z-index: 2;
+  min-width: 160px;
+  min-height: 52px;
+  padding: 0 28px;
+  border: 1px solid rgba(255, 255, 255, 0.72);
+  border-radius: 999px;
+  background: rgba(8, 13, 24, 0.62);
+  color: #ffffff;
+  font: 700 0.98rem/1 'Inter', 'Segoe UI', Arial, sans-serif;
+  letter-spacing: 0;
+  cursor: pointer;
+  backdrop-filter: blur(12px);
+  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28);
+  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+}
+
+.video-intro__button:hover,
+.video-intro__button:focus-visible {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: #ffffff;
+  color: #0b1020;
+  transform: translateX(-50%) translateY(-2px);
+  outline: none;
+}
+
+.video-intro__button:active {
+  transform: translateX(-50%) translateY(0);
+}
+
+@media (max-width: 480px) {
+  .video-intro__button {
+    width: min(78vw, 260px);
+    min-height: 54px;
+    padding: 0 22px;
+  }
+}
+
 a {
   color: inherit;
   text-decoration: none;
