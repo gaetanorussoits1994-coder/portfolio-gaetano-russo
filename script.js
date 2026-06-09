@@ -146,18 +146,35 @@ async function handleContactFormSubmit(event) {
   }
 }
 
-function getIntroVideoSource() {
-  const isMobile =
-    window.matchMedia("(max-width: 768px)").matches ||
-    /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+function isMobileIntroDevice() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
 
-  return isMobile ? "video/smartphone.mp4" : "video/intro.mp4.mp4";
+  const isTouchDevice =
+    'ontouchstart' in window ||
+    navigator.maxTouchPoints > 0 ||
+    navigator.msMaxTouchPoints > 0;
+
+  const isSmallScreen = window.innerWidth <= 900;
+
+  const isMobileUserAgent =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Windows Phone/i.test(userAgent);
+
+  return isMobileUserAgent || (isTouchDevice && isSmallScreen);
+}
+
+function getIntroVideoSource() {
+  if (isMobileIntroDevice()) {
+    return 'video/smartphone.mp4';
+  }
+
+  return 'video/intro.mp4.mp4';
 }
 
 function setupVideoIntro() {
   const intro = document.getElementById('videoIntro');
   const introVideo = document.getElementById('introVideo');
   const enterBtn = document.getElementById('enterSiteBtn');
+  const siteContent = document.getElementById('siteContent');
 
   document.body.classList.add('intro-active');
 
@@ -166,13 +183,25 @@ function setupVideoIntro() {
     return;
   }
 
-  introVideo.src = getIntroVideoSource();
+  const selectedVideo = getIntroVideoSource();
+
+  console.log('Intro video device mobile:', isMobileIntroDevice());
+  console.log('Intro video selezionato:', selectedVideo);
+  console.log('User agent:', navigator.userAgent);
+  console.log('Viewport:', window.innerWidth, window.innerHeight);
+
+  introVideo.pause();
+  introVideo.removeAttribute('src');
+  introVideo.innerHTML = '';
+  introVideo.src = selectedVideo;
   introVideo.muted = true;
+  introVideo.autoplay = true;
+  introVideo.loop = true;
   introVideo.playsInline = true;
-  introVideo.setAttribute('playsinline', '');
   introVideo.setAttribute('muted', '');
   introVideo.setAttribute('autoplay', '');
   introVideo.setAttribute('loop', '');
+  introVideo.setAttribute('playsinline', '');
   introVideo.removeAttribute('controls');
   introVideo.load();
 
@@ -194,6 +223,9 @@ function setupVideoIntro() {
     intro.classList.add('hidden');
     document.body.classList.remove('intro-active');
     introVideo.pause();
+    if (siteContent) {
+      siteContent.style.display = '';
+    }
 
     const target = document.getElementById('chi-sono');
     if (target) {
