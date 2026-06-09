@@ -40,10 +40,7 @@ body.intro-active {
   overflow: hidden;
 }
 
-.site-content {
-  transition: opacity 0.45s ease;
-}
-
+body.intro-active .site-content,
 body.intro-active .topbar,
 body.intro-active header,
 body.intro-active main,
@@ -58,6 +55,8 @@ body.intro-active .lightbox {
   left: 0;
   z-index: 9999;
   width: 100vw;
+  min-height: 100vh;
+  min-height: 100dvh;
   height: 100vh;
   height: 100dvh;
   overflow: hidden;
@@ -73,18 +72,21 @@ body.intro-active .lightbox {
 }
 
 .video-intro__media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
   width: 100%;
   height: 100%;
   display: block;
   object-fit: cover;
-  object-position: center;
+  object-position: center center;
 }
 
 .video-intro__overlay {
   position: absolute;
   inset: 0;
   z-index: 1;
-  background: rgba(2, 8, 16, 0.34);
+  background: rgba(2, 12, 32, 0.45);
   pointer-events: none;
 }
 
@@ -94,9 +96,11 @@ body.intro-active .lightbox {
   bottom: clamp(28px, 7vh, 72px);
   transform: translateX(-50%);
   z-index: 2;
-  min-width: 160px;
-  min-height: 52px;
-  padding: 0 28px;
+  width: fit-content;
+  max-width: 85vw;
+  min-width: 168px;
+  min-height: 54px;
+  padding: 16px 30px;
   border: 1px solid rgba(52, 211, 238, 0.86);
   border-radius: 999px;
   background: rgba(3, 12, 24, 0.58);
@@ -122,11 +126,25 @@ body.intro-active .lightbox {
   transform: translateX(-50%) translateY(0);
 }
 
-@media (max-width: 480px) {
-  .video-intro__button {
-    width: min(78vw, 260px);
-    min-height: 54px;
-    padding: 0 22px;
+@media (max-width: 768px) {
+  .video-intro {
+    width: 100vw;
+    min-height: 100vh;
+    min-height: 100dvh;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  .video-intro__media {
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .intro-enter-btn {
+    width: min(85vw, 420px);
+    font-size: 1rem;
+    padding: 16px 24px;
+    bottom: calc(48px + env(safe-area-inset-bottom));
   }
 }
 
