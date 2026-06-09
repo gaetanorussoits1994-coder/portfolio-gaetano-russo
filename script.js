@@ -147,54 +147,48 @@ async function handleContactFormSubmit(event) {
 }
 
 function setupVideoIntro() {
-  var intro = document.getElementById('videoIntro');
-  var video = document.getElementById('introVideo');
-  var enterButton = document.getElementById('enterSiteBtn');
-  var siteContent = document.getElementById('siteContent');
-  var homeSection = document.getElementById('home');
-  var introSeenKey = 'portfolioIntroSeen';
+  const intro = document.getElementById('videoIntro');
+  const introVideo = document.getElementById('introVideo');
+  const enterButton = document.getElementById('enterSiteBtn');
+  const homeSection = document.getElementById('home');
 
-  if (!intro || !video || !enterButton || !siteContent) {
+  if (!intro || !introVideo || !enterButton) {
     document.body.classList.remove('intro-active');
     return;
   }
 
   function showPortfolio(scrollToHome) {
     document.body.classList.remove('intro-active');
-    siteContent.setAttribute('aria-hidden', 'false');
-    intro.classList.add('is-hidden');
-    video.pause();
+    intro.classList.add('hidden');
+    introVideo.pause();
+
+    window.setTimeout(function() {
+      intro.style.display = 'none';
+    }, 650);
 
     if (scrollToHome && homeSection) {
       homeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
   }
 
-  if (sessionStorage.getItem(introSeenKey) === 'true') {
-    showPortfolio(false);
-    return;
-  }
+  introVideo.muted = true;
+  introVideo.removeAttribute('controls');
 
-  video.muted = true;
-  video.removeAttribute('controls');
-  siteContent.setAttribute('aria-hidden', 'true');
-
-  var playPromise = video.play();
+  const playPromise = introVideo.play();
   if (playPromise && typeof playPromise.catch === 'function') {
     playPromise.catch(function(error) {
       console.warn('Autoplay intro video non avviato automaticamente:', error);
     });
   }
 
-  video.addEventListener('timeupdate', function() {
-    if (video.currentTime >= 6) {
-      video.currentTime = 0;
-      video.play();
+  introVideo.addEventListener('timeupdate', function() {
+    if (introVideo.currentTime >= 6) {
+      introVideo.currentTime = 0;
+      introVideo.play();
     }
   });
 
   enterButton.addEventListener('click', function() {
-    sessionStorage.setItem(introSeenKey, 'true');
     showPortfolio(true);
   });
 }
