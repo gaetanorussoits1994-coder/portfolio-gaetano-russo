@@ -146,38 +146,40 @@ async function handleContactFormSubmit(event) {
   }
 }
 
+function getIntroVideoSource() {
+  const isMobile =
+    window.matchMedia("(max-width: 768px)").matches ||
+    /Android|iPhone|iPad|iPod|Windows Phone/i.test(navigator.userAgent);
+
+  return isMobile ? "video/smartphone.mp4" : "video/intro.mp4.mp4";
+}
+
 function setupVideoIntro() {
   const intro = document.getElementById('videoIntro');
   const introVideo = document.getElementById('introVideo');
-  const enterButton = document.getElementById('enterSiteBtn');
-  const homeSection = document.getElementById('home');
+  const enterBtn = document.getElementById('enterSiteBtn');
 
-  if (!intro || !introVideo || !enterButton) {
+  document.body.classList.add('intro-active');
+
+  if (!intro || !introVideo || !enterBtn) {
     document.body.classList.remove('intro-active');
     return;
   }
 
-  function showPortfolio(scrollToHome) {
-    document.body.classList.remove('intro-active');
-    intro.classList.add('hidden');
-    introVideo.pause();
-
-    window.setTimeout(function() {
-      intro.style.display = 'none';
-    }, 650);
-
-    if (scrollToHome && homeSection) {
-      homeSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  }
-
+  introVideo.src = getIntroVideoSource();
   introVideo.muted = true;
+  introVideo.playsInline = true;
+  introVideo.setAttribute('playsinline', '');
+  introVideo.setAttribute('muted', '');
+  introVideo.setAttribute('autoplay', '');
+  introVideo.setAttribute('loop', '');
   introVideo.removeAttribute('controls');
+  introVideo.load();
 
   const playPromise = introVideo.play();
   if (playPromise && typeof playPromise.catch === 'function') {
     playPromise.catch(function(error) {
-      console.warn('Autoplay intro video non avviato automaticamente:', error);
+      console.warn('Autoplay intro video bloccato:', error);
     });
   }
 
@@ -188,8 +190,15 @@ function setupVideoIntro() {
     }
   });
 
-  enterButton.addEventListener('click', function() {
-    showPortfolio(true);
+  enterBtn.addEventListener('click', function() {
+    intro.classList.add('hidden');
+    document.body.classList.remove('intro-active');
+    introVideo.pause();
+
+    const target = document.getElementById('chi-sono');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth' });
+    }
   });
 }
 

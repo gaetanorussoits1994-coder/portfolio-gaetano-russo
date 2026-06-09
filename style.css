@@ -45,44 +45,30 @@ body.intro-active {
   height: 100dvh;
 }
 
-body.intro-active .site-content,
-body.intro-active .topbar,
-body.intro-active header,
-body.intro-active main,
-body.intro-active footer,
-body.intro-active .lightbox {
-  display: none;
+body.intro-active #siteContent {
+  display: none !important;
 }
 
 .video-intro {
   position: fixed;
-  top: 0;
-  left: 0;
-  z-index: 9999;
+  inset: 0;
   width: 100vw;
-  min-height: 100vh;
-  min-height: 100dvh;
   height: 100vh;
   height: 100dvh;
+  z-index: 99999;
   overflow: hidden;
-  background: #05070d;
-  transition: opacity 0.65s ease, visibility 0.65s ease;
+  background: #020b1f;
 }
 
-.video-intro.hidden,
-.video-intro.is-hidden {
-  opacity: 0;
-  visibility: hidden;
-  pointer-events: none;
+.video-intro.hidden {
+  display: none !important;
 }
 
-.video-intro__media {
+#introVideo {
   position: absolute;
   inset: 0;
-  z-index: 0;
   width: 100%;
   height: 100%;
-  display: block;
   object-fit: cover;
   object-position: center center;
 }
@@ -90,116 +76,39 @@ body.intro-active .lightbox {
 .video-intro__overlay {
   position: absolute;
   inset: 0;
-  z-index: 1;
-  background: rgba(2, 12, 32, 0.45);
+  background: rgba(2, 10, 30, 0.35);
+  z-index: 2;
   pointer-events: none;
 }
 
-.video-intro__button {
+.intro-enter-btn {
   position: absolute;
   left: 50%;
-  bottom: clamp(28px, 7vh, 72px);
+  bottom: calc(56px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
-  z-index: 2;
-  width: fit-content;
-  max-width: 85vw;
-  min-width: 168px;
-  min-height: 54px;
-  padding: 16px 30px;
-  border: 1px solid rgba(52, 211, 238, 0.86);
+  z-index: 3;
+  width: min(85vw, 380px);
+  padding: 18px 28px;
   border-radius: 999px;
-  background: rgba(3, 12, 24, 0.58);
-  color: #dffbff;
-  font: 700 0.98rem/1 'Inter', 'Segoe UI', Arial, sans-serif;
-  letter-spacing: 0;
+  border: 1px solid #23d5ff;
+  background: rgba(2, 10, 30, 0.72);
+  color: #fff;
+  font-size: 1.1rem;
+  font-weight: 700;
   cursor: pointer;
-  backdrop-filter: blur(12px);
-  box-shadow: 0 18px 42px rgba(0, 0, 0, 0.28), 0 0 26px rgba(52, 211, 238, 0.18);
-  transition: background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-}
-
-.video-intro__button:hover,
-.video-intro__button:focus-visible {
-  background: rgba(52, 211, 238, 0.16);
-  border-color: #67e8f9;
-  color: #ffffff;
-  transform: translateX(-50%) translateY(-2px);
-  outline: none;
-}
-
-.video-intro__button:active {
-  transform: translateX(-50%) translateY(0);
 }
 
 @media (max-width: 768px) {
-  .video-intro {
-    position: fixed;
-    inset: 0;
-    width: 100vw;
-    height: 100dvh;
-    min-height: 100dvh;
-    overflow: hidden;
-    background: #020b1f;
-  }
-
-  .video-intro video,
   #introVideo {
-    position: absolute;
-    inset: 0;
-    width: 100vw;
-    height: 100dvh;
     object-fit: cover;
     object-position: center center;
   }
 
-  .video-intro__overlay {
-    display: none;
-  }
-
-  .video-intro::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      180deg,
-      rgba(2, 8, 24, 0.35),
-      rgba(2, 8, 24, 0.55)
-    );
-    z-index: 2;
-    pointer-events: none;
-  }
-
-  #enterSiteBtn,
   .intro-enter-btn {
-    position: absolute;
-    left: 50%;
-    bottom: calc(48px + env(safe-area-inset-bottom));
-    transform: translateX(-50%);
-    width: min(86vw, 360px);
-    z-index: 5;
+    width: min(84vw, 360px);
     padding: 16px 24px;
     font-size: 1rem;
-    border-radius: 999px;
-  }
-
-  #enterSiteBtn:hover,
-  #enterSiteBtn:focus-visible,
-  .intro-enter-btn:hover,
-  .intro-enter-btn:focus-visible {
-    transform: translateX(-50%) translateY(-2px);
-  }
-
-  #enterSiteBtn:active,
-  .intro-enter-btn:active {
-    transform: translateX(-50%);
-  }
-}
-
-@media (max-width: 480px) {
-  #enterSiteBtn,
-  .intro-enter-btn {
-    padding: 16px 24px;
-    bottom: calc(48px + env(safe-area-inset-bottom));
+    bottom: calc(44px + env(safe-area-inset-bottom));
   }
 }
 
