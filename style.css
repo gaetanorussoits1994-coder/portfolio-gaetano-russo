@@ -24,11 +24,15 @@
 
 html {
   scroll-behavior: smooth;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
 }
 
 body {
   margin: 0;
+  width: 100%;
+  max-width: 100%;
   background: var(--bg);
   color: var(--text);
   overflow-x: hidden;
@@ -38,6 +42,7 @@ body {
 
 body.intro-active {
   overflow: hidden;
+  height: 100dvh;
 }
 
 body.intro-active .site-content,
@@ -128,21 +133,71 @@ body.intro-active .lightbox {
 
 @media (max-width: 768px) {
   .video-intro {
+    position: fixed;
+    inset: 0;
     width: 100vw;
-    min-height: 100vh;
-    min-height: 100dvh;
-    height: 100vh;
     height: 100dvh;
+    min-height: 100dvh;
+    overflow: hidden;
+    background: #020b1f;
   }
 
-  .video-intro__media {
+  .video-intro video,
+  #introVideo {
+    position: absolute;
+    inset: 0;
+    width: 100vw;
+    height: 100dvh;
     object-fit: cover;
     object-position: center center;
   }
 
+  .video-intro__overlay {
+    display: none;
+  }
+
+  .video-intro::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      180deg,
+      rgba(2, 8, 24, 0.35),
+      rgba(2, 8, 24, 0.55)
+    );
+    z-index: 2;
+    pointer-events: none;
+  }
+
+  #enterSiteBtn,
   .intro-enter-btn {
-    width: min(85vw, 420px);
+    position: absolute;
+    left: 50%;
+    bottom: calc(48px + env(safe-area-inset-bottom));
+    transform: translateX(-50%);
+    width: min(86vw, 360px);
+    z-index: 5;
+    padding: 16px 24px;
     font-size: 1rem;
+    border-radius: 999px;
+  }
+
+  #enterSiteBtn:hover,
+  #enterSiteBtn:focus-visible,
+  .intro-enter-btn:hover,
+  .intro-enter-btn:focus-visible {
+    transform: translateX(-50%) translateY(-2px);
+  }
+
+  #enterSiteBtn:active,
+  .intro-enter-btn:active {
+    transform: translateX(-50%);
+  }
+}
+
+@media (max-width: 480px) {
+  #enterSiteBtn,
+  .intro-enter-btn {
     padding: 16px 24px;
     bottom: calc(48px + env(safe-area-inset-bottom));
   }
