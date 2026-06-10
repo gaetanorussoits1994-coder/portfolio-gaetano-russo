@@ -1799,3 +1799,14 @@ img,
     padding: 1.5rem 0;
   }
 }
+
+@media (max-width: 768px) {
+  .hero-video-actions,
+  .hero-video-actions a,
+  .hero-video-actions .button {
+    display: none !important;
+    visibility: hidden !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
+}
