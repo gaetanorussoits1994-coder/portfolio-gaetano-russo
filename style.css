@@ -64,13 +64,16 @@ body.intro-active #siteContent {
   display: none !important;
 }
 
-.hero-video {
-  position: fixed;
+#introVideo {
+  position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
+  max-width: none;
+  display: block;
   object-fit: cover;
   object-position: center center;
+  z-index: 1;
 }
 
 .video-intro__overlay {
@@ -81,79 +84,51 @@ body.intro-active #siteContent {
   pointer-events: none;
 }
 
-.video-intro__actions {
-  position: absolute;
+.intro-enter-btn {
+  position: fixed;
   left: 50%;
-  bottom: calc(56px + env(safe-area-inset-bottom));
+  bottom: 56px;
   transform: translateX(-50%);
-  z-index: 3;
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 14px;
-  width: min(92vw, 720px);
-}
-
-.intro-action {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 150px;
-  min-height: 52px;
-  padding: 14px 24px;
+  z-index: 100000;
+  width: min(320px, 80vw);
+  padding: 16px 28px;
   border-radius: 999px;
-  border: 1px solid rgba(128, 212, 255, 0.8);
-  background: rgba(2, 10, 30, 0.72);
+  border: 1px solid #23d5ff;
+  background: rgba(2, 10, 30, 0.75);
   color: #fff;
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
   backdrop-filter: blur(12px);
-  font-size: 1rem;
+  font-size: 1.1rem;
   font-weight: 700;
   line-height: 1.1;
   cursor: pointer;
   text-align: center;
 }
 
-.intro-action:hover,
-.intro-action:focus-visible {
+.intro-enter-btn:hover,
+.intro-enter-btn:focus-visible {
   background: rgba(30, 95, 196, 0.86);
   border-color: #ffffff;
   outline: none;
-  transform: translateY(-2px);
-}
-
-.intro-action--primary {
-  background: linear-gradient(135deg, rgba(30, 95, 196, 0.96), rgba(35, 213, 255, 0.8));
-  border-color: rgba(255, 255, 255, 0.78);
+  transform: translateX(-50%) translateY(-2px);
 }
 
 @media (max-width: 900px) {
-  .hero-video {
+  #introVideo {
     object-fit: cover;
     object-position: center center;
-  }
-
-  .video-intro__actions {
-    bottom: calc(44px + env(safe-area-inset-bottom));
   }
 }
 
 @media (max-width: 768px) {
-  .hero-video {
+  #introVideo {
     object-fit: cover;
     object-position: center center;
   }
 
-  .video-intro__actions {
-    width: min(88vw, 360px);
-    flex-direction: column;
-    gap: 10px;
-  }
-
-  .intro-action {
-    width: 100%;
-    min-height: 48px;
-    padding: 12px 18px;
+  .intro-enter-btn {
+    bottom: calc(48px + env(safe-area-inset-bottom));
+    width: min(86vw, 360px);
   }
 }
 
@@ -457,6 +432,95 @@ textarea {
   color: var(--text-muted);
   font-size: 0.98rem;
   line-height: 1.7;
+}
+
+.hero-video-section {
+  position: relative;
+  width: 100%;
+  min-height: 85vh;
+  overflow: hidden;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding: 0 24px 72px;
+  background: #020b1f;
+}
+
+.hero-bg-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  z-index: 1;
+}
+
+.hero-video-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 10, 30, 0.12),
+    rgba(2, 10, 30, 0.45)
+  );
+}
+
+.hero-video-actions {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  width: min(92vw, 760px);
+}
+
+.hero-video-actions .button {
+  min-width: 150px;
+  color: #fff;
+  border-color: rgba(128, 212, 255, 0.72);
+  background: rgba(2, 10, 30, 0.72);
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(12px);
+}
+
+.hero-video-actions .button--primary {
+  background: linear-gradient(135deg, rgba(30, 95, 196, 0.96), rgba(35, 213, 255, 0.8));
+  border-color: rgba(255, 255, 255, 0.78);
+}
+
+.hero-video-actions .button:hover,
+.hero-video-actions .button:focus-visible {
+  background: rgba(30, 95, 196, 0.86);
+  border-color: #ffffff;
+  outline: none;
+  transform: translateY(-2px);
+}
+
+@media (max-width: 768px) {
+  .hero-video-section {
+    min-height: 80svh;
+    padding: 0 18px 48px;
+  }
+
+  .hero-bg-video {
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .hero-video-actions {
+    width: min(88vw, 360px);
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .hero-video-actions .button {
+    width: 100%;
+    min-height: 48px;
+  }
 }
 
 .section {

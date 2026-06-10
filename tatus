@@ -1,0 +1,175 @@
+warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'script.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'style.css', LF will be replaced by CRLF the next time Git touches it
+[1mdiff --git a/index.html b/index.html[m
+[1mindex ad01ba9..eb77d55 100644[m
+[1m--- a/index.html[m
+[1m+++ b/index.html[m
+[36m@@ -8,13 +8,9 @@[m
+ </head>[m
+ <body class="intro-active">[m
+   <section id="videoIntro" class="video-intro">[m
+[31m-    <video id="introVideo" class="hero-video" autoplay muted playsinline loop preload="auto"></video>[m
+[32m+[m[32m    <video id="introVideo" autoplay muted playsinline loop preload="auto"></video>[m
+     <div class="video-intro__overlay"></div>[m
+[31m-    <div class="video-intro__actions" aria-label="Azioni principali">[m
+[31m-      <button id="enterSiteBtn" class="intro-action intro-action--primary" type="button">Learn More</button>[m
+[31m-      <button id="introContactBtn" class="intro-action" type="button">Contattami</button>[m
+[31m-      <a class="intro-action" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer">LinkedIn</a>[m
+[31m-    </div>[m
+[32m+[m[32m    <button id="enterSiteBtn" class="intro-enter-btn" type="button">Learn More</button>[m
+   </section>[m
+ [m
+   <div id="siteContent" class="site-content">[m
+[36m@@ -35,18 +31,14 @@[m
+     </div>[m
+   </div>[m
+ [m
+[31m-  <section class="hero" id="home">[m
+[31m-    <div class="container hero__grid">[m
+[31m-      <div class="hero__content">[m
+[31m-        <span class="eyebrow">IT Specialist</span>[m
+[31m-        <h1>Gaetano Russo</h1>[m
+[31m-        <p class="hero__subtitle">Infrastrutture IT, supporto enterprise, SAP e cybersecurity operativa.</p>[m
+[31m-        <p class="hero__text">Gestisco ambienti tecnologici aziendali con attenzione a continuita', sicurezza e supporto concreto agli utenti.</p>[m
+[31m-        <div class="hero__actions">[m
+[31m-          <a class="button button--primary" href="#chi-sono">Scopri il profilo</a>[m
+[31m-          <a class="button button--secondary" href="#contatti">Contattami</a>[m
+[31m-        </div>[m
+[31m-      </div>[m
+[32m+[m[32m  <section class="hero hero-video-section" id="home">[m
+[32m+[m[32m    <video id="heroVideo" class="hero-bg-video" autoplay muted playsinline loop preload="auto"></video>[m
+[32m+[m[32m    <div class="hero-video-overlay"></div>[m
+[32m+[m
+[32m+[m[32m    <div class="hero-video-actions">[m
+[32m+[m[32m      <a class="button button--primary" href="#chi-sono">Learn More</a>[m
+[32m+[m[32m      <a class="button button--secondary" href="#contatti">Contattami</a>[m
+[32m+[m[32m      <a class="button button--secondary" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer">LinkedIn</a>[m
+     </div>[m
+   </section>[m
+ [m
+[1mdiff --git a/script.js b/script.js[m
+[1mindex ae1859f..ecfd449 100644[m
+[1m--- a/script.js[m
+[1m+++ b/script.js[m
+[36m@@ -146,58 +146,73 @@[m [masync function handleContactFormSubmit(event) {[m
+   }[m
+ }[m
+ [m
+[32m+[m[32mfunction isMobileDevice() {[m
+[32m+[m[32m  return window.matchMedia("(max-width: 768px)").matches ||[m
+[32m+[m[32m    /Android|iPhone|iPad|iPod|Windows Phone|Opera Mini|IEMobile/i.test(navigator.userAgent);[m
+[32m+[m[32m}[m
+[32m+[m
+[32m+[m[32mfunction configureManagedVideo(video, source, loopSeconds, label, playImmediately) {[m
+[32m+[m[32m  if (!video) return;[m
+[32m+[m
+[32m+[m[32m  video.pause();[m
+[32m+[m[32m  video.removeAttribute('src');[m
+[32m+[m[32m  video.innerHTML = '';[m
+[32m+[m[32m  video.src = source;[m
+[32m+[m[32m  video.muted = true;[m
+[32m+[m[32m  video.autoplay = true;[m
+[32m+[m[32m  video.loop = true;[m
+[32m+[m[32m  video.playsInline = true;[m
+[32m+[m[32m  video.setAttribute('muted', '');[m
+[32m+[m[32m  video.setAttribute('autoplay', '');[m
+[32m+[m[32m  video.setAttribute('loop', '');[m
+[32m+[m[32m  video.setAttribute('playsinline', '');[m
+[32m+[m[32m  video.removeAttribute('controls');[m
+[32m+[m[32m  video.load();[m
+[32m+[m
+[32m+[m[32m  video.addEventListener('timeupdate', function() {[m
+[32m+[m[32m    if (video.currentTime >= loopSeconds) {[m
+[32m+[m[32m      video.currentTime = 0;[m
+[32m+[m[32m      video.play();[m
+[32m+[m[32m    }[m
+[32m+[m[32m  });[m
+[32m+[m
+[32m+[m[32m  if (playImmediately) {[m
+[32m+[m[32m    const playPromise = video.play();[m
+[32m+[m[32m    if (playPromise && typeof playPromise.catch === 'function') {[m
+[32m+[m[32m      playPromise.catch(function(error) {[m
+[32m+[m[32m        console.warn('Autoplay ' + label + ' video bloccato:', error);[m
+[32m+[m[32m      });[m
+[32m+[m[32m    }[m
+[32m+[m[32m  } else {[m
+[32m+[m[32m    video.pause();[m
+[32m+[m[32m  }[m
+[32m+[m[32m}[m
+[32m+[m
+ function setupVideoIntro() {[m
+   const intro = document.getElementById('videoIntro');[m
+   const introVideo = document.getElementById('introVideo');[m
+   const enterBtn = document.getElementById('enterSiteBtn');[m
+[31m-  const contactBtn = document.getElementById('introContactBtn');[m
+   const siteContent = document.getElementById('siteContent');[m
+ [m
+   document.body.classList.add('intro-active');[m
+ [m
+[31m-  if (!intro || !introVideo || !enterBtn || !contactBtn) {[m
+[32m+[m[32m  if (!intro || !introVideo || !enterBtn) {[m
+     document.body.classList.remove('intro-active');[m
+     return;[m
+   }[m
+ [m
+[31m-  const isMobile =[m
+[31m-    /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test([m
+[31m-      navigator.userAgent[m
+[31m-    ) ||[m
+[31m-    window.innerWidth <= 768;[m
+[32m+[m[32m  const introSource = isMobileDevice()[m
+[32m+[m[32m    ? 'video/smartphone.mp4'[m
+[32m+[m[32m    : 'video/intro.mp4.mp4';[m
+ [m
+[31m-  const videoSource = isMobile[m
+[31m-    ? 'video/testata mobile.mp4'[m
+[31m-    : 'video/testata.mp4';[m
+[31m-[m
+[31m-  console.log('Intro video device mobile:', isMobile);[m
+[31m-  console.log('Intro video selezionato:', videoSource);[m
+[31m-  console.log('User agent:', navigator.userAgent);[m
+[31m-  console.log('Viewport:', window.innerWidth, window.innerHeight);[m
+[31m-[m
+[31m-  introVideo.pause();[m
+[31m-  introVideo.removeAttribute('src');[m
+[31m-  introVideo.innerHTML = '';[m
+[31m-  introVideo.src = videoSource;[m
+[31m-  introVideo.muted = true;[m
+[31m-  introVideo.autoplay = true;[m
+[31m-  introVideo.loop = true;[m
+[31m-  introVideo.playsInline = true;[m
+[31m-  introVideo.setAttribute('muted', '');[m
+[31m-  introVideo.setAttribute('autoplay', '');[m
+[31m-  introVideo.setAttribute('loop', '');[m
+[31m-  introVideo.setAttribute('playsinline', '');[m
+[31m-  introVideo.removeAttribute('controls');[m
+[31m-  introVideo.load();[m
+[31m-[m
+[31m-  const playPromise = introVideo.play();[m
+[31m-  if (playPromise && typeof playPromise.catch === 'function') {[m
+[31m-    playPromise.catch(function(error) {[m
+[31m-      console.warn('Autoplay intro video bloccato:', error);[m
+[31m-    });[m
+[31m-  }[m
+[32m+[m[32m  console.log('Intro video device mobile:', isMobileDevice());[m
+[32m+[m[32m  console.log('Intro video selezionato:', introSource);[m
+[32m+[m
+[32m+[m[32m  configureManagedVideo(introVideo, introSource, 6, 'intro', true);[m
+[32m+[m
+[32m+[m[32m  enterBtn.addEventListener('click', function() {[m
+[32m+[m[32m    const heroVideo = document.getElementById('heroVideo');[m
+ [m
+[31m-  function showPortfolio(targetId) {[m
+     intro.classList.add('hidden');[m
+     document.body.classList.remove('intro-active');[m
+     introVideo.pause();[m
+[36m@@ -206,21 +221,27 @@[m [mfunction setupVideoIntro() {[m
+       siteContent.style.display = '';[m
+     }[m
+ [m
+[31m-    if (targetId) {[m
+[31m-      const target = document.getElementById(targetId);[m
+[31m-      if (target) {[m
+[31m-        target.scrollIntoView({ behavior: 'smooth' });[m
+[32m+[m[32m    if 

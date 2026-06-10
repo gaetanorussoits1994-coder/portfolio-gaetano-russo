@@ -8,13 +8,9 @@
 </head>
 <body class="intro-active">
   <section id="videoIntro" class="video-intro">
-    <video id="introVideo" class="hero-video" autoplay muted playsinline loop preload="auto"></video>
+    <video id="introVideo" autoplay muted playsinline loop preload="auto"></video>
     <div class="video-intro__overlay"></div>
-    <div class="video-intro__actions" aria-label="Azioni principali">
-      <button id="enterSiteBtn" class="intro-action intro-action--primary" type="button">Learn More</button>
-      <button id="introContactBtn" class="intro-action" type="button">Contattami</button>
-      <a class="intro-action" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer">LinkedIn</a>
-    </div>
+    <button id="enterSiteBtn" class="intro-enter-btn" type="button">Learn More</button>
   </section>
 
   <div id="siteContent" class="site-content">
@@ -35,18 +31,14 @@
     </div>
   </div>
 
-  <section class="hero" id="home">
-    <div class="container hero__grid">
-      <div class="hero__content">
-        <span class="eyebrow">IT Specialist</span>
-        <h1>Gaetano Russo</h1>
-        <p class="hero__subtitle">Infrastrutture IT, supporto enterprise, SAP e cybersecurity operativa.</p>
-        <p class="hero__text">Gestisco ambienti tecnologici aziendali con attenzione a continuita', sicurezza e supporto concreto agli utenti.</p>
-        <div class="hero__actions">
-          <a class="button button--primary" href="#chi-sono">Scopri il profilo</a>
-          <a class="button button--secondary" href="#contatti">Contattami</a>
-        </div>
-      </div>
+  <section class="hero hero-video-section" id="home">
+    <video id="heroVideo" class="hero-bg-video" autoplay muted playsinline loop preload="auto"></video>
+    <div class="hero-video-overlay"></div>
+
+    <div class="hero-video-actions">
+      <a class="button button--primary" href="#chi-sono">Learn More</a>
+      <a class="button button--secondary" href="#contatti">Contattami</a>
+      <a class="button button--secondary" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer">LinkedIn</a>
     </div>
   </section>
 

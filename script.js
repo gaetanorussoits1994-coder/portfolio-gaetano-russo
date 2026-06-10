@@ -146,58 +146,73 @@ async function handleContactFormSubmit(event) {
   }
 }
 
+function isMobileDevice() {
+  return window.matchMedia("(max-width: 768px)").matches ||
+    /Android|iPhone|iPad|iPod|Windows Phone|Opera Mini|IEMobile/i.test(navigator.userAgent);
+}
+
+function configureManagedVideo(video, source, loopSeconds, label, playImmediately) {
+  if (!video) return;
+
+  video.pause();
+  video.removeAttribute('src');
+  video.innerHTML = '';
+  video.src = source;
+  video.muted = true;
+  video.autoplay = true;
+  video.loop = true;
+  video.playsInline = true;
+  video.setAttribute('muted', '');
+  video.setAttribute('autoplay', '');
+  video.setAttribute('loop', '');
+  video.setAttribute('playsinline', '');
+  video.removeAttribute('controls');
+  video.load();
+
+  video.addEventListener('timeupdate', function() {
+    if (video.currentTime >= loopSeconds) {
+      video.currentTime = 0;
+      video.play();
+    }
+  });
+
+  if (playImmediately) {
+    const playPromise = video.play();
+    if (playPromise && typeof playPromise.catch === 'function') {
+      playPromise.catch(function(error) {
+        console.warn('Autoplay ' + label + ' video bloccato:', error);
+      });
+    }
+  } else {
+    video.pause();
+  }
+}
+
 function setupVideoIntro() {
   const intro = document.getElementById('videoIntro');
   const introVideo = document.getElementById('introVideo');
   const enterBtn = document.getElementById('enterSiteBtn');
-  const contactBtn = document.getElementById('introContactBtn');
   const siteContent = document.getElementById('siteContent');
 
   document.body.classList.add('intro-active');
 
-  if (!intro || !introVideo || !enterBtn || !contactBtn) {
+  if (!intro || !introVideo || !enterBtn) {
     document.body.classList.remove('intro-active');
     return;
   }
 
-  const isMobile =
-    /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(
-      navigator.userAgent
-    ) ||
-    window.innerWidth <= 768;
+  const introSource = isMobileDevice()
+    ? 'video/smartphone.mp4'
+    : 'video/intro.mp4.mp4';
 
-  const videoSource = isMobile
-    ? 'video/testata mobile.mp4'
-    : 'video/testata.mp4';
+  console.log('Intro video device mobile:', isMobileDevice());
+  console.log('Intro video selezionato:', introSource);
 
-  console.log('Intro video device mobile:', isMobile);
-  console.log('Intro video selezionato:', videoSource);
-  console.log('User agent:', navigator.userAgent);
-  console.log('Viewport:', window.innerWidth, window.innerHeight);
+  configureManagedVideo(introVideo, introSource, 6, 'intro', true);
 
-  introVideo.pause();
-  introVideo.removeAttribute('src');
-  introVideo.innerHTML = '';
-  introVideo.src = videoSource;
-  introVideo.muted = true;
-  introVideo.autoplay = true;
-  introVideo.loop = true;
-  introVideo.playsInline = true;
-  introVideo.setAttribute('muted', '');
-  introVideo.setAttribute('autoplay', '');
-  introVideo.setAttribute('loop', '');
-  introVideo.setAttribute('playsinline', '');
-  introVideo.removeAttribute('controls');
-  introVideo.load();
+  enterBtn.addEventListener('click', function() {
+    const heroVideo = document.getElementById('heroVideo');
 
-  const playPromise = introVideo.play();
-  if (playPromise && typeof playPromise.catch === 'function') {
-    playPromise.catch(function(error) {
-      console.warn('Autoplay intro video bloccato:', error);
-    });
-  }
-
-  function showPortfolio(targetId) {
     intro.classList.add('hidden');
     document.body.classList.remove('intro-active');
     introVideo.pause();
@@ -206,21 +221,27 @@ function setupVideoIntro() {
       siteContent.style.display = '';
     }
 
-    if (targetId) {
-      const target = document.getElementById(targetId);
-      if (target) {
-        target.scrollIntoView({ behavior: 'smooth' });
+    if (heroVideo) {
+      const playPromise = heroVideo.play();
+      if (playPromise && typeof playPromise.catch === 'function') {
+        playPromise.catch(function(error) {
+          console.warn('Autoplay hero video bloccato:', error);
+        });
       }
     }
-  }
-
-  enterBtn.addEventListener('click', function() {
-    showPortfolio();
   });
+}
 
-  contactBtn.addEventListener('click', function() {
-    showPortfolio('contatti');
-  });
+function setupHeroVideo() {
+  const heroVideo = document.getElementById('heroVideo');
+  const heroSource = isMobileDevice()
+    ? 'video/testata mobile.mp4'
+    : 'video/testata desktop.mp4';
+
+  console.log('Hero video device mobile:', isMobileDevice());
+  console.log('Hero video selezionato:', heroSource);
+
+  configureManagedVideo(heroVideo, heroSource, 4, 'hero', false);
 }
 
 function setupReveal() {
@@ -287,6 +308,7 @@ window.addEventListener('DOMContentLoaded', function() {
   console.log('DOMContentLoaded');
   document.documentElement.classList.remove('dark');
   setupVideoIntro();
+  setupHeroVideo();
 
   const contactForm = document.getElementById('contactForm');
   if (!contactForm) {
