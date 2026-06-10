@@ -146,54 +146,39 @@ async function handleContactFormSubmit(event) {
   }
 }
 
-function isMobileIntroDevice() {
-  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
-
-  const isTouchDevice =
-    'ontouchstart' in window ||
-    navigator.maxTouchPoints > 0 ||
-    navigator.msMaxTouchPoints > 0;
-
-  const isSmallScreen = window.innerWidth <= 900;
-
-  const isMobileUserAgent =
-    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini|Windows Phone/i.test(userAgent);
-
-  return isMobileUserAgent || (isTouchDevice && isSmallScreen);
-}
-
-function getIntroVideoSource() {
-  if (isMobileIntroDevice()) {
-    return 'video/smartphone.mp4';
-  }
-
-  return 'video/intro.mp4.mp4';
-}
-
 function setupVideoIntro() {
   const intro = document.getElementById('videoIntro');
   const introVideo = document.getElementById('introVideo');
   const enterBtn = document.getElementById('enterSiteBtn');
+  const contactBtn = document.getElementById('introContactBtn');
   const siteContent = document.getElementById('siteContent');
 
   document.body.classList.add('intro-active');
 
-  if (!intro || !introVideo || !enterBtn) {
+  if (!intro || !introVideo || !enterBtn || !contactBtn) {
     document.body.classList.remove('intro-active');
     return;
   }
 
-  const selectedVideo = getIntroVideoSource();
+  const isMobile =
+    /Android|iPhone|iPad|iPod|Opera Mini|IEMobile/i.test(
+      navigator.userAgent
+    ) ||
+    window.innerWidth <= 768;
 
-  console.log('Intro video device mobile:', isMobileIntroDevice());
-  console.log('Intro video selezionato:', selectedVideo);
+  const videoSource = isMobile
+    ? 'video/testata mobile.mp4'
+    : 'video/testata.mp4';
+
+  console.log('Intro video device mobile:', isMobile);
+  console.log('Intro video selezionato:', videoSource);
   console.log('User agent:', navigator.userAgent);
   console.log('Viewport:', window.innerWidth, window.innerHeight);
 
   introVideo.pause();
   introVideo.removeAttribute('src');
   introVideo.innerHTML = '';
-  introVideo.src = selectedVideo;
+  introVideo.src = videoSource;
   introVideo.muted = true;
   introVideo.autoplay = true;
   introVideo.loop = true;
@@ -212,57 +197,33 @@ function setupVideoIntro() {
     });
   }
 
-  introVideo.addEventListener('timeupdate', function() {
-    if (introVideo.currentTime >= 6) {
-      introVideo.currentTime = 0;
-      introVideo.play();
-    }
-  });
-
-  enterBtn.addEventListener('click', function() {
+  function showPortfolio(targetId) {
     intro.classList.add('hidden');
     document.body.classList.remove('intro-active');
     introVideo.pause();
+
     if (siteContent) {
       siteContent.style.display = '';
     }
 
-    const target = document.getElementById('chi-sono');
-    if (target) {
-      target.scrollIntoView({ behavior: 'smooth' });
+    if (targetId) {
+      const target = document.getElementById(targetId);
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth' });
+      }
     }
+  }
+
+  enterBtn.addEventListener('click', function() {
+    showPortfolio();
+  });
+
+  contactBtn.addEventListener('click', function() {
+    showPortfolio('contatti');
   });
 }
 
-function setupDarkModeAndReveal() {
-  var root = document.documentElement;
-  var toggle = document.getElementById('darkToggle');
-  var key = 'site-theme';
-
-  function applyTheme(theme) {
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
-    if (toggle) {
-      toggle.textContent = theme === 'dark' ? '\u263E' : '\u2600';
-      toggle.title = theme === 'dark' ? 'Modalita scura' : 'Modalita chiara';
-      toggle.setAttribute('aria-pressed', theme === 'dark' ? 'true' : 'false');
-    }
-  }
-
-  var saved = localStorage.getItem(key) || (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-  applyTheme(saved);
-
-  if (toggle) {
-    toggle.addEventListener('click', function() {
-      var now = root.classList.contains('dark') ? 'light' : 'dark';
-      localStorage.setItem(key, now);
-      applyTheme(now);
-    });
-  }
-
+function setupReveal() {
   var observer = new IntersectionObserver(function(entries) {
     entries.forEach(function(entry) {
       if (entry.isIntersecting) {
@@ -324,6 +285,7 @@ function setupCertificateLightbox() {
 
 window.addEventListener('DOMContentLoaded', function() {
   console.log('DOMContentLoaded');
+  document.documentElement.classList.remove('dark');
   setupVideoIntro();
 
   const contactForm = document.getElementById('contactForm');
@@ -336,6 +298,6 @@ window.addEventListener('DOMContentLoaded', function() {
   }
 
   initEmailJS();
-  setupDarkModeAndReveal();
+  setupReveal();
   setupCertificateLightbox();
 });

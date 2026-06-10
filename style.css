@@ -64,8 +64,8 @@ body.intro-active #siteContent {
   display: none !important;
 }
 
-#introVideo {
-  position: absolute;
+.hero-video {
+  position: fixed;
   inset: 0;
   width: 100%;
   height: 100%;
@@ -81,32 +81,79 @@ body.intro-active #siteContent {
   pointer-events: none;
 }
 
-.intro-enter-btn {
+.video-intro__actions {
   position: absolute;
   left: 50%;
   bottom: calc(56px + env(safe-area-inset-bottom));
   transform: translateX(-50%);
   z-index: 3;
-  width: min(85vw, 380px);
-  padding: 18px 28px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  width: min(92vw, 720px);
+}
+
+.intro-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 150px;
+  min-height: 52px;
+  padding: 14px 24px;
   border-radius: 999px;
-  border: 1px solid #23d5ff;
+  border: 1px solid rgba(128, 212, 255, 0.8);
   background: rgba(2, 10, 30, 0.72);
   color: #fff;
-  font-size: 1.1rem;
+  box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
+  backdrop-filter: blur(12px);
+  font-size: 1rem;
   font-weight: 700;
+  line-height: 1.1;
   cursor: pointer;
+  text-align: center;
+}
+
+.intro-action:hover,
+.intro-action:focus-visible {
+  background: rgba(30, 95, 196, 0.86);
+  border-color: #ffffff;
+  outline: none;
+  transform: translateY(-2px);
+}
+
+.intro-action--primary {
+  background: linear-gradient(135deg, rgba(30, 95, 196, 0.96), rgba(35, 213, 255, 0.8));
+  border-color: rgba(255, 255, 255, 0.78);
 }
 
 @media (max-width: 900px) {
-  #introVideo {
+  .hero-video {
     object-fit: cover;
     object-position: center center;
   }
 
-  .intro-enter-btn {
-    width: min(86vw, 360px);
+  .video-intro__actions {
     bottom: calc(44px + env(safe-area-inset-bottom));
+  }
+}
+
+@media (max-width: 768px) {
+  .hero-video {
+    object-fit: cover;
+    object-position: center center;
+  }
+
+  .video-intro__actions {
+    width: min(88vw, 360px);
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .intro-action {
+    width: 100%;
+    min-height: 48px;
+    padding: 12px 18px;
   }
 }
 
