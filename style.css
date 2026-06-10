@@ -512,6 +512,7 @@ textarea {
   }
 
   .hero-video-actions {
+    display: none !important;
     width: min(88vw, 360px);
     flex-direction: column;
     gap: 10px;

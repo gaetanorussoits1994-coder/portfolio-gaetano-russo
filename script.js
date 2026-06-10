@@ -170,7 +170,9 @@ function configureManagedVideo(video, source, loopSeconds, label, playImmediatel
   video.load();
 
   video.addEventListener('timeupdate', function() {
-    if (video.currentTime >= loopSeconds) {
+    const maxDuration = typeof loopSeconds === 'function' ? loopSeconds() : loopSeconds;
+
+    if (video.currentTime >= maxDuration) {
       video.currentTime = 0;
       video.play();
     }
@@ -241,7 +243,9 @@ function setupHeroVideo() {
   console.log('Hero video device mobile:', isMobileDevice());
   console.log('Hero video selezionato:', heroSource);
 
-  configureManagedVideo(heroVideo, heroSource, 4, 'hero', false);
+  configureManagedVideo(heroVideo, heroSource, function() {
+    return isMobileDevice() ? 5 : 4;
+  }, 'hero', false);
 }
 
 function setupReveal() {
