@@ -169,14 +169,16 @@ function configureManagedVideo(video, source, loopSeconds, label, playImmediatel
   video.removeAttribute('controls');
   video.load();
 
-  video.addEventListener('timeupdate', function() {
-    const maxDuration = typeof loopSeconds === 'function' ? loopSeconds() : loopSeconds;
+  if (loopSeconds) {
+    video.addEventListener('timeupdate', function() {
+      const maxDuration = typeof loopSeconds === 'function' ? loopSeconds() : loopSeconds;
 
-    if (video.currentTime >= maxDuration) {
-      video.currentTime = 0;
-      video.play();
-    }
-  });
+      if (video.currentTime >= maxDuration) {
+        video.currentTime = 0;
+        video.play();
+      }
+    });
+  }
 
   if (playImmediately) {
     const playPromise = video.play();
@@ -195,6 +197,8 @@ function setupVideoIntro() {
   const introVideo = document.getElementById('introVideo');
   const enterBtn = document.getElementById('enterSiteBtn');
   const siteContent = document.getElementById('siteContent');
+  const globalBgVideo = document.getElementById('globalBgVideo');
+  const isMobile = isMobileDevice();
 
   document.body.classList.add('intro-active');
 
@@ -203,14 +207,26 @@ function setupVideoIntro() {
     return;
   }
 
-  const introSource = isMobileDevice()
-    ? 'video/smartphone.mp4'
-    : 'video/intro.mp4.mp4';
+  if (globalBgVideo) {
+    globalBgVideo.muted = true;
+    globalBgVideo.playsInline = true;
+    globalBgVideo.loop = true;
+    globalBgVideo.setAttribute('muted', '');
+    globalBgVideo.setAttribute('playsinline', '');
+    globalBgVideo.setAttribute('loop', '');
+    globalBgVideo.removeAttribute('controls');
+    globalBgVideo.pause();
+  }
 
-  console.log('Intro video device mobile:', isMobileDevice());
+  const introSource = isMobile
+    ? 'video/smartphone.mp4'
+    : 'video/intro.mp4';
+
+  console.log('Intro video device mobile:', isMobile);
   console.log('Intro video selezionato:', introSource);
 
-  configureManagedVideo(introVideo, introSource, 6, 'intro', true);
+  const introLoopSeconds = isMobile ? 10 : null;
+  configureManagedVideo(introVideo, introSource, introLoopSeconds, 'intro', true);
 
   enterBtn.addEventListener('click', function() {
     const heroVideo = document.getElementById('heroVideo');
@@ -221,6 +237,15 @@ function setupVideoIntro() {
 
     if (siteContent) {
       siteContent.style.display = '';
+    }
+
+    if (globalBgVideo) {
+      const globalPlayPromise = globalBgVideo.play();
+      if (globalPlayPromise && typeof globalPlayPromise.catch === 'function') {
+        globalPlayPromise.catch(function(error) {
+          console.warn('Autoplay global background video bloccato:', error);
+        });
+      }
     }
 
     if (heroVideo) {
