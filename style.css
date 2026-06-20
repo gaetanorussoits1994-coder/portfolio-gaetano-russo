@@ -115,7 +115,6 @@ body.intro-active #siteContent {
   background: rgba(2, 10, 30, 0.75);
   color: #fff;
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
-  backdrop-filter: blur(12px);
   font-size: 1.1rem;
   font-weight: 700;
   line-height: 1.1;
@@ -210,7 +209,6 @@ textarea {
   inset: 0 0 auto 0;
   z-index: 100;
   background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(14px);
   border-bottom: 1px solid rgba(15, 31, 56, 0.08);
 }
 
@@ -515,7 +513,6 @@ textarea {
   border-color: rgba(128, 212, 255, 0.72);
   background: rgba(2, 10, 30, 0.72);
   box-shadow: 0 16px 34px rgba(0, 0, 0, 0.28);
-  backdrop-filter: blur(12px);
 }
 
 .hero-video-actions .button--primary {
@@ -557,16 +554,15 @@ textarea {
 
 .section {
   padding: 5rem 1.5rem;
-  background: rgba(255, 255, 255, 0.88);
-  backdrop-filter: blur(6px);
+  background: rgba(255, 255, 255, 0.78);
 }
 
 .section--bg {
-  background: rgba(255, 255, 255, 0.88);
+  background: rgba(255, 255, 255, 0.78);
 }
 
 :root.dark .section--bg {
-  background: var(--surface-dark);
+  background: rgba(15, 22, 36, 0.78);
 }
 
 .section--accent {
@@ -619,13 +615,13 @@ article.card h1 {
   padding: 2rem;
   max-width: 100%;
   min-width: 0;
-  background: var(--surface);
+  background: rgba(255, 255, 255, 0.85);
   box-shadow: var(--shadow);
   border: 1px solid rgba(15, 31, 56, 0.06);
 }
 
 .card--highlight {
-  background: var(--surface-soft);
+  background: rgba(238, 245, 255, 0.84);
 }
 
 .card h3,
@@ -750,8 +746,8 @@ article.card h1 {
   gap: 2rem;
   grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.9fr);
   align-items: center;
-  background: rgba(255, 255, 255, 0.11);
-  border-color: rgba(255,255,255,0.18);
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255,255,255,0.24);
 }
 
 .topbar.dark + .hero,
@@ -775,13 +771,13 @@ article.card h1 {
 :root.dark .visual-card,
 :root.dark .contact-form,
 :root.dark .footer {
-  background: var(--surface-dark);
+  background: rgba(15, 22, 36, 0.84);
   color: var(--text-dark);
   border-color: rgba(255,255,255,0.08);
 }
 
 :root.dark .card--highlight {
-  background: var(--surface-soft-dark);
+  background: rgba(255,255,255,0.08);
 }
 
 :root.dark .footer-button {
@@ -1122,7 +1118,6 @@ article.card h1 {
   place-items: center;
   padding: clamp(0.75rem, 4vw, 2rem);
   background: rgba(3, 8, 18, 0.88);
-  backdrop-filter: blur(10px);
 }
 
 .lightbox.is-open {
