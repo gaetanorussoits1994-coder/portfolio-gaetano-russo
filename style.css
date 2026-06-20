@@ -848,6 +848,19 @@ article.card h1 {
   min-width: 0;
 }
 
+.contact-copy {
+  display: grid;
+  gap: 0.85rem;
+  color: rgba(248, 250, 252, 0.94);
+  font-weight: 500;
+  text-shadow: 0 2px 16px rgba(0, 0, 0, 0.35);
+}
+
+.contact-copy p {
+  margin: 0;
+  color: inherit;
+}
+
 .contact-details a {
   color: #fff;
 }
