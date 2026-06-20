@@ -278,16 +278,15 @@ function setupVideoIntro() {
 
 function setupHeroVideo() {
   const heroVideo = document.getElementById('heroVideo');
-  const heroSource = isMobileDevice()
+  const isMobile = isMobileDevice();
+  const heroSource = isMobile
     ? 'video/testata mobile.mp4'
-    : 'video/testata desktop.mp4';
+    : 'video/intro.mp4';
 
-  console.log('Hero video device mobile:', isMobileDevice());
+  console.log('Hero video device mobile:', isMobile);
   console.log('Hero video selezionato:', heroSource);
 
-  configureManagedVideo(heroVideo, heroSource, function() {
-    return isMobileDevice() ? 5 : 4;
-  }, 'hero', false);
+  configureManagedVideo(heroVideo, heroSource, isMobile ? 5 : null, 'hero', false);
 }
 
 function setupReveal() {
