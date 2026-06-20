@@ -203,11 +203,16 @@ function setupVideoIntro() {
     return;
   }
 
+  if (window.location.hash) {
+    window.history.replaceState(null, document.title, window.location.pathname);
+  }
+
   const intro = document.getElementById('videoIntro');
   const introVideo = document.getElementById('introVideo');
   const enterBtn = document.getElementById('enterSiteBtn');
   const siteContent = document.getElementById('siteContent');
   const globalBgVideo = document.getElementById('globalBgVideo');
+  const globalBgSource = 'video/sottofondo.mp4';
   const isMobile = isMobileDevice();
 
   document.body.classList.add('intro-active');
@@ -218,6 +223,7 @@ function setupVideoIntro() {
   }
 
   if (globalBgVideo) {
+    globalBgVideo.src = globalBgSource;
     globalBgVideo.muted = true;
     globalBgVideo.playsInline = true;
     globalBgVideo.loop = true;
@@ -225,6 +231,7 @@ function setupVideoIntro() {
     globalBgVideo.setAttribute('playsinline', '');
     globalBgVideo.setAttribute('loop', '');
     globalBgVideo.removeAttribute('controls');
+    globalBgVideo.load();
     globalBgVideo.pause();
   }
 
