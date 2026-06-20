@@ -151,6 +151,11 @@ function isMobileDevice() {
     /Android|iPhone|iPad|iPod|Windows Phone|Opera Mini|IEMobile/i.test(navigator.userAgent);
 }
 
+function isPortfolioHomepage() {
+  const pathname = window.location.pathname.toLowerCase();
+  return pathname === '/' || pathname.endsWith('/') || pathname.endsWith('/index.html') || pathname.endsWith('index.html');
+}
+
 function configureManagedVideo(video, source, loopSeconds, label, playImmediately) {
   if (!video) return;
 
@@ -193,6 +198,11 @@ function configureManagedVideo(video, source, loopSeconds, label, playImmediatel
 }
 
 function setupVideoIntro() {
+  if (!isPortfolioHomepage()) {
+    document.body.classList.remove('intro-active');
+    return;
+  }
+
   const intro = document.getElementById('videoIntro');
   const introVideo = document.getElementById('introVideo');
   const enterBtn = document.getElementById('enterSiteBtn');
