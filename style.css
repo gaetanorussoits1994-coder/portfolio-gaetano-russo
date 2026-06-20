@@ -515,18 +515,6 @@ textarea {
   width: min(92vw, 900px);
 }
 
-.hero-description {
-  max-width: 900px;
-  margin: 0 auto 40px auto;
-  text-align: center;
-  line-height: 1.45;
-  color: #fff;
-  font-size: clamp(1rem, 1.7vw, 1.28rem);
-  font-weight: 800;
-  letter-spacing: 0.01em;
-  text-shadow: 0 3px 20px rgba(0, 0, 0, 0.72);
-}
-
 .hero-video-actions {
   display: flex;
   flex-wrap: wrap;
@@ -580,10 +568,6 @@ textarea {
     width: min(88vw, 360px);
     flex-direction: column;
     gap: 10px;
-  }
-
-  .hero-description {
-    display: none !important;
   }
 
   .hero-video-actions .button {
