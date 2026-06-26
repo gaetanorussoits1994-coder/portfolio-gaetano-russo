@@ -349,6 +349,68 @@ function setupCertificateLightbox() {
   });
 }
 
+function setupTechnicalLab() {
+  var filters = document.querySelectorAll('.lab-filter');
+  var cards = document.querySelectorAll('.lab-card');
+  var lightbox = document.getElementById('detailLightbox');
+  var title = document.getElementById('detailLightboxTitle');
+  var description = document.getElementById('detailLightboxText');
+  var closeButton = lightbox ? lightbox.querySelector('.lightbox__close') : null;
+
+  filters.forEach(function(filterButton) {
+    filterButton.addEventListener('click', function() {
+      var selectedFilter = filterButton.dataset.filter || 'all';
+
+      filters.forEach(function(button) {
+        var isActive = button === filterButton;
+        button.classList.toggle('is-active', isActive);
+        button.setAttribute('aria-pressed', isActive ? 'true' : 'false');
+      });
+
+      cards.forEach(function(card) {
+        var categories = (card.dataset.category || '').split(' ');
+        var shouldShow = selectedFilter === 'all' || categories.indexOf(selectedFilter) !== -1;
+        card.classList.toggle('is-hidden', !shouldShow);
+      });
+    });
+  });
+
+  if (!lightbox || !title || !description || !closeButton) return;
+
+  function openDetailLightbox(detailTitle, detailText) {
+    title.textContent = detailTitle || 'Approfondimento';
+    description.textContent = detailText || '';
+    lightbox.classList.add('is-open');
+    lightbox.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lightbox-open');
+    closeButton.focus();
+  }
+
+  function closeDetailLightbox() {
+    lightbox.classList.remove('is-open');
+    lightbox.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lightbox-open');
+    title.textContent = '';
+    description.textContent = '';
+  }
+
+  document.querySelectorAll('[data-detail-title][data-detail-text]').forEach(function(actionButton) {
+    actionButton.addEventListener('click', function() {
+      openDetailLightbox(actionButton.dataset.detailTitle, actionButton.dataset.detailText);
+    });
+  });
+
+  closeButton.addEventListener('click', closeDetailLightbox);
+
+  lightbox.addEventListener('click', function(event) {
+    if (event.target === lightbox) closeDetailLightbox();
+  });
+
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && lightbox.classList.contains('is-open')) closeDetailLightbox();
+  });
+}
+
 window.addEventListener('DOMContentLoaded', function() {
   console.log('DOMContentLoaded');
   document.documentElement.classList.remove('dark');
@@ -367,4 +429,5 @@ window.addEventListener('DOMContentLoaded', function() {
   initEmailJS();
   setupReveal();
   setupCertificateLightbox();
+  setupTechnicalLab();
 });

@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Gaetano Russo | IT Specialist</title>
+  <title>Gaetano Russo | IT Infrastructure Specialist</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body class="intro-active">
@@ -26,10 +26,12 @@
       <nav class="nav">
         <a href="index.html#chi-sono">Chi sono</a>
         <a href="index.html#competenze">Competenze</a>
+        <a href="index.html#technical-lab">Technical Lab</a>
         <a href="index.html#servizi">Servizi</a>
         <a href="index.html#esperienze">Esperienze</a>
         <a href="index.html#certificazioni">Certificazioni</a>
         <a href="index.html#blog">Blog</a>
+        <a href="index.html#curriculum">CV</a>
         <a href="index.html#contatti">Contatti</a>
       </nav>
     </div>
@@ -87,6 +89,118 @@
         </div>
       </div>
     </section>
+
+      <section id="technical-lab" class="section section--bg">
+        <div class="container">
+          <div class="section__heading">
+            <span class="section__tag">Technical Lab</span>
+            <h2>Technical Lab</h2>
+            <p>Laboratori, ambienti di test e tecnologie utilizzate per consolidare competenze operative in infrastrutture IT, networking, sistemi enterprise e sviluppo web.</p>
+          </div>
+
+          <div class="lab-filters" aria-label="Filtri Technical Lab">
+            <button class="lab-filter is-active" type="button" data-filter="all" aria-pressed="true">Tutti</button>
+            <button class="lab-filter" type="button" data-filter="infrastructure" aria-pressed="false">Infrastructure</button>
+            <button class="lab-filter" type="button" data-filter="windows" aria-pressed="false">Windows</button>
+            <button class="lab-filter" type="button" data-filter="networking" aria-pressed="false">Networking</button>
+            <button class="lab-filter" type="button" data-filter="sap" aria-pressed="false">SAP</button>
+            <button class="lab-filter" type="button" data-filter="cloud" aria-pressed="false">Cloud</button>
+            <button class="lab-filter" type="button" data-filter="development" aria-pressed="false">Development</button>
+          </div>
+
+          <div class="technical-lab-grid">
+            <article class="lab-card reveal" data-category="infrastructure windows" data-technologies="Active Directory, GPO, DNS, utenti e gruppi">
+              <div class="lab-card__body">
+                <h3>Active Directory</h3>
+                <p>Gestione centralizzata di identit&agrave;, gruppi, OU, permessi, policy e autenticazione in domini Windows.</p>
+                <div class="lab-card__tech">Active Directory · GPO · DNS · Utenti e gruppi</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="Active Directory" data-detail-text="Ho esperienza pratica nella gestione di domini Windows, utenti, gruppi, OU e policy di sicurezza. Lavoro su permessi, autenticazione centralizzata e organizzazione delle risorse per mantenere ambienti ordinati, controllabili e coerenti con le esigenze aziendali.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="infrastructure windows" data-technologies="Windows Server, servizi di dominio, file server, backup">
+              <div class="lab-card__body">
+                <h3>Windows Server</h3>
+                <p>Installazione, configurazione, manutenzione e amministrazione di server Windows in ambienti enterprise.</p>
+                <div class="lab-card__tech">Windows Server · Servizi di dominio · File server · Backup</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="Windows Server" data-detail-text="Gestisco server Windows in scenari operativi reali, curando configurazione, manutenzione, servizi di dominio, condivisioni, aggiornamenti e continuit&agrave; operativa. L'obiettivo &egrave; garantire stabilit&agrave;, accessibilit&agrave; e controllo delle risorse IT.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="infrastructure windows cloud" data-technologies="Macchine virtuali, snapshot, reti virtuali, ambienti di test">
+              <div class="lab-card__body">
+                <h3>Virtualizzazione e gestione ambienti</h3>
+                <p>Creazione e amministrazione di ambienti virtualizzati, snapshot, networking virtuale e scenari di laboratorio.</p>
+                <div class="lab-card__tech">Macchine virtuali · Snapshot · Reti virtuali · Ambienti di test</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="Virtualizzazione e gestione ambienti" data-detail-text="Utilizzo ambienti virtualizzati per creare laboratori, testare configurazioni e simulare scenari infrastrutturali senza impattare i sistemi produttivi. Lavoro con snapshot, reti virtuali e ambienti isolati per validare procedure e troubleshooting.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="sap" data-technologies="SAP GUI, SAP Router, utenti SAP, troubleshooting">
+              <div class="lab-card__body">
+                <h3>SAP Support</h3>
+                <p>Supporto tecnico SAP, gestione utenti, troubleshooting, SAP GUI, SAP Router e attivit&agrave; di assistenza applicativa.</p>
+                <div class="lab-card__tech">SAP GUI · SAP Router · Utenti SAP · Troubleshooting</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="SAP Support" data-detail-text="Fornisco supporto tecnico su SAP in attivit&agrave; di gestione utenti, accessi, SAP GUI, SAP Router e troubleshooting applicativo. L'approccio &egrave; orientato alla continuit&agrave; del servizio e alla risoluzione rapida delle criticit&agrave; operative.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="networking infrastructure" data-technologies="VPN client-site, tunnel, sicurezza, accessi remoti">
+              <div class="lab-card__body">
+                <h3>VPN</h3>
+                <p>Configurazione e troubleshooting di accessi remoti sicuri, tunnel VPN e connettivit&agrave; aziendale.</p>
+                <div class="lab-card__tech">VPN client-site · Tunnel · Sicurezza · Accessi remoti</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="VPN" data-detail-text="Mi occupo di configurazione e supporto VPN per garantire accesso remoto sicuro a utenti e sedi. Le attivit&agrave; includono verifica della connettivit&agrave;, analisi dei tunnel, troubleshooting e controllo della sicurezza degli accessi.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="networking infrastructure" data-technologies="Routing, switching, VLAN, subnetting">
+              <div class="lab-card__body">
+                <h3>Enterprise Networking</h3>
+                <p>Analisi e gestione di routing, switching, VLAN, subnetting e troubleshooting della connettivit&agrave;.</p>
+                <div class="lab-card__tech">Routing · Switching · VLAN · Subnetting</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="Enterprise Networking" data-detail-text="Lavoro su reti aziendali con attenzione a indirizzamenti IP, routing, switching, VLAN e diagnosi dei problemi di connettivit&agrave;. L'esperienza pratica nasce dal supporto a contesti produttivi dove stabilit&agrave; e tempi di risposta sono fondamentali.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="networking" data-technologies="Wi-Fi analyzer, access point, canali, copertura">
+              <div class="lab-card__body">
+                <h3>Wi-Fi Survey</h3>
+                <p>Analisi della copertura wireless, progettazione reti Wi-Fi enterprise, ottimizzazione segnale e troubleshooting.</p>
+                <div class="lab-card__tech">Wi-Fi analyzer · Access point · Canali · Copertura</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="Wi-Fi Survey" data-detail-text="Analizzo copertura, interferenze, canali e qualit&agrave; del segnale per migliorare le reti wireless aziendali. In ambienti produttivi considero ostacoli fisici, densit&agrave; dei dispositivi e continuit&agrave; della connessione.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="cloud development" data-technologies="Docker, immagini, container, compose">
+              <div class="lab-card__body">
+                <h3>Docker</h3>
+                <p>Containerizzazione delle applicazioni, gestione immagini, container, compose e ambienti di sviluppo.</p>
+                <div class="lab-card__tech">Docker · Immagini · Container · Compose</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="Docker" data-detail-text="Uso Docker per creare ambienti riproducibili, isolare servizi e semplificare sviluppo e test. La gestione di immagini, container e compose consente di ridurre differenze tra ambienti locali e deploy.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="development" data-technologies="Next.js, routing, SEO, performance">
+              <div class="lab-card__body">
+                <h3>Next.js</h3>
+                <p>Sviluppo frontend moderno con Next.js, ottimizzazione SEO, routing e performance.</p>
+                <div class="lab-card__tech">Next.js · Routing · SEO · Performance</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="Next.js" data-detail-text="Utilizzo Next.js per realizzare interfacce moderne, responsive e ottimizzate. L'attenzione principale &egrave; su routing, organizzazione dei componenti, performance, SEO tecnica e qualit&agrave; dell'esperienza utente.">Visualizza Lab</button>
+              </div>
+            </article>
+
+            <article class="lab-card reveal" data-category="cloud development" data-technologies="Supabase, PostgreSQL, Auth, REST API">
+              <div class="lab-card__body">
+                <h3>Supabase</h3>
+                <p>Backend-as-a-Service, autenticazione, database PostgreSQL, API REST, realtime e storage.</p>
+                <div class="lab-card__tech">Supabase · PostgreSQL · Auth · REST API</div>
+                <button class="button button--secondary action-button lab-card__action" type="button" data-detail-title="Supabase" data-detail-text="Uso Supabase per prototipare backend strutturati con database PostgreSQL, autenticazione, API e storage. &Egrave; utile per sviluppare applicazioni complete mantenendo velocit&agrave; operativa e controllo dei dati.">Visualizza Lab</button>
+              </div>
+            </article>
+          </div>
+        </div>
+      </section>
       <section id="esperienze" class="section section--bg">
         <div class="container">
           <div class="section__heading">
@@ -97,7 +211,7 @@
             <div class="timeline-item reveal">
               <div class="dot">24</div>
               <div>
-                <h3>ZILMET S.P.A. — IT Specialist / Admin</h3>
+                <h3>ZILMET S.P.A. — IT Infrastructure Specialist | System Administrator | SAP Support | Windows Server | Networking</h3>
                 <p class="text-muted">01/2024 - Presente · Gestione infrastruttura IT, VMware, Windows Server, Active Directory, VPN e supporto operativo per ambiente produttivo.</p>
               </div>
             </div>
@@ -202,14 +316,77 @@
             <div class="blog-card__meta">Windows Server</div>
             <h3>Guida a Windows Server e Active Directory</h3>
             <p>Best practice per assicurare disponibilità, domain controller corretti e gestione degli utenti in ambienti enterprise.</p>
-            <a href="articolo1.html">Leggi di più</a>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Windows Server e Active Directory" data-detail-text="La mia esperienza include amministrazione di domini Windows, gestione utenti, gruppi, policy e risorse condivise. Lavoro con un approccio orientato alla continuit&agrave; operativa, al controllo degli accessi e alla risoluzione rapida delle criticit&agrave; infrastrutturali.">Leggi di più</button>
           </article>
           <article class="blog-card">
             <div class="blog-card__meta">Cybersecurity</div>
             <h3>Strategie di difesa per infrastrutture aziendali</h3>
             <p>Approccio concreto alla protezione di reti, VPN e sistemi SAP in contesti multinazionali.</p>
-            <a href="articolo2.html">Leggi di più</a>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Cybersecurity" data-detail-text="Affronto la sicurezza con attenzione a consapevolezza utente, protezione degli accessi, VPN, aggiornamenti e continuit&agrave; dei servizi. In ambito operativo considero la cybersecurity come parte quotidiana della gestione IT, non come attivit&agrave; separata.">Leggi di più</button>
           </article>
+          <article class="blog-card reveal">
+            <div class="blog-card__meta">SAP</div>
+            <h3>SAP Support &amp; Administration</h3>
+            <p>Gestione del supporto tecnico SAP, utenti, SAP GUI, SAP Router e troubleshooting applicativo.</p>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="SAP Support &amp; Administration" data-detail-text="Ho maturato esperienza nel supporto tecnico SAP, nella gestione utenti e nel troubleshooting applicativo. Lavoro su SAP GUI, SAP Router e attivit&agrave; di assistenza con l'obiettivo di ridurre i fermi operativi e supportare gli utenti in modo chiaro.">Leggi di più</button>
+          </article>
+          <article class="blog-card reveal">
+            <div class="blog-card__meta">Networking</div>
+            <h3>Enterprise Networking</h3>
+            <p>Routing, switching, VLAN, indirizzamenti IP e continuit&agrave; operativa nelle reti aziendali.</p>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Enterprise Networking" data-detail-text="Gestisco e analizzo reti aziendali con attenzione a routing, switching, VLAN e indirizzamenti IP. L'esperienza pratica riguarda soprattutto troubleshooting, stabilit&agrave; della connettivit&agrave; e supporto a sedi e reparti operativi.">Leggi di più</button>
+          </article>
+          <article class="blog-card reveal">
+            <div class="blog-card__meta">Industry 4.0</div>
+            <h3>Wi-Fi Survey &amp; Industry 4.0</h3>
+            <p>Analisi della copertura wireless e ottimizzazione della connettivit&agrave; in ambienti produttivi.</p>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Wi-Fi Survey &amp; Industry 4.0" data-detail-text="Mi occupo di analisi della copertura wireless, qualit&agrave; del segnale e ottimizzazione della connettivit&agrave; in ambienti produttivi. In contesti Industry 4.0 considero stabilit&agrave;, interferenze e continuit&agrave; come fattori centrali.">Leggi di più</button>
+          </article>
+          <article class="blog-card reveal">
+            <div class="blog-card__meta">Infrastructure</div>
+            <h3>Virtualizzazione e gestione ambienti</h3>
+            <p>Creazione di ambienti di test, snapshot, reti virtuali e laboratori per infrastrutture IT.</p>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Virtualizzazione e gestione ambienti" data-detail-text="Utilizzo ambienti virtualizzati per testare configurazioni, simulare scenari e validare procedure tecniche. Questo approccio permette di imparare, documentare e risolvere problemi riducendo i rischi sugli ambienti reali.">Leggi di più</button>
+          </article>
+          <article class="blog-card reveal">
+            <div class="blog-card__meta">Container</div>
+            <h3>Docker &amp; Container</h3>
+            <p>Containerizzazione, gestione immagini, compose e ambienti riproducibili per sviluppo e test.</p>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Docker &amp; Container" data-detail-text="Uso Docker per creare ambienti coerenti, isolare servizi e semplificare test e sviluppo. Lavorare con immagini, container e compose aiuta a rendere i progetti pi&ugrave; ordinati, replicabili e gestibili.">Leggi di più</button>
+          </article>
+          <article class="blog-card reveal">
+            <div class="blog-card__meta">Deployment</div>
+            <h3>Git, GitHub &amp; Deployment</h3>
+            <p>Workflow di versionamento, repository, branch, deploy e gestione del ciclo di rilascio.</p>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Git, GitHub &amp; Deployment" data-detail-text="Utilizzo Git e GitHub per versionare il codice, organizzare modifiche e gestire workflow di rilascio. L'attenzione &egrave; su tracciabilit&agrave;, ordine dei branch, commit chiari e deploy controllati.">Leggi di più</button>
+          </article>
+          <article class="blog-card reveal">
+            <div class="blog-card__meta">Portfolio</div>
+            <h3>Come ho sviluppato questo Portfolio</h3>
+            <p>Struttura del sito, organizzazione dei contenuti, responsive design e integrazione del form contatti.</p>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Come ho sviluppato questo Portfolio" data-detail-text="Ho costruito questo portfolio come progetto personale per presentare competenze IT, contenuti tecnici e contatti professionali. Ho curato struttura HTML, stile responsive, video di sfondo, animazioni leggere e integrazione del form tramite EmailJS.">Leggi di più</button>
+          </article>
+          <article class="blog-card reveal">
+            <div class="blog-card__meta">Full Stack</div>
+            <h3>Sviluppo Full Stack - Barber Booking Platform</h3>
+            <p>Architettura di una piattaforma booking con frontend moderno, backend, autenticazione e database.</p>
+            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Sviluppo Full Stack - Barber Booking Platform" data-detail-text="Ho lavorato su una piattaforma di prenotazione full stack con attenzione a frontend, gestione disponibilit&agrave;, database, autenticazione e flussi utente. Il progetto unisce logica applicativa, UI responsive e gestione dati strutturata.">Leggi di più</button>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="curriculum" class="section section--bg">
+      <div class="container">
+        <div class="cv-panel card reveal">
+          <div>
+            <span class="section__tag">CV</span>
+            <h2>Curriculum Vitae</h2>
+            <p>Consulta il mio curriculum aggiornato con esperienze professionali, competenze tecniche, certificazioni e progetti sviluppati nel settore IT Infrastructure e Software Development.</p>
+          </div>
+          <div class="cv-actions">
+            <a class="button button--primary action-button" href="Gaetano_Russo_CV_ITS.pdf" target="_blank" rel="noopener noreferrer">Visualizza CV</a>
+          </div>
         </div>
       </div>
     </section>
@@ -268,7 +445,7 @@
 
   <footer class="footer">
     <div class="container footer__inner">
-      <p>Gaetano Russo | IT Specialist</p>
+      <p>Gaetano Russo | IT Infrastructure Specialist | System Administrator | SAP Support | Windows Server | Networking</p>
       <div class="footer__links">
         <div class="footer__btns">
           <a class="footer-button" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
@@ -291,6 +468,15 @@
       <img id="certificateLightboxImage" src="" alt="" />
       <figcaption id="certificateLightboxCaption"></figcaption>
     </figure>
+  </div>
+
+  <div class="lightbox text-lightbox" id="detailLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Approfondimento">
+    <button class="lightbox__close" type="button" aria-label="Chiudi approfondimento">&times;</button>
+    <div class="lightbox__content text-lightbox__content">
+      <span class="section__tag">Approfondimento</span>
+      <h3 id="detailLightboxTitle"></h3>
+      <p id="detailLightboxText"></p>
+    </div>
   </div>
   </div>
 
