@@ -351,7 +351,7 @@ function setupCertificateLightbox() {
 
 function setupTechnicalLab() {
   var filters = document.querySelectorAll('.lab-filter');
-  var cards = document.querySelectorAll('.lab-card');
+  var cards = document.querySelectorAll('.technical-lab__card');
   var lightbox = document.getElementById('detailLightbox');
   var title = document.getElementById('detailLightboxTitle');
   var description = document.getElementById('detailLightboxText');
