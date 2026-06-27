@@ -33,11 +33,12 @@ body {
   margin: 0;
   width: 100%;
   max-width: 100%;
-  background: transparent;
+  background: #020617;
   color: var(--text);
   overflow-x: hidden;
   line-height: 1.6;
   -webkit-text-size-adjust: 100%;
+  isolation: isolate;
 }
 
 .global-bg-video {
@@ -47,18 +48,21 @@ body {
   height: 100vh;
   object-fit: cover;
   object-position: center center;
-  z-index: -2;
+  z-index: -10;
+  opacity: 1;
+  filter: none;
   pointer-events: none;
-  filter: none !important;
-  backdrop-filter: none !important;
-  opacity: 1 !important;
 }
 
 .site-content,
-main,
-section {
+main {
   position: relative;
   z-index: 1;
+  background: transparent !important;
+}
+
+.site-content main > section {
+  background: transparent !important;
 }
 
 .site-content::before {
@@ -954,7 +958,7 @@ article.card h1 {
 }
 
 :root.dark body {
-  background: transparent;
+  background: #020617;
   color: var(--text-dark);
 }
 
