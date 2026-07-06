@@ -64,10 +64,24 @@ async function handleContactFormSubmit(event) {
   const emailInput = form.querySelector('#email');
   const companyInput = form.querySelector('#company');
   const messageInput = form.querySelector('#message');
+  const privacyConsent = form.querySelector('#privacyConsent');
 
   if (!nameInput || !emailInput || !companyInput || !messageInput) {
     console.error('Errore: uno o più campi del form non sono presenti.');
     updateDebugStatus('Errore: uno o più campi del form non sono presenti.', true);
+    return;
+  }
+
+  if (!privacyConsent || !privacyConsent.checked) {
+    const language = window.portfolioI18n ? window.portfolioI18n.getLanguage() : 'it';
+    showMessage(
+      messageContainer,
+      language === 'en'
+        ? 'To send the message, you must accept the Privacy Policy and the data processing notice.'
+        : 'Per inviare il messaggio è necessario accettare la Privacy Policy e l’informativa sul trattamento dei dati.',
+      'error'
+    );
+    if (privacyConsent) privacyConsent.focus();
     return;
   }
 

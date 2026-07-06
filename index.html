@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Gaetano Russo | IT Infrastructure Specialist</title>
-  <link rel="stylesheet" href="style.css?v=global-video-3" />
+  <link rel="stylesheet" href="style.css?v=privacy-i18n-2" />
 </head>
 <body class="intro-active">
   <video id="globalBgVideo" class="global-bg-video" autoplay muted playsinline loop preload="auto">
@@ -14,7 +14,7 @@
   <section id="videoIntro" class="video-intro">
     <video id="introVideo" autoplay muted playsinline loop preload="auto"></video>
     <div class="video-intro__overlay"></div>
-    <button id="enterSiteBtn" class="intro-enter-btn" type="button">Learn More</button>
+    <button id="enterSiteBtn" class="intro-enter-btn" type="button" data-i18n="action.learn">Scopri di più</button>
   </section>
 
   <div id="siteContent" class="site-content">
@@ -24,16 +24,23 @@
       <input class="nav-toggle__checkbox" type="checkbox" id="navToggle" aria-label="Apri menu" />
       <label class="nav-toggle" for="navToggle" aria-hidden="true"><span></span></label>
       <nav class="nav">
-        <a href="index.html#chi-sono">Chi sono</a>
-        <a href="index.html#competenze">Competenze</a>
-        <a href="index.html#technical-lab">Technical Lab</a>
-        <a href="index.html#servizi">Servizi</a>
-        <a href="index.html#esperienze">Esperienze</a>
-        <a href="index.html#certificazioni">Certificazioni</a>
-        <a href="index.html#blog">Blog</a>
-        <a href="index.html#curriculum">CV</a>
-        <a href="index.html#contatti">Contatti</a>
+        <a href="index.html#chi-sono" data-i18n="nav.about">Chi sono</a>
+        <a href="index.html#competenze" data-i18n="nav.skills">Competenze</a>
+        <a href="index.html#technical-lab" data-i18n="nav.lab">Technical Lab</a>
+        <a href="index.html#servizi" data-i18n="nav.services">Servizi</a>
+        <a href="index.html#esperienze" data-i18n="nav.experience">Esperienze</a>
+        <a href="index.html#certificazioni" data-i18n="nav.certifications">Certificazioni</a>
+        <a href="index.html#blog" data-i18n="nav.blog">Blog</a>
+        <a href="index.html#curriculum" data-i18n="nav.cv">CV</a>
+        <a href="index.html#contatti" data-i18n="nav.contact">Contatti</a>
+        <a href="privacy.html" data-i18n="nav.privacy">Privacy Policy</a>
+        <a href="trattamento-dati.html" data-i18n="nav.data">Trattamento dati</a>
       </nav>
+      <div class="language-switcher" role="group" aria-label="Seleziona lingua / Select language">
+        <button type="button" data-lang="it" aria-pressed="true">IT</button>
+        <span aria-hidden="true">|</span>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
     </div>
   </div>
 
@@ -43,8 +50,8 @@
 
     <div class="hero-video-content">
       <div class="hero-video-actions hero-actions">
-        <a class="button button--primary" href="#chi-sono">Learn More</a>
-        <a class="button button--secondary" href="#contatti">Contattami</a>
+        <a class="button button--primary" href="#chi-sono" data-i18n="action.learn">Scopri di più</a>
+        <a class="button button--secondary" href="#contatti" data-i18n="action.contact">Contattami</a>
         <a class="button button--secondary" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
       </div>
     </div>
@@ -55,12 +62,12 @@
       <div class="container">
         <div class="section__grid section__grid--columns">
           <div>
-            <span class="section__tag">Chi sono</span>
-            <h2>IT Specialist con esperienza operativa reale</h2>
+            <span class="section__tag" data-i18n="about.tag">Chi sono</span>
+            <h2 data-i18n="about.title">IT Specialist con esperienza operativa reale</h2>
             <p>Gestisco quotidianamente infrastrutture IT aziendali, supporto utenti, reti e piattaforme SAP in contesti enterprise, industriali e multinazionali.</p>
           </div>
           <div class="card card--highlight">
-            <h3>Il mio approccio</h3>
+            <h3 data-i18n="about.approach">Il mio approccio</h3>
             <ul>
               <li>Gestione infrastruttura IT enterprise e datacenter</li>
               <li>Supporto a reparti produttivi e filiali estere</li>
@@ -74,8 +81,8 @@
     <section id="competenze" class="section">
       <div class="container">
         <div class="section__heading">
-          <span class="section__tag">Competenze</span>
-          <h2>Specializzazioni chiave</h2>
+          <span class="section__tag" data-i18n="skills.tag">Competenze</span>
+          <h2 data-i18n="skills.title">Specializzazioni chiave</h2>
         </div>
         <div class="skills-grid">
           <article class="skill-card"><span class="skill-card__icon">🖥️</span><h3>IT Infrastructure</h3></article>
@@ -93,8 +100,8 @@
       <section id="technical-lab" class="section technical-lab section--bg">
         <div class="container">
           <div class="section__heading">
-            <span class="section__tag">Technical Lab</span>
-            <h2>Technical Lab</h2>
+            <span class="section__tag" data-i18n="lab.tag">Technical Lab</span>
+            <h2 data-i18n="lab.title">Technical Lab</h2>
             <p class="section__intro">Laboratori, ambienti di test e tecnologie utilizzate per consolidare competenze operative in infrastrutture IT, networking, sistemi enterprise e sviluppo web.</p>
           </div>
 
@@ -204,8 +211,8 @@
       <section id="esperienze" class="section section--bg">
         <div class="container">
           <div class="section__heading">
-            <span class="section__tag">Esperienze</span>
-            <h2>Esperienze professionali</h2>
+            <span class="section__tag" data-i18n="experience.tag">Esperienze</span>
+            <h2 data-i18n="experience.title">Esperienze professionali</h2>
           </div>
           <div class="timeline">
             <div class="timeline-item reveal">
@@ -236,19 +243,19 @@
       <section id="certificazioni" class="section">
         <div class="container">
           <div class="section__heading">
-            <span class="section__tag">Certificazioni e Attestati</span>
-            <h2>Formazione certificata</h2>
+            <span class="section__tag" data-i18n="certifications.tag">Certificazioni e Attestati</span>
+            <h2 data-i18n="certifications.title">Formazione certificata</h2>
           </div>
           <div class="services-grid">
             <div class="card reveal">
               <h3>IFOA Academy Developer</h3>
               <p class="text-muted">Programmatore ABAP<br>Attestato di frequenza<br>Competenze: sviluppo ABAP, logiche SAP, formazione tecnica.</p>
-              <a class="button button--secondary certificate-link" href="immagini/Attestato ABAP.png" data-certificate-image="immagini/Attestato ABAP.png" data-certificate-title="IFOA Academy Developer">Visualizza attestato</a>
+              <a class="button button--secondary certificate-link" href="immagini/Attestato ABAP.png" data-certificate-image="immagini/Attestato ABAP.png" data-certificate-title="IFOA Academy Developer" data-i18n="action.viewCertificate">Visualizza attestato</a>
             </div>
             <div class="card reveal">
               <h3>TelsySkills</h3>
               <p class="text-muted">CyberSecurity Awareness<br>Attestato di partecipazione<br>Competenze: consapevolezza cyber, sicurezza informatica, protezione degli ambienti aziendali.</p>
-              <a class="button button--secondary certificate-link" href="immagini/Attestato Telsy.png" data-certificate-image="immagini/Attestato Telsy.png" data-certificate-title="TelsySkills Cybersecurity Awareness">Visualizza attestato</a>
+              <a class="button button--secondary certificate-link" href="immagini/Attestato Telsy.png" data-certificate-image="immagini/Attestato Telsy.png" data-certificate-title="TelsySkills Cybersecurity Awareness" data-i18n="action.viewCertificate">Visualizza attestato</a>
             </div>
 
           </div>
@@ -281,8 +288,8 @@
     <section id="servizi" class="section section--bg">
       <div class="container">
         <div class="section__heading">
-          <span class="section__tag">Servizi</span>
-          <h2>Proposte di valore</h2>
+          <span class="section__tag" data-i18n="services.tag">Servizi</span>
+          <h2 data-i18n="services.title">Proposte di valore</h2>
         </div>
         <div class="services-grid">
           <article class="service-card">
@@ -308,8 +315,8 @@
     <section id="blog" class="section">
       <div class="container">
         <div class="section__heading">
-          <span class="section__tag">Blog</span>
-          <h2>Approfondimenti tecnici</h2>
+          <span class="section__tag" data-i18n="blog.tag">Blog</span>
+          <h2 data-i18n="blog.title">Approfondimenti tecnici</h2>
         </div>
         <div class="blog-grid">
           <article class="blog-card">
@@ -381,11 +388,11 @@
         <div class="cv-panel card reveal">
           <div>
             <span class="section__tag">CV</span>
-            <h2>Curriculum Vitae</h2>
+            <h2 data-i18n="cv.title">Curriculum Vitae</h2>
             <p>Consulta il mio curriculum aggiornato con esperienze professionali, competenze tecniche, certificazioni e progetti sviluppati nel settore IT Infrastructure e Software Development.</p>
           </div>
           <div class="cv-actions">
-            <a class="button button--primary action-button" href="Gaetano_Russo_CV_ITS.pdf" target="_blank" rel="noopener noreferrer">Visualizza CV</a>
+            <button id="viewCvButton" class="button button--primary action-button" type="button" data-i18n="action.viewCv">Visualizza CV</button>
           </div>
         </div>
       </div>
@@ -395,8 +402,8 @@
       <div class="container">
         <div class="contact-panel">
           <div>
-            <span class="section__tag section__tag--light">Contatti</span>
-            <h2>Parliamo del tuo progetto IT</h2>
+            <span class="section__tag section__tag--light" data-i18n="contact.tag">Contatti</span>
+            <h2 data-i18n="contact.title">Parliamo del tuo progetto IT</h2>
             <div class="contact-copy">
               <p>Aiuto aziende e team a migliorare affidabilità, sicurezza e continuità operativa delle infrastrutture IT.</p>
               <p>Nel portfolio sono raccolte esperienze professionali, competenze tecniche, certificazioni e approfondimenti relativi a sistemi enterprise, networking, Active Directory, SAP e cybersecurity.</p>
@@ -411,9 +418,9 @@
             </div>
           </div>
 
-          <form id="contactForm" class="contact-form" aria-label="Modulo di contatto">
+          <form id="contactForm" class="contact-form" aria-label="Modulo di contatto" novalidate>
             <div class="form-row">
-              <label for="name">Nome</label>
+              <label for="name" data-i18n="form.name">Nome</label>
               <input id="name" name="name" type="text" placeholder="Il tuo nome" required />
             </div>
 
@@ -423,17 +430,27 @@
             </div>
 
             <div class="form-row">
-              <label for="company">Azienda (opzionale)</label>
+              <label for="company" data-i18n="form.company">Azienda (opzionale)</label>
               <input id="company" name="company" type="text" placeholder="Nome azienda" />
             </div>
 
             <div class="form-row">
-              <label for="message">Messaggio</label>
+              <label for="message" data-i18n="form.message">Messaggio</label>
               <textarea id="message" name="message" rows="5" placeholder="Descrivi il progetto o la richiesta" required></textarea>
             </div>
 
+            <div class="form-row privacy-consent">
+              <input id="privacyConsent" name="privacy_consent" type="checkbox" required />
+              <label for="privacyConsent" data-i18n-skip>
+                <span data-i18n-it="Ho letto e accetto la" data-i18n-en="I have read and accept the">Ho letto e accetto la</span>
+                <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+                <span data-i18n-it="e l’informativa sul" data-i18n-en="and the">e l’informativa sul</span>
+                <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer">trattamento dei dati</a>.
+              </label>
+            </div>
+
             <div class="form-row form-row--actions">
-              <button type="submit" class="button button--primary">Invia messaggio</button>
+              <button type="submit" class="button button--primary" data-i18n="action.send">Invia messaggio</button>
             </div>
 
             <div class="form-message" id="formMessage" aria-live="polite"></div>
@@ -448,6 +465,8 @@
       <p>Gaetano Russo | IT Infrastructure Specialist | System Administrator | SAP Support | Windows Server | Networking</p>
       <div class="footer__links">
         <div class="footer__btns">
+          <a class="footer-button footer-button--legal" href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
+          <a class="footer-button footer-button--legal" href="trattamento-dati.html" data-i18n="footer.data">Trattamento dati</a>
           <a class="footer-button" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M4.98 3.5C4.98 4.88 3.9 6 2.49 6S0 4.88 0 3.5 1.08 1 2.49 1 4.98 2.12 4.98 3.5zM0 8.98h4.98V24H0V8.98zM8.21 8.98h4.78v2.05h.07c.67-1.27 2.31-2.6 4.76-2.6 5.09 0 6.03 3.35 6.03 7.69V24h-4.98v-7.43c0-1.77-.03-4.05-2.47-4.05-2.48 0-2.86 1.93-2.86 3.92V24H8.21V8.98z"/></svg>
             <span>LinkedIn</span>
@@ -478,9 +497,32 @@
       <p id="detailLightboxText"></p>
     </div>
   </div>
+
+  <div class="lightbox cv-consent-modal" id="cvConsentModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cvConsentTitle">
+    <div class="lightbox__content cv-consent-modal__content">
+      <button class="lightbox__close" type="button" aria-label="Chiudi">&times;</button>
+      <span class="section__tag">CV</span>
+      <h2 id="cvConsentTitle" data-i18n="cv.modal.title">Prima di visualizzare il CV</h2>
+      <p>Prima di visualizzare il CV, conferma di aver letto la Privacy Policy e l’informativa sul trattamento dei dati. Il documento contiene dati personali e professionali di Gaetano Russo ed è reso disponibile esclusivamente per finalità di consultazione professionale.</p>
+      <div class="privacy-consent">
+        <input id="cvPrivacyConsent" type="checkbox" />
+        <label for="cvPrivacyConsent" data-i18n-skip>
+          <span data-i18n-it="Confermo di aver letto e accettato" data-i18n-en="I confirm that I have read and accepted the">Confermo di aver letto e accettato</span>
+          <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+          <span data-i18n-it="e il" data-i18n-en="and the">e il</span>
+          <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer">trattamento dati</a>.
+        </label>
+      </div>
+      <p id="cvConsentMessage" class="consent-message" aria-live="polite"></p>
+      <div class="cv-consent-modal__actions">
+        <a id="openCvButton" class="button button--primary action-button" data-cv-href="Gaetano_Russo_CV_ITS.pdf" target="_blank" rel="noopener noreferrer" aria-disabled="true" data-i18n="action.openCv">Apri CV</a>
+      </div>
+    </div>
+  </div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-  <script src="script.js?v=lab-layout-2" defer></script>
+  <script src="js/i18n.js?v=privacy-i18n-2" defer></script>
+  <script src="script.js?v=privacy-i18n-2" defer></script>
 </body>
 </html>

@@ -35,6 +35,36 @@ function isValidEmail(email) {
   return emailRegex.test(email);
 }
 
+function setupLanguageSelector() {
+  var storageKey = 'portfolio-language';
+  var savedLanguage = localStorage.getItem(storageKey) === 'en' ? 'en' : 'it';
+  var buttons = document.querySelectorAll('.language-switcher [data-lang]');
+
+  function applyLanguage(language) {
+    localStorage.setItem(storageKey, language);
+    document.documentElement.lang = language;
+
+    if (window.portfolioI18n && typeof window.portfolioI18n.applyLanguage === 'function') {
+      window.portfolioI18n.applyLanguage(language);
+      return;
+    }
+
+    document.querySelectorAll('[data-i18n-it][data-i18n-en]').forEach(function(element) {
+      element.textContent = language === 'en' ? element.dataset.i18nEn : element.dataset.i18nIt;
+    });
+  }
+
+  buttons.forEach(function(button) {
+    if (button.dataset.languageHandler === 'ready') return;
+    button.dataset.languageHandler = 'ready';
+    button.addEventListener('click', function() {
+      applyLanguage(button.dataset.lang === 'en' ? 'en' : 'it');
+    });
+  });
+
+  applyLanguage(savedLanguage);
+}
+
 function showMessage(container, text, type) {
   if (!container) return;
   container.classList.remove('success', 'error');
@@ -61,10 +91,24 @@ async function handleContactFormSubmit(event) {
   const emailInput = document.getElementById('email');
   const companyInput = document.getElementById('company');
   const messageInput = document.getElementById('message');
+  const privacyConsent = document.getElementById('privacyConsent');
 
   if (!nameInput || !emailInput || !messageInput) {
     console.error('Errore: uno o più campi obbligatori del form non sono presenti.');
     showMessage(messageContainer, 'Errore: campi del form mancanti', 'error');
+    return;
+  }
+
+  if (!privacyConsent || !privacyConsent.checked) {
+    const language = window.portfolioI18n ? window.portfolioI18n.getLanguage() : 'it';
+    showMessage(
+      messageContainer,
+      language === 'en'
+        ? 'To send the message, you must accept the Privacy Policy and the data processing notice.'
+        : 'Per inviare il messaggio è necessario accettare la Privacy Policy e l’informativa sul trattamento dei dati.',
+      'error'
+    );
+    if (privacyConsent) privacyConsent.focus();
     return;
   }
 
@@ -112,7 +156,9 @@ async function handleContactFormSubmit(event) {
 
   if (submitButton) {
     submitButton.disabled = true;
-    submitButton.textContent = 'Invio in corso...';
+    submitButton.textContent = window.portfolioI18n && window.portfolioI18n.getLanguage() === 'en'
+      ? 'Sending...'
+      : 'Invio in corso...';
   }
 
   try {
@@ -126,7 +172,13 @@ async function handleContactFormSubmit(event) {
 
     if (response && response.status === 200) {
       console.log('Email inviata con successo');
-      showMessage(messageContainer, 'Messaggio inviato correttamente', 'success');
+      showMessage(
+        messageContainer,
+        window.portfolioI18n && window.portfolioI18n.getLanguage() === 'en'
+          ? 'Message sent successfully'
+          : 'Messaggio inviato correttamente',
+        'success'
+      );
       form.reset();
     } else {
       console.warn('Risposta EmailJS non valida:', response);
@@ -141,7 +193,9 @@ async function handleContactFormSubmit(event) {
   } finally {
     if (submitButton) {
       submitButton.disabled = false;
-      submitButton.textContent = 'Invia messaggio';
+      submitButton.textContent = window.portfolioI18n && window.portfolioI18n.getLanguage() === 'en'
+        ? 'Send message'
+        : 'Invia messaggio';
     }
   }
 }
@@ -411,9 +465,79 @@ function setupTechnicalLab() {
   });
 }
 
+function setupCvConsentModal() {
+  var openTrigger = document.getElementById('viewCvButton');
+  var modal = document.getElementById('cvConsentModal');
+  var checkbox = document.getElementById('cvPrivacyConsent');
+  var openCvButton = document.getElementById('openCvButton');
+  var message = document.getElementById('cvConsentMessage');
+  var closeButton = modal ? modal.querySelector('.lightbox__close') : null;
+
+  if (!openTrigger || !modal || !checkbox || !openCvButton || !closeButton) return;
+
+  function updateButtonState() {
+    var enabled = checkbox.checked;
+    openCvButton.classList.toggle('is-disabled', !enabled);
+    openCvButton.setAttribute('aria-disabled', enabled ? 'false' : 'true');
+    if (enabled) {
+      openCvButton.setAttribute('href', openCvButton.dataset.cvHref);
+    } else {
+      openCvButton.removeAttribute('href');
+    }
+    if (enabled && message) message.textContent = '';
+  }
+
+  function openModal() {
+    checkbox.checked = false;
+    updateButtonState();
+    modal.classList.add('is-open');
+    modal.setAttribute('aria-hidden', 'false');
+    document.body.classList.add('lightbox-open');
+    checkbox.focus();
+  }
+
+  function closeModal() {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    document.body.classList.remove('lightbox-open');
+    checkbox.checked = false;
+    updateButtonState();
+    openTrigger.focus();
+  }
+
+  openTrigger.addEventListener('click', openModal);
+  checkbox.addEventListener('change', updateButtonState);
+  closeButton.addEventListener('click', closeModal);
+
+  openCvButton.addEventListener('click', function(event) {
+    if (!checkbox.checked) {
+      event.preventDefault();
+      if (message) {
+        message.textContent = window.portfolioI18n && window.portfolioI18n.getLanguage() === 'en'
+          ? 'Please accept the privacy notices before opening the CV.'
+          : 'Accetta le informative privacy prima di aprire il CV.';
+      }
+      checkbox.focus();
+      return;
+    }
+    closeModal();
+  });
+
+  modal.addEventListener('click', function(event) {
+    if (event.target === modal) closeModal();
+  });
+
+  document.addEventListener('keydown', function(event) {
+    if (event.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+  });
+
+  updateButtonState();
+}
+
 window.addEventListener('DOMContentLoaded', function() {
   console.log('DOMContentLoaded');
   document.documentElement.classList.remove('dark');
+  setupLanguageSelector();
   setupVideoIntro();
   setupHeroVideo();
 
@@ -430,4 +554,5 @@ window.addEventListener('DOMContentLoaded', function() {
   setupReveal();
   setupCertificateLightbox();
   setupTechnicalLab();
+  setupCvConsentModal();
 });

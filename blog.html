@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Blog - IT Specialist | Gaetano Russo</title>
   <script src="js/start-home.js"></script>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=privacy-i18n-2" />
 </head>
 <body>
   <div class="topbar">
@@ -21,6 +21,11 @@
         <a href="index.html#home">Portfolio</a>
         <a href="index.html#contatti">Contatti</a>
       </nav>
+      <div class="language-switcher" role="group" aria-label="Seleziona lingua / Select language">
+        <button type="button" data-lang="it" aria-pressed="true">IT</button>
+        <span aria-hidden="true">|</span>
+        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      </div>
       <button id="darkToggle" class="dark-toggle" title="Modalita chiara" aria-pressed="false" aria-label="Cambia tema">&#9788;</button>
     </div>
   </div>
@@ -108,6 +113,8 @@
       <p>Gaetano Russo | IT Specialist</p>
       <div class="footer__links">
         <div class="footer__btns">
+          <a class="footer-button footer-button--legal" href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
+          <a class="footer-button footer-button--legal" href="trattamento-dati.html" data-i18n="footer.data">Trattamento dati</a>
           <a class="footer-button" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M4.98 3.5C4.98 4.88 3.9 6 2.49 6S0 4.88 0 3.5 1.08 1 2.49 1 4.98 2.12 4.98 3.5zM0 8.98h4.98V24H0V8.98zM8.21 8.98h4.78v2.05h.07c.67-1.27 2.31-2.6 4.76-2.6 5.09 0 6.03 3.35 6.03 7.69V24h-4.98v-7.43c0-1.77-.03-4.05-2.47-4.05-2.48 0-2.86 1.93-2.86 3.92V24H8.21V8.98z"/></svg>
             <span>LinkedIn</span>
@@ -122,6 +129,7 @@
     </div>
   </footer>
 
+  <script src="js/i18n.js?v=privacy-i18n-2" defer></script>
   <script>
     // Filter articles by category
     (function(){

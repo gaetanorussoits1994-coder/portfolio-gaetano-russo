@@ -38,3 +38,12 @@ warning: in the working copy of 'style.css', LF will be replaced by CRLF the nex
      width: min(88vw, 360px);[m
      flex-direction: column;[m
      gap: 10px;[m
+warning: in the working copy of 'articolo1.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'articolo2.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'blog.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'contact.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'contatti.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'index.html', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'js/contact.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'script.js', LF will be replaced by CRLF the next time Git touches it
+warning: in the working copy of 'style.css', LF will be replaced by CRLF the next time Git touches it
