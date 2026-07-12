@@ -465,12 +465,10 @@ function setupTechnicalLab() {
   });
 }
 
-const CV_FILE_URL = './Gaetano_Russo_CV.pdf';
-
 function setupCvConsentModal() {
   var openTrigger = document.getElementById('viewCvButton');
   var modal = document.getElementById('cvConsentModal');
-  var cvConsent = document.getElementById('cvPrivacyConsent');
+  var cvConsent = document.getElementById('cvConsentCheckbox');
   var openCvButton = document.getElementById('openCvButton');
   var message = document.getElementById('cvConsentMessage');
   var cancelButton = document.getElementById('cancelCvButton');
@@ -483,7 +481,19 @@ function setupCvConsentModal() {
     openCvButton.classList.toggle('is-disabled', !enabled);
     openCvButton.setAttribute('aria-disabled', enabled ? 'false' : 'true');
     openCvButton.disabled = !enabled;
-    if (enabled && message) message.textContent = '';
+    if (message) message.textContent = '';
+    console.log('Stato consenso CV:', enabled);
+  }
+
+  function getCvUrl() {
+    var repositoryName = 'portfolio-gaetano-russo';
+    var isGitHubPages = window.location.hostname.endsWith('github.io');
+
+    if (isGitHubPages) {
+      return '/' + repositoryName + '/Gaetano_Russo_CV.pdf';
+    }
+
+    return './Gaetano_Russo_CV.pdf';
   }
 
   function openModal() {
@@ -509,19 +519,31 @@ function setupCvConsentModal() {
   closeButton.addEventListener('click', closeCvModal);
   if (cancelButton) cancelButton.addEventListener('click', closeCvModal);
 
-  openCvButton.addEventListener('click', function() {
-    if (!cvConsent.checked) {
+  openCvButton.addEventListener('click', function(event) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    var accepted = Boolean(cvConsent.checked);
+    console.log('Privacy accettata:', accepted);
+
+    if (!accepted) {
+      if (message) message.textContent = 'Devi accettare l’informativa prima di aprire il CV.';
       return;
     }
 
-    var cvUrl = new URL(CV_FILE_URL, document.baseURI).href;
+    var cvUrl = getCvUrl();
+    console.log('URL finale CV:', cvUrl);
+
     var cvWindow = window.open(cvUrl, '_blank');
+    console.log('Risultato window.open:', cvWindow);
 
     if (cvWindow) {
       cvWindow.opener = null;
       closeCvModal();
     } else {
-      window.location.href = cvUrl;
+      if (message) {
+        message.textContent = 'Il browser ha bloccato l’apertura del CV. Consenti i popup e riprova.';
+      }
     }
   });
 
