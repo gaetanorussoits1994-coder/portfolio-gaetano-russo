@@ -2209,6 +2209,26 @@ img,
   text-align: left;
 }
 
+.cv-modal {
+  position: fixed;
+  z-index: 10000;
+}
+
+.cv-modal__dialog {
+  position: relative;
+  z-index: 10001;
+  pointer-events: auto;
+}
+
+#openCvButton {
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+#openCvButton:disabled {
+  cursor: not-allowed;
+}
+
 .cv-consent-modal__content h2,
 .cv-consent-modal__content p {
   margin: 0;

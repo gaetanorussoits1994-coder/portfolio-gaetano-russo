@@ -504,8 +504,8 @@
     </div>
   </div>
 
-  <div class="lightbox cv-consent-modal" id="cvConsentModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cvConsentTitle">
-    <div class="lightbox__content cv-consent-modal__content">
+  <div class="lightbox cv-modal cv-consent-modal" id="cvConsentModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cvConsentTitle">
+    <div class="lightbox__content cv-modal__dialog cv-consent-modal__content">
       <button class="lightbox__close" type="button" aria-label="Chiudi">&times;</button>
       <span class="section__tag">CV</span>
       <h2 id="cvConsentTitle" data-i18n="cv.modal.title">Prima di visualizzare il CV</h2>
@@ -522,7 +522,7 @@
       <p id="cvConsentMessage" class="consent-message" aria-live="polite"></p>
       <div class="cv-consent-modal__actions">
         <button id="cancelCvButton" class="button button--secondary action-button" type="button" data-i18n-it="Annulla" data-i18n-en="Cancel">Annulla</button>
-        <button id="openCvButton" class="button button--primary action-button" type="button" data-cv-href="Gaetano_Russo_CV.pdf" disabled data-i18n="action.openCv">Apri CV</button>
+        <button id="openCvButton" class="button button--primary action-button" type="button" disabled data-i18n="action.openCv">Apri CV</button>
       </div>
     </div>
   </div>
