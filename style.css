@@ -2249,6 +2249,126 @@ img,
   color: #f8fafc;
 }
 
+/* Shared professional finish: accessibility, footer, consent and utilities */
+.skip-link {
+  position: fixed;
+  z-index: 10000;
+  top: 0.75rem;
+  left: 0.75rem;
+  padding: 0.75rem 1rem;
+  border-radius: 10px;
+  color: #071426;
+  background: #e0f2fe;
+  font-weight: 800;
+  transform: translateY(-160%);
+  transition: transform 0.2s ease;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  padding: 0 !important;
+  margin: -1px !important;
+  overflow: hidden !important;
+  clip: rect(0, 0, 0, 0) !important;
+  white-space: nowrap !important;
+  border: 0 !important;
+}
+
+.skip-link:focus { transform: translateY(0); }
+
+:where(a, button, input, textarea, select):focus-visible {
+  outline: 3px solid #7dd3fc;
+  outline-offset: 3px;
+}
+
+.footer {
+  position: relative;
+  z-index: 2;
+  background: rgba(3, 10, 22, 0.94);
+  border-top: 1px solid rgba(125, 211, 252, 0.2);
+  backdrop-filter: blur(16px);
+}
+
+.footer-pro {
+  display: grid;
+  grid-template-columns: minmax(220px, 1.2fr) repeat(2, minmax(170px, 1fr));
+  gap: clamp(1.5rem, 4vw, 3.5rem);
+  padding-block: clamp(2.5rem, 6vw, 4.5rem) 1.5rem;
+  color: #e2e8f0;
+}
+
+.footer-pro__identity strong { color: #fff; font-size: 1.25rem; }
+.footer-pro__identity p { color: #cbd5e1; line-height: 1.75; }
+.footer-pro__nav { display: flex; flex-direction: column; align-items: flex-start; gap: 0.65rem; }
+.footer-pro__nav a, .footer-cookie-button { color: #dbeafe; text-decoration: none; }
+.footer-pro__nav a:hover, .footer-cookie-button:hover { color: #7dd3fc; }
+.footer-cookie-button { border: 0; padding: 0; background: none; font: inherit; cursor: pointer; }
+.footer-pro__copyright { grid-column: 1 / -1; margin: 1rem 0 0; padding-top: 1.25rem; border-top: 1px solid rgba(148, 163, 184, 0.2); color: #94a3b8; }
+
+.cookie-banner {
+  position: fixed;
+  z-index: 9000;
+  right: clamp(0.75rem, 3vw, 2rem);
+  bottom: clamp(0.75rem, 3vw, 2rem);
+  left: clamp(0.75rem, 3vw, 2rem);
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 1.25rem;
+  max-width: 1120px;
+  margin-inline: auto;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid rgba(125, 211, 252, 0.35);
+  border-radius: 18px;
+  color: #f8fafc;
+  background: rgba(3, 10, 22, 0.98);
+  box-shadow: 0 24px 70px rgba(0, 0, 0, 0.5);
+}
+
+.cookie-banner[hidden], .back-to-top[hidden] { display: none; }
+.cookie-banner h2, .cookie-banner p { margin: 0 0 0.5rem; color: inherit; }
+.cookie-banner__links a { color: #7dd3fc; }
+.cookie-banner__actions { display: flex; flex-wrap: wrap; gap: 0.65rem; }
+.cookie-preferences__content { display: grid; gap: 1.25rem; width: min(540px, calc(100vw - 2rem)); padding: 2rem; color: #f8fafc; background: #0a1428; }
+.cookie-preferences__content label { display: flex; gap: 0.75rem; align-items: center; }
+
+.back-to-top {
+  position: fixed;
+  z-index: 8000;
+  right: 1rem;
+  bottom: 1rem;
+  min-height: 44px;
+  padding: 0.7rem 1rem;
+  border: 1px solid rgba(125, 211, 252, 0.5);
+  border-radius: 999px;
+  color: #f8fafc;
+  background: rgba(7, 20, 38, 0.95);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.35);
+  cursor: pointer;
+}
+
+@media (max-width: 760px) {
+  .footer-pro { grid-template-columns: 1fr 1fr; }
+  .footer-pro__identity { grid-column: 1 / -1; }
+  .cookie-banner { grid-template-columns: 1fr; max-height: calc(100vh - 1.5rem); overflow-y: auto; }
+  .cookie-banner__actions .button { flex: 1 1 180px; }
+  .back-to-top { right: 0.75rem; bottom: 0.75rem; }
+}
+
+@media (max-width: 430px) {
+  .footer-pro { grid-template-columns: 1fr; }
+  .footer-pro__identity, .footer-pro__copyright { grid-column: 1; }
+  .cookie-banner__actions { flex-direction: column; }
+  .cookie-banner__actions .button { flex-basis: auto; width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto !important; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
 .legal-document h1 {
   margin: 0.5rem 0 0.25rem;
   color: #fff;

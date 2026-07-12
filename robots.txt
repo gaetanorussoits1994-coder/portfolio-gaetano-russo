@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/sitemap.xml

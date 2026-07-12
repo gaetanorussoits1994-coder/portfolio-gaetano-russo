@@ -471,6 +471,7 @@ function setupCvConsentModal() {
   var checkbox = document.getElementById('cvPrivacyConsent');
   var openCvButton = document.getElementById('openCvButton');
   var message = document.getElementById('cvConsentMessage');
+  var cancelButton = document.getElementById('cancelCvButton');
   var closeButton = modal ? modal.querySelector('.lightbox__close') : null;
 
   if (!openTrigger || !modal || !checkbox || !openCvButton || !closeButton) return;
@@ -479,12 +480,12 @@ function setupCvConsentModal() {
     var enabled = checkbox.checked;
     openCvButton.classList.toggle('is-disabled', !enabled);
     openCvButton.setAttribute('aria-disabled', enabled ? 'false' : 'true');
-    if (enabled) {
-      openCvButton.setAttribute('href', openCvButton.dataset.cvHref);
-    } else {
-      openCvButton.removeAttribute('href');
-    }
+    openCvButton.disabled = !enabled;
     if (enabled && message) message.textContent = '';
+  }
+
+  function getCvUrl() {
+    return new URL(openCvButton.dataset.cvHref, window.location.href).href;
   }
 
   function openModal() {
@@ -508,10 +509,12 @@ function setupCvConsentModal() {
   openTrigger.addEventListener('click', openModal);
   checkbox.addEventListener('change', updateButtonState);
   closeButton.addEventListener('click', closeModal);
+  if (cancelButton) cancelButton.addEventListener('click', closeModal);
 
-  openCvButton.addEventListener('click', function(event) {
+  openCvButton.addEventListener('click', async function() {
+    console.log('Privacy accettata:', checkbox.checked);
+
     if (!checkbox.checked) {
-      event.preventDefault();
       if (message) {
         message.textContent = window.portfolioI18n && window.portfolioI18n.getLanguage() === 'en'
           ? 'Please accept the privacy notices before opening the CV.'
@@ -520,7 +523,49 @@ function setupCvConsentModal() {
       checkbox.focus();
       return;
     }
-    closeModal();
+
+    var cvUrl = getCvUrl();
+    console.log('URL CV:', cvUrl);
+
+    var newWindow = window.open('', '_blank');
+    console.log('Risultato window.open:', newWindow);
+
+    if (!newWindow) {
+      if (message) {
+        message.textContent = window.portfolioI18n && window.portfolioI18n.getLanguage() === 'en'
+          ? 'The browser blocked the CV. Allow pop-ups and try again.'
+          : 'Il browser ha bloccato l\u2019apertura del CV. Consenti i popup e riprova.';
+      }
+      return;
+    }
+
+    newWindow.opener = null;
+
+    try {
+      var response = await fetch(cvUrl, {
+        method: 'HEAD',
+        cache: 'no-store'
+      });
+
+      console.log('Verifica disponibilità CV:', response.status, response.ok);
+
+      if (!response.ok) {
+        newWindow.close();
+        if (message) {
+          message.textContent = 'Il Curriculum Vitae non è momentaneamente disponibile. Verifica che il file PDF sia stato pubblicato correttamente.';
+        }
+        return;
+      }
+
+      newWindow.location.replace(cvUrl);
+      closeModal();
+    } catch (error) {
+      console.error('Errore durante la verifica del CV:', error);
+      newWindow.close();
+      if (message) {
+        message.textContent = 'Il Curriculum Vitae non è momentaneamente disponibile. Verifica che il file PDF sia stato pubblicato correttamente.';
+      }
+    }
   });
 
   modal.addEventListener('click', function(event) {
@@ -528,7 +573,16 @@ function setupCvConsentModal() {
   });
 
   document.addEventListener('keydown', function(event) {
-    if (event.key === 'Escape' && modal.classList.contains('is-open')) closeModal();
+    if (!modal.classList.contains('is-open')) return;
+    if (event.key === 'Escape') closeModal();
+    if (event.key === 'Tab') {
+      var focusable = Array.prototype.slice.call(modal.querySelectorAll('a[href], button:not([disabled]), input:not([disabled])'));
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    }
   });
 
   updateButtonState();
