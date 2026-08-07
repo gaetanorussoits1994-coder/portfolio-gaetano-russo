@@ -13,8 +13,8 @@
   }
 
   function setLanguageAttributes() {
-    document.querySelectorAll('.language-switcher [data-lang="it"]').forEach(function (button) { button.textContent = '🇮🇹 IT'; });
-    document.querySelectorAll('.language-switcher [data-lang="en"]').forEach(function (button) { button.textContent = '🇬🇧 EN'; });
+    document.querySelectorAll('.language-switcher [data-lang="it"]:not([data-detailed-language])').forEach(function (button) { button.textContent = '🇮🇹 IT'; });
+    document.querySelectorAll('.language-switcher [data-lang="en"]:not([data-detailed-language])').forEach(function (button) { button.textContent = '🇬🇧 EN'; });
     document.querySelectorAll('[data-site-it][data-site-en]').forEach(function (element) {
       element.textContent = text(element.dataset.siteIt, element.dataset.siteEn);
     });
@@ -59,6 +59,11 @@
 
   function createFooter() {
     var footer = document.querySelector('.footer');
+    if (footer && footer.hasAttribute('data-preserve-footer')) {
+      var currentYear = footer.querySelector('[data-current-year]');
+      if (currentYear) currentYear.textContent = new Date().getFullYear();
+      return;
+    }
     if (!footer) {
       footer = document.createElement('footer');
       footer.className = 'footer';
@@ -70,7 +75,7 @@
           '<p>IT Infrastructure Specialist<br>System Administrator · SAP Support<br>Windows Server · Networking</p></div>' +
         '<nav class="footer-pro__nav" aria-label="Footer">' +
           '<a href="index.html#home" data-site-it="Home" data-site-en="Home">Home</a>' +
-          '<a href="index.html#chi-sono" data-site-it="Chi sono" data-site-en="About me">Chi sono</a>' +
+          '<a href="index.html#profilo" data-site-it="Profilo" data-site-en="Profile">Profilo</a>' +
           '<a href="index.html#competenze" data-site-it="Competenze" data-site-en="Skills">Competenze</a>' +
           '<a href="index.html#technical-lab">Technical Lab</a>' +
           '<a href="index.html#esperienze" data-site-it="Esperienze" data-site-en="Experience">Esperienze</a>' +
@@ -119,7 +124,7 @@
         '<button type="button" class="button button--secondary" data-cookie-customize data-site-it="Personalizza" data-site-en="Customise">Personalizza</button></div>' +
       '</section>' +
       '<div class="cookie-preferences lightbox" role="dialog" aria-modal="true" aria-labelledby="cookie-preferences-title" aria-hidden="true">' +
-        '<div class="lightbox__content cookie-preferences__content"><button type="button" class="lightbox__close" data-cookie-close aria-label="Chiudi">×</button>' +
+        '<div class="lightbox__content cookie-preferences__content"><button type="button" class="lightbox__close" data-cookie-close aria-label="Chiudi" data-site-label-it="Chiudi preferenze cookie" data-site-label-en="Close cookie preferences">×</button>' +
         '<h2 id="cookie-preferences-title" data-site-it="Preferenze cookie" data-site-en="Cookie preferences">Preferenze cookie</h2>' +
         '<label><input type="checkbox" checked disabled> <span data-site-it="Tecnologie necessarie (sempre attive)" data-site-en="Necessary technologies (always active)">Tecnologie necessarie (sempre attive)</span></label>' +
         '<label><input type="checkbox" data-statistics-consent> <span data-site-it="Statistiche facoltative" data-site-en="Optional analytics">Statistiche facoltative</span></label>' +
@@ -141,7 +146,17 @@
     document.querySelector('[data-cookie-save]').addEventListener('click', function () { decide(statistics.checked); closePreferences(); });
     document.querySelector('[data-cookie-close]').addEventListener('click', closePreferences);
     modal.addEventListener('click', function (event) { if (event.target === modal) closePreferences(); });
-    document.addEventListener('keydown', function (event) { if (event.key === 'Escape' && modal.classList.contains('is-open')) closePreferences(); });
+    document.addEventListener('keydown', function (event) {
+      if (!modal.classList.contains('is-open')) return;
+      if (event.key === 'Escape') { closePreferences(); return; }
+      if (event.key !== 'Tab') return;
+      var focusable = Array.prototype.slice.call(modal.querySelectorAll('button:not([disabled]), input:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])'));
+      if (!focusable.length) return;
+      var first = focusable[0];
+      var last = focusable[focusable.length - 1];
+      if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+      else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+    });
     document.querySelectorAll('[data-cookie-settings]').forEach(function (button) { button.addEventListener('click', function () { openPreferences(button); }); });
     var saved = readConsent();
     banner.hidden = !!saved;
@@ -159,8 +174,24 @@
     button.dataset.siteLabelEn = 'Back to the top of the page';
     button.textContent = text('Torna su', 'Back to top');
     document.body.appendChild(button);
-    function update() { button.hidden = window.scrollY < 500; }
+    var footer = document.querySelector('.footer');
+    function update() {
+      button.hidden = window.scrollY < Math.max(480, window.innerHeight * 0.65);
+      var overlap = 0;
+      if (footer) {
+        var footerRect = footer.getBoundingClientRect();
+        if (footerRect.top < window.innerHeight && footerRect.bottom > 0) {
+          overlap = Math.min(Math.max(0, window.innerHeight - Math.max(footerRect.top, 0)), Math.max(0, window.innerHeight - 80));
+        }
+      }
+      button.style.setProperty('--footer-overlap', overlap + 'px');
+    }
     window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update, { passive: true });
+    if (window.visualViewport) {
+      window.visualViewport.addEventListener('resize', update, { passive: true });
+      window.visualViewport.addEventListener('scroll', update, { passive: true });
+    }
     button.addEventListener('click', function () {
       var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       window.scrollTo({ top: 0, behavior: reduced ? 'auto' : 'smooth' });

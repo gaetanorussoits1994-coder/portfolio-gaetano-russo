@@ -1,536 +1,301 @@
-﻿<!DOCTYPE html>
+<!doctype html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#07111f">
+  <meta name="description" content="Portfolio di Gaetano Russo, IT Infrastructure Specialist: sistemi Windows, Active Directory, networking, SAP e progetti web tecnici.">
+  <meta name="robots" content="index, follow">
+  <link rel="canonical" href="https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/">
+  <link rel="icon" href="favicon.svg" type="image/svg+xml">
+  <meta property="og:title" content="Gaetano Russo | IT Infrastructure Specialist">
+  <meta property="og:description" content="Esperienza con Windows Server, Active Directory, networking e SAP; progetti web, Technical Lab e attestati consultabili.">
+  <meta property="og:type" content="profile">
+  <meta property="og:image" content="https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/immagini/IT%20Solutions%20that%20transform%20your%20business.png">
   <title>Gaetano Russo | IT Infrastructure Specialist</title>
-  <meta name="description" content="Portfolio professionale di Gaetano Russo, IT Infrastructure Specialist a Padova: Windows Server, Active Directory, SAP e networking." />
-  <meta name="robots" content="index, follow" /><link rel="canonical" href="https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/" /><link rel="icon" href="favicon.svg" type="image/svg+xml" />
-  <meta property="og:title" content="Gaetano Russo | IT Infrastructure Specialist" /><meta property="og:description" content="Esperienza operativa in infrastrutture IT, Windows Server, Active Directory, SAP e networking." /><meta property="og:type" content="profile" /><meta property="og:url" content="https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/" /><meta property="og:image" content="https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/immagini/IT%20Solutions%20that%20transform%20your%20business.png" /><meta property="og:locale" content="it_IT" />
-  <meta name="twitter:card" content="summary_large_image" /><meta name="twitter:title" content="Gaetano Russo | IT Infrastructure Specialist" /><meta name="twitter:description" content="Portfolio professionale: infrastrutture IT, Windows Server, SAP e networking." /><meta name="twitter:image" content="https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/immagini/IT%20Solutions%20that%20transform%20your%20business.png" />
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Gaetano Russo","jobTitle":"IT Infrastructure Specialist","url":"https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/","sameAs":["https://www.linkedin.com/in/gaetano-russo-b11664220/"],"address":{"@type":"PostalAddress","addressLocality":"Padova","addressCountry":"IT"},"knowsAbout":["IT Infrastructure","System Administration","Windows Server","Active Directory","SAP Support","Networking"]}</script>
-  <link rel="stylesheet" href="style.css?v=privacy-i18n-2" />
+  <script>
+    document.documentElement.classList.add('js');
+    try { document.documentElement.dataset.theme = localStorage.getItem('site-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) { document.documentElement.dataset.theme = 'light'; }
+  </script>
+  <link rel="stylesheet" href="css/home.css?v=2">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Gaetano Russo","jobTitle":"IT Infrastructure Specialist","url":"https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/","sameAs":["https://www.linkedin.com/in/gaetano-russo-b11664220/"],"address":{"@type":"PostalAddress","addressLocality":"Padova","addressCountry":"IT"}}</script>
 </head>
-<body class="intro-active">
-  <video id="globalBgVideo" class="global-bg-video" autoplay muted playsinline loop preload="auto">
-    <source src="video/sottofondo.mp4" type="video/mp4">
-  </video>
+<body class="enhanced-home">
+  <a class="skip-link" href="#main-content" data-i18n-it="Vai al contenuto" data-i18n-en="Skip to content">Vai al contenuto</a>
 
-  <section id="videoIntro" class="video-intro">
-    <video id="introVideo" autoplay muted playsinline loop preload="auto"></video>
-    <div class="video-intro__overlay"></div>
-    <button id="enterSiteBtn" class="intro-enter-btn" type="button" data-i18n="action.learn">Scopri di più</button>
-  </section>
-
-  <div id="siteContent" class="site-content">
-  <div class="topbar">
-    <div class="container topbar__inner">
-      <a class="brand" href="index.html#home">Gaetano Russo</a>
-      <input class="nav-toggle__checkbox" type="checkbox" id="navToggle" aria-label="Apri menu" />
-      <label class="nav-toggle" for="navToggle" aria-hidden="true"><span></span></label>
-      <nav class="nav">
-        <a href="index.html#chi-sono" data-i18n="nav.about">Chi sono</a>
-        <a href="index.html#competenze" data-i18n="nav.skills">Competenze</a>
-        <a href="index.html#technical-lab" data-i18n="nav.lab">Technical Lab</a>
-        <a href="index.html#servizi" data-i18n="nav.services">Servizi</a>
-        <a href="index.html#esperienze" data-i18n="nav.experience">Esperienze</a>
-        <a href="index.html#certificazioni" data-i18n="nav.certifications">Certificazioni</a>
-        <a href="index.html#blog" data-i18n="nav.blog">Blog</a>
-        <a href="index.html#curriculum" data-i18n="nav.cv">CV</a>
-        <a href="index.html#contatti" data-i18n="nav.contact">Contatti</a>
-        <a href="privacy.html" data-i18n="nav.privacy">Privacy Policy</a>
-        <a href="trattamento-dati.html" data-i18n="nav.data">Trattamento dati</a>
+  <header class="site-header" data-header>
+    <div class="shell header-inner topbar__inner">
+      <a class="brand" href="#home" aria-label="Gaetano Russo, home">
+        <span class="brand-mark" aria-hidden="true">GR</span>
+        <span>Gaetano Russo</span>
+      </a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="primaryNavigation"><span></span><span></span><span></span></button>
+      <nav class="nav" id="primaryNavigation" aria-label="Navigazione principale" data-i18n-label-it="Navigazione principale" data-i18n-label-en="Primary navigation">
+        <a href="#profilo" data-i18n-it="Profilo" data-i18n-en="Profile">Profilo</a>
+        <a href="#case-study" data-i18n-it="Case study" data-i18n-en="Case studies">Case study</a>
+        <a href="#technical-lab">Technical Lab</a>
+        <a href="#esperienze" data-i18n-it="Esperienze" data-i18n-en="Experience">Esperienze</a>
+        <a href="#contatti" data-i18n-it="Contatti" data-i18n-en="Contact">Contatti</a>
       </nav>
-      <div class="language-switcher" role="group" aria-label="Seleziona lingua / Select language">
-        <button type="button" data-lang="it" aria-pressed="true">IT</button>
-        <span aria-hidden="true">|</span>
-        <button type="button" data-lang="en" aria-pressed="false">EN</button>
+      <div class="header-tools">
+        <div class="language-switcher" role="group" aria-label="Lingua del sito" data-i18n-label-it="Lingua del sito" data-i18n-label-en="Site language">
+          <button type="button" data-lang="it" data-detailed-language aria-pressed="true"><span class="lang-code">IT</span><span class="lang-name">Italiano</span></button>
+          <span class="language-divider" aria-hidden="true">|</span>
+          <button type="button" data-lang="en" data-detailed-language aria-pressed="false"><span class="lang-code">EN</span><span class="lang-name">English</span></button>
+        </div>
+        <button class="theme-toggle" id="darkToggle" type="button" aria-label="Attiva tema scuro" aria-pressed="false"><span aria-hidden="true">◐</span></button>
       </div>
     </div>
-  </div>
+  </header>
 
-  <section class="hero hero-video-section" id="home">
-    <h1 class="visually-hidden">Gaetano Russo — IT Infrastructure Specialist</h1>
-    <video id="heroVideo" class="hero-bg-video" autoplay muted playsinline loop preload="auto"></video>
-    <div class="hero-video-overlay"></div>
-
-    <div class="hero-video-content">
-      <div class="hero-video-actions hero-actions">
-        <a class="button button--primary" href="#chi-sono" data-i18n="action.learn">Scopri di più</a>
-        <a class="button button--secondary" href="#contatti" data-i18n="action.contact">Contattami</a>
-        <a class="button button--secondary" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+  <main id="main-content">
+    <section class="hero" id="home" aria-labelledby="hero-title">
+      <picture class="hero-poster" aria-hidden="true">
+        <img src="immagini/IT Solutions that transform your business.png" alt="" fetchpriority="high">
+      </picture>
+      <video class="hero-video" data-hero-video muted loop playsinline preload="none" poster="immagini/IT Solutions that transform your business.png" aria-hidden="true">
+        <source data-desktop-src="video/testata desktop.mp4" data-mobile-src="video/testata mobile.mp4" type="video/mp4">
+      </video>
+      <div class="hero-scrim" aria-hidden="true"></div>
+      <div class="hero-grid" aria-hidden="true"></div>
+      <div class="shell hero-content">
+        <div class="hero-copy reveal">
+          <p class="eyebrow"><span class="status-dot"></span><span data-i18n-it="Aperto a nuove opportunità professionali" data-i18n-en="Open to new professional opportunities">Aperto a nuove opportunità professionali</span></p>
+          <h1 id="hero-title">Gaetano Russo</h1>
+          <p class="hero-role"><span class="role-line">IT Infrastructure Specialist</span><span class="role-secondary" data-i18n-it="Sviluppo web come competenza complementare" data-i18n-en="Web development as a complementary skill">Sviluppo web come competenza complementare</span></p>
+          <p class="hero-intro" data-i18n-it="Gestisco sistemi, utenti e connettività in contesti aziendali con un approccio metodico alla diagnosi; applico lo stesso metodo anche ai progetti web." data-i18n-en="I manage systems, users and connectivity in corporate environments with a methodical approach to diagnostics, and apply the same method to web projects.">Gestisco sistemi, utenti e connettività in contesti aziendali con un approccio metodico alla diagnosi; applico lo stesso metodo anche ai progetti web.</p>
+          <div class="hero-actions">
+            <a class="button button-primary" href="#case-study" data-select-track="it" data-i18n-it="Esplora il profilo IT" data-i18n-en="Explore the IT profile">Esplora il profilo IT</a>
+            <a class="button button-secondary" href="#case-study" data-select-track="web" data-i18n-it="Esplora i progetti tecnici" data-i18n-en="Explore technical projects">Esplora i progetti tecnici</a>
+            <a class="button button-quiet" href="#contatti" data-i18n-it="Contattami" data-i18n-en="Contact me">Contattami</a>
+            <button class="button button-quiet" type="button" data-open-cv data-i18n-it="Consulta il CV ↗" data-i18n-en="View CV ↗">Consulta il CV ↗</button>
+          </div>
+        </div>
+        <aside class="hero-signal reveal" aria-label="Focus professionali" data-i18n-label-it="Focus professionali" data-i18n-label-en="Professional focus" data-focus-card>
+          <div class="signal-topline"><span class="signal-label">Focus</span><span class="signal-count" data-focus-count>01 / 03</span></div>
+          <strong data-hero-focus>Continuità operativa</strong>
+          <p data-focus-description>Supporto e diagnosi per mantenere accessibili sistemi e servizi aziendali.</p>
+          <div class="focus-controls" role="group" aria-label="Seleziona focus" data-i18n-label-it="Seleziona focus" data-i18n-label-en="Select focus">
+            <button type="button" data-focus-index="0" aria-label="Focus 1: Continuità operativa" aria-current="true"></button>
+            <button type="button" data-focus-index="1" aria-label="Focus 2: Infrastrutture affidabili" aria-current="false"></button>
+            <button type="button" data-focus-index="2" aria-label="Focus 3: Interfacce responsive" aria-current="false"></button>
+          </div>
+          <div class="signal-line"><span></span></div>
+        </aside>
       </div>
-    </div>
-  </section>
+      <a class="scroll-cue" href="#case-study"><span data-i18n-it="Esplora" data-i18n-en="Explore">Esplora</span><i aria-hidden="true"></i></a>
+    </section>
 
-  <main>
-    <section id="chi-sono" class="section section--bg">
-      <div class="container">
-        <div class="section__grid section__grid--columns">
-          <div>
-            <span class="section__tag" data-i18n="about.tag">Chi sono</span>
-            <h2 data-i18n="about.title">IT Specialist con esperienza operativa reale</h2>
-            <p>Gestisco quotidianamente infrastrutture IT aziendali, supporto utenti, reti e piattaforme SAP in contesti enterprise, industriali e multinazionali.</p>
-          </div>
-          <div class="card card--highlight">
-            <h3 data-i18n="about.approach">Il mio approccio</h3>
-            <ul>
-              <li>Gestione infrastruttura IT enterprise e datacenter</li>
-              <li>Supporto a reparti produttivi e filiali estere</li>
-              <li>Sicurezza operativa e continuità dei servizi</li>
-            </ul>
-          </div>
+    <section class="section intro-section" id="chi-sono">
+      <div class="shell track-stage reveal" id="case-study">
+        <span class="anchor-alias" id="servizi" aria-hidden="true"></span>
+        <span class="anchor-alias" id="projects" aria-hidden="true"></span>
+        <div class="path-choice-copy">
+          <p class="kicker" data-i18n-it="Due percorsi professionali" data-i18n-en="Two professional paths">Due percorsi professionali</p>
+          <h2 data-i18n-it="Scegli il percorso più vicino al tuo obiettivo" data-i18n-en="Choose the path that best matches your goal">Scegli il percorso più vicino al tuo obiettivo</h2>
+          <p data-i18n-it="Puoi partire dalle attività di infrastruttura IT oppure dai progetti web. Il resto del percorso rimane sempre consultabile." data-i18n-en="Start with IT infrastructure or explore my web projects. The rest of the portfolio always remains available.">Puoi partire dalle attività di infrastruttura IT oppure dai progetti web. Il resto del percorso rimane sempre consultabile.</p>
+        </div>
+        <div class="track-switcher" role="tablist" aria-label="Scegli il percorso professionale" data-i18n-label-it="Scegli il percorso professionale" data-i18n-label-en="Choose a professional path">
+          <button id="track-it" role="tab" aria-selected="true" aria-controls="track-panel" data-track="it">
+            <strong data-i18n-it="Infrastruttura IT" data-i18n-en="IT Infrastructure">Infrastruttura IT</strong><small data-i18n-it="Per recruiter e responsabili IT" data-i18n-en="For recruiters and IT managers">Per recruiter e responsabili IT</small>
+          </button>
+          <button id="track-web" role="tab" aria-selected="false" aria-controls="track-panel" data-track="web" tabindex="-1">
+            <strong data-i18n-it="Sviluppo web" data-i18n-en="Web development">Sviluppo web</strong><small data-i18n-it="Progetti e competenze complementari" data-i18n-en="Projects and complementary skills">Progetti e competenze complementari</small>
+          </button>
+          <span class="track-indicator" aria-hidden="true"></span>
+        </div>
+        <div id="track-panel" class="track-panel" role="tabpanel" aria-labelledby="track-it" aria-live="polite" tabindex="-1"></div>
+      </div>
+
+      <div class="shell profile-story reveal" id="profilo">
+        <div class="profile-story__heading">
+          <p class="kicker" data-i18n-it="Profilo" data-i18n-en="Profile">Profilo</p>
+          <h2 data-i18n-it="L’infrastruttura IT è il mio lavoro principale. Il web è il percorso che sto costruendo accanto." data-i18n-en="IT infrastructure is my main role. Web development is the path I am building alongside it.">L’infrastruttura IT è il mio lavoro principale. Il web è il percorso che sto costruendo accanto.</h2>
+        </div>
+        <div class="profile-story__copy">
+          <p data-i18n-it="Mi occupo di Windows Server, Active Directory, networking, supporto utenti e SAP in contesti aziendali. Quando arriva una segnalazione, parto dal sintomo, verifico le dipendenze e modifico soltanto ciò che posso controllare e verificare." data-i18n-en="I work with Windows Server, Active Directory, networking, user support and SAP in corporate environments. When an issue is reported, I start from the symptom, check the dependencies and change only what I can control and verify.">Mi occupo di Windows Server, Active Directory, networking, supporto utenti e SAP in contesti aziendali. Quando arriva una segnalazione, parto dal sintomo, verifico le dipendenze e modifico soltanto ciò che posso controllare e verificare.</p>
+          <p data-i18n-it="Nello sviluppo web applico lo stesso metodo: chiarisco l’esigenza, organizzo i contenuti, costruisco l’interfaccia e controllo il comportamento sui dispositivi. Questo ambito completa il mio profilo tecnico accanto all’esperienza in infrastrutture e system administration." data-i18n-en="I apply the same method to web development: I clarify the need, organise the content, build the interface and check its behaviour across devices. This complements my infrastructure and system administration experience.">Nello sviluppo web applico lo stesso metodo: chiarisco l’esigenza, organizzo i contenuti, costruisco l’interfaccia e controllo il comportamento sui dispositivi. Questo ambito completa il mio profilo tecnico accanto all’esperienza in infrastrutture e system administration.</p>
+        </div>
+        <aside class="method-note" aria-label="Metodo di troubleshooting" data-i18n-label-it="Metodo di troubleshooting" data-i18n-label-en="Troubleshooting method">
+          <span data-i18n-it="Il metodo che seguo" data-i18n-en="The method I follow">Il metodo che seguo</span>
+          <ol>
+            <li><b>1</b><span data-i18n-it="Raccolgo sintomo e contesto" data-i18n-en="Collect symptom and context">Raccolgo sintomo e contesto</span></li>
+            <li><b>2</b><span data-i18n-it="Isolo il livello coinvolto" data-i18n-en="Isolate the affected layer">Isolo il livello coinvolto</span></li>
+            <li><b>3</b><span data-i18n-it="Intervengo e verifico" data-i18n-en="Intervene and verify">Intervengo e verifico</span></li>
+          </ol>
+        </aside>
+      </div>
+
+    </section>
+
+    <section class="section skills-section" id="competenze">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <p class="kicker" data-i18n-it="Competenze" data-i18n-en="Skills">Competenze</p>
+          <h2 data-i18n-it="Competenze tecniche" data-i18n-en="Technical skills">Competenze tecniche</h2>
+          <p data-i18n-it="Il percorso selezionato porta in primo piano le competenze più pertinenti, senza nascondere le altre." data-i18n-en="The selected path highlights the most relevant skills while keeping the others available.">Il percorso selezionato porta in primo piano le competenze più pertinenti, senza nascondere le altre.</p>
+        </div>
+        <div class="skills-path-control reveal" role="group" aria-label="Seleziona il percorso evidenziato nelle competenze" data-i18n-label-it="Seleziona il percorso evidenziato nelle competenze" data-i18n-label-en="Select the path highlighted in skills">
+          <span class="skills-path-control__label" data-i18n-it="Percorso evidenziato:" data-i18n-en="Highlighted path:">Percorso evidenziato:</span>
+          <button type="button" data-skill-track-select="it" aria-pressed="true" data-i18n-it="Infrastruttura IT" data-i18n-en="IT Infrastructure">Infrastruttura IT</button>
+          <button type="button" data-skill-track-select="web" aria-pressed="false" data-i18n-it="Sviluppo web" data-i18n-en="Web Development">Sviluppo web</button>
+          <span class="skills-active-status" data-active-track-label aria-live="polite">Infrastruttura IT</span>
+        </div>
+        <div class="skills-grid" data-skills-grid></div>
+      </div>
+    </section>
+
+    <section class="section lab-section" id="technical-lab">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <p class="kicker">Technical Lab</p>
+          <h2 data-i18n-it="Sperimentare prima di intervenire." data-i18n-en="Experiment before making changes.">Sperimentare prima di intervenire.</h2>
+          <p data-i18n-it="Laboratori e ambienti di test usati per consolidare competenze, documentare procedure e ridurre il rischio sui sistemi reali." data-i18n-en="Labs and test environments used to strengthen skills, document procedures and reduce risk on real systems.">Laboratori e ambienti di test usati per consolidare competenze, documentare procedure e ridurre il rischio sui sistemi reali.</p>
+        </div>
+        <div class="lab-toolbar reveal" role="group" aria-label="Filtra Technical Lab" data-i18n-label-it="Filtra Technical Lab" data-i18n-label-en="Filter Technical Lab">
+          <button class="chip is-active" type="button" data-lab-filter="all" aria-pressed="true" data-i18n-it="Tutti" data-i18n-en="All">Tutti</button>
+          <button class="chip" type="button" data-lab-filter="windows" aria-pressed="false" data-i18n-it="Sistemi Windows" data-i18n-en="Windows systems">Sistemi Windows</button>
+          <button class="chip" type="button" data-lab-filter="access" aria-pressed="false" data-i18n-it="Accessi" data-i18n-en="Access management">Accessi</button>
+          <button class="chip" type="button" data-lab-filter="network" aria-pressed="false">Networking</button>
+          <button class="chip" type="button" data-lab-filter="sap" aria-pressed="false">SAP</button>
+          <button class="chip" type="button" data-lab-filter="web" aria-pressed="false" data-i18n-it="Sviluppo web" data-i18n-en="Web development">Sviluppo web</button>
+        </div>
+        <div class="lab-grid" data-lab-grid></div>
+      </div>
+    </section>
+
+    <section class="section evidence-section" id="evidenze">
+      <div class="shell evidence-layout">
+        <div class="evidence-heading reveal">
+          <p class="kicker" data-i18n-it="Evidenze disponibili" data-i18n-en="Available evidence">Evidenze disponibili</p>
+          <h2 data-i18n-it="Progetti e materiali verificabili" data-i18n-en="Projects and supporting material">Progetti e materiali verificabili</h2>
+          <p data-i18n-it="Una raccolta di progetti pubblicati, attività documentate, attestati e materiali che approfondiscono il mio percorso tecnico." data-i18n-en="A selection of published projects, documented work, training records and material that provides more context about my technical background.">Una raccolta di progetti pubblicati, attività documentate, attestati e materiali che approfondiscono il mio percorso tecnico.</p>
+        </div>
+        <div class="evidence-board reveal">
+          <a class="evidence-link evidence-lab" href="#technical-lab"><span>Technical Lab</span><small data-i18n-it="Windows Server, Active Directory, virtualizzazione, networking, SAP e laboratori web, con attività e verifiche dichiarate." data-i18n-en="Windows Server, Active Directory, virtualisation, networking, SAP and web labs, with clearly stated activities and checks.">Windows Server, Active Directory, virtualizzazione, networking, SAP e laboratori web, con attività e verifiche dichiarate.</small><strong class="evidence-action" data-i18n-it="Esplora il Technical Lab" data-i18n-en="Explore the Technical Lab">Esplora il Technical Lab</strong></a>
+          <button class="evidence-link evidence-cv" type="button" data-open-cv><span>Curriculum Vitae</span><small data-i18n-it="Esperienze, formazione e competenze. La consultazione segue il flusso privacy del sito." data-i18n-en="Experience, training and skills. Access follows the site’s privacy flow.">Esperienze, formazione e competenze. La consultazione segue il flusso privacy del sito.</small><strong class="evidence-action" data-i18n-it="Consulta il CV" data-i18n-en="View CV">Consulta il CV</strong></button>
+          <section class="evidence-certificates" aria-labelledby="evidence-certificates-title">
+            <div><h3 id="evidence-certificates-title" data-i18n-it="Attestati consultabili" data-i18n-en="Reviewable certificates">Attestati consultabili</h3><small data-i18n-it="Attestati e documenti formativi consultabili." data-i18n-en="Training records and supporting documents available for review.">Attestati e documenti formativi consultabili.</small></div>
+            <div class="evidence-thumbs">
+              <button type="button" data-certificate="immagini/Attestato ABAP.png" data-certificate-title-it="IFOA Academy Developer — Programmatore ABAP" data-certificate-title-en="IFOA Academy Developer — ABAP Developer" aria-label="Apri l’attestato IFOA Academy Developer" data-i18n-label-it="Apri l’attestato IFOA Academy Developer" data-i18n-label-en="Open the IFOA Academy Developer certificate"><img src="immagini/Attestato ABAP.png" alt="Anteprima attestato IFOA Academy Developer" data-i18n-alt-it="Anteprima attestato IFOA Academy Developer" data-i18n-alt-en="IFOA Academy Developer certificate preview" loading="lazy" width="132" height="88"><span>IFOA Academy Developer</span><small data-i18n-it="Attestato di frequenza · ABAP" data-i18n-en="Attendance certificate · ABAP">Attestato di frequenza · ABAP</small><em>PNG</em></button>
+              <button type="button" data-certificate="immagini/Attestato Telsy.png" data-certificate-title-it="TelsySkills — CyberSecurity Awareness" data-certificate-title-en="TelsySkills — CyberSecurity Awareness" aria-label="Apri l’attestato TelsySkills" data-i18n-label-it="Apri l’attestato TelsySkills" data-i18n-label-en="Open the TelsySkills certificate"><img src="immagini/Attestato Telsy.png" alt="Anteprima attestato TelsySkills" data-i18n-alt-it="Anteprima attestato TelsySkills" data-i18n-alt-en="TelsySkills certificate preview" loading="lazy" width="132" height="88"><span>TelsySkills</span><small data-i18n-it="Attestato di partecipazione · CyberSecurity Awareness" data-i18n-en="Participation certificate · CyberSecurity Awareness">Attestato di partecipazione · CyberSecurity Awareness</small><em>PNG</em></button>
+            </div>
+          </section>
         </div>
       </div>
     </section>
 
-    <section id="competenze" class="section">
-      <div class="container">
-        <div class="section__heading">
-          <span class="section__tag" data-i18n="skills.tag">Competenze</span>
-          <h2 data-i18n="skills.title">Specializzazioni chiave</h2>
+    <section class="section experience-section" id="esperienze">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <p class="kicker" data-i18n-it="Esperienza" data-i18n-en="Experience">Esperienza</p>
+          <h2 data-i18n-it="Esperienza operativa, contesti reali." data-i18n-en="Hands-on experience, real environments.">Esperienza operativa, contesti reali.</h2>
         </div>
-        <div class="skills-grid">
-          <article class="skill-card"><span class="skill-card__icon">🖥️</span><h3>IT Infrastructure</h3></article>
-          <article class="skill-card"><span class="skill-card__icon">🗄️</span><h3>Windows Server & Active Directory</h3></article>
-          <article class="skill-card"><span class="skill-card__icon">⚙️</span><h3>SAP Support & Administration</h3></article>
-          <article class="skill-card"><span class="skill-card__icon">🌐</span><h3>Enterprise Networking</h3></article>
-          <article class="skill-card"><span class="skill-card__icon">🔒</span><h3>Cybersecurity & VPN</h3></article>
-          <article class="skill-card"><span class="skill-card__icon">📧</span><h3>Google Workspace</h3></article>
-          <article class="skill-card"><span class="skill-card__icon">🏭</span><h3>Industrial IT / Industry 4.0</h3></article>
-          <article class="skill-card"><span class="skill-card__icon">📡</span><h3>Wi-Fi Survey</h3></article>
+        <div class="timeline" data-experience-list></div>
+      </div>
+    </section>
+
+    <section class="section certification-section" id="certificazioni">
+      <div class="shell">
+        <div class="section-heading reveal">
+          <p class="kicker" data-i18n-it="Attestati" data-i18n-en="Training records">Attestati</p>
+          <h2 data-i18n-it="Attestati consultabili." data-i18n-en="Reviewable training records.">Attestati consultabili.</h2>
+        </div>
+        <div class="certificate-grid" data-certification-list></div>
+      </div>
+    </section>
+
+    <section class="section insight-section" id="blog">
+      <div class="shell insight-layout reveal">
+        <div>
+          <p class="kicker" data-i18n-it="Approfondimenti" data-i18n-en="Insights">Approfondimenti</p>
+          <h2 data-i18n-it="Note tecniche su sistemi, reti e sicurezza." data-i18n-en="Technical notes on systems, networks and security.">Note tecniche su sistemi, reti e sicurezza.</h2>
+        </div>
+        <div class="insight-links">
+          <a href="blog.html"><span>Windows Server & Active Directory</span><small data-i18n-it="Blog tecnico" data-i18n-en="Technical blog">Blog tecnico</small><b aria-hidden="true">↗</b></a>
+          <a href="articolo1.html"><span data-i18n-it="Guida ai sistemi enterprise" data-i18n-en="Enterprise systems guide">Guida ai sistemi enterprise</span><small>Windows Server</small><b aria-hidden="true">↗</b></a>
+          <a href="articolo2.html"><span data-i18n-it="Strategie di difesa" data-i18n-en="Defence strategies">Strategie di difesa</span><small>Cybersecurity</small><b aria-hidden="true">↗</b></a>
         </div>
       </div>
     </section>
 
-      <section id="technical-lab" class="section technical-lab section--bg">
-        <div class="container">
-          <div class="section__heading">
-            <span class="section__tag" data-i18n="lab.tag">Technical Lab</span>
-            <h2 data-i18n="lab.title">Technical Lab</h2>
-            <p class="section__intro">Laboratori, ambienti di test e tecnologie utilizzate per consolidare competenze operative in infrastrutture IT, networking, sistemi enterprise e sviluppo web.</p>
-          </div>
-
-          <div class="lab-filters" aria-label="Filtri Technical Lab">
-            <button class="lab-filter is-active" type="button" data-filter="all" aria-pressed="true">Tutti</button>
-            <button class="lab-filter" type="button" data-filter="infrastructure" aria-pressed="false">Infrastructure</button>
-            <button class="lab-filter" type="button" data-filter="windows" aria-pressed="false">Windows</button>
-            <button class="lab-filter" type="button" data-filter="networking" aria-pressed="false">Networking</button>
-            <button class="lab-filter" type="button" data-filter="sap" aria-pressed="false">SAP</button>
-            <button class="lab-filter" type="button" data-filter="cloud" aria-pressed="false">Cloud</button>
-            <button class="lab-filter" type="button" data-filter="development" aria-pressed="false">Development</button>
-          </div>
-
-          <div class="technical-lab__grid">
-            <article class="technical-lab__card reveal" data-category="infrastructure windows" data-technologies="Active Directory, GPO, DNS, utenti e gruppi">
-              <div class="technical-lab__body">
-                <h3>Active Directory</h3>
-                <p>Gestione centralizzata di identit&agrave;, gruppi, OU, permessi, policy e autenticazione in domini Windows.</p>
-                <div class="technical-lab__tags"><span>Active Directory</span><span>GPO</span><span>DNS</span><span>Utenti e gruppi</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="Active Directory" data-detail-text="Ho esperienza pratica nella gestione di domini Windows, utenti, gruppi, OU e policy di sicurezza. Lavoro su permessi, autenticazione centralizzata e organizzazione delle risorse per mantenere ambienti ordinati, controllabili e coerenti con le esigenze aziendali.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="infrastructure windows" data-technologies="Windows Server, servizi di dominio, file server, backup">
-              <div class="technical-lab__body">
-                <h3>Windows Server</h3>
-                <p>Installazione, configurazione, manutenzione e amministrazione di server Windows in ambienti enterprise.</p>
-                <div class="technical-lab__tags"><span>Windows Server</span><span>Servizi di dominio</span><span>File server</span><span>Backup</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="Windows Server" data-detail-text="Gestisco server Windows in scenari operativi reali, curando configurazione, manutenzione, servizi di dominio, condivisioni, aggiornamenti e continuit&agrave; operativa. L'obiettivo &egrave; garantire stabilit&agrave;, accessibilit&agrave; e controllo delle risorse IT.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="infrastructure windows cloud" data-technologies="Macchine virtuali, snapshot, reti virtuali, ambienti di test">
-              <div class="technical-lab__body">
-                <h3>Virtualizzazione e gestione ambienti</h3>
-                <p>Creazione e amministrazione di ambienti virtualizzati, snapshot, networking virtuale e scenari di laboratorio.</p>
-                <div class="technical-lab__tags"><span>Macchine virtuali</span><span>Snapshot</span><span>Reti virtuali</span><span>Ambienti di test</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="Virtualizzazione e gestione ambienti" data-detail-text="Utilizzo ambienti virtualizzati per creare laboratori, testare configurazioni e simulare scenari infrastrutturali senza impattare i sistemi produttivi. Lavoro con snapshot, reti virtuali e ambienti isolati per validare procedure e troubleshooting.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="sap" data-technologies="SAP GUI, SAP Router, utenti SAP, troubleshooting">
-              <div class="technical-lab__body">
-                <h3>SAP Support</h3>
-                <p>Supporto tecnico SAP, gestione utenti, troubleshooting, SAP GUI, SAP Router e attivit&agrave; di assistenza applicativa.</p>
-                <div class="technical-lab__tags"><span>SAP GUI</span><span>SAP Router</span><span>Utenti SAP</span><span>Troubleshooting</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="SAP Support" data-detail-text="Fornisco supporto tecnico su SAP in attivit&agrave; di gestione utenti, accessi, SAP GUI, SAP Router e troubleshooting applicativo. L'approccio &egrave; orientato alla continuit&agrave; del servizio e alla risoluzione rapida delle criticit&agrave; operative.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="networking infrastructure" data-technologies="VPN client-site, tunnel, sicurezza, accessi remoti">
-              <div class="technical-lab__body">
-                <h3>VPN</h3>
-                <p>Configurazione e troubleshooting di accessi remoti sicuri, tunnel VPN e connettivit&agrave; aziendale.</p>
-                <div class="technical-lab__tags"><span>VPN client-site</span><span>Tunnel</span><span>Sicurezza</span><span>Accessi remoti</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="VPN" data-detail-text="Mi occupo di configurazione e supporto VPN per garantire accesso remoto sicuro a utenti e sedi. Le attivit&agrave; includono verifica della connettivit&agrave;, analisi dei tunnel, troubleshooting e controllo della sicurezza degli accessi.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="networking infrastructure" data-technologies="Routing, switching, VLAN, subnetting">
-              <div class="technical-lab__body">
-                <h3>Enterprise Networking</h3>
-                <p>Analisi e gestione di routing, switching, VLAN, subnetting e troubleshooting della connettivit&agrave;.</p>
-                <div class="technical-lab__tags"><span>Routing</span><span>Switching</span><span>VLAN</span><span>Subnetting</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="Enterprise Networking" data-detail-text="Lavoro su reti aziendali con attenzione a indirizzamenti IP, routing, switching, VLAN e diagnosi dei problemi di connettivit&agrave;. L'esperienza pratica nasce dal supporto a contesti produttivi dove stabilit&agrave; e tempi di risposta sono fondamentali.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="networking" data-technologies="Wi-Fi analyzer, access point, canali, copertura">
-              <div class="technical-lab__body">
-                <h3>Wi-Fi Survey</h3>
-                <p>Analisi della copertura wireless, progettazione reti Wi-Fi enterprise, ottimizzazione segnale e troubleshooting.</p>
-                <div class="technical-lab__tags"><span>Wi-Fi analyzer</span><span>Access point</span><span>Canali</span><span>Copertura</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="Wi-Fi Survey" data-detail-text="Analizzo copertura, interferenze, canali e qualit&agrave; del segnale per migliorare le reti wireless aziendali. In ambienti produttivi considero ostacoli fisici, densit&agrave; dei dispositivi e continuit&agrave; della connessione.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="cloud development" data-technologies="Docker, immagini, container, compose">
-              <div class="technical-lab__body">
-                <h3>Docker</h3>
-                <p>Containerizzazione delle applicazioni, gestione immagini, container, compose e ambienti di sviluppo.</p>
-                <div class="technical-lab__tags"><span>Docker</span><span>Immagini</span><span>Container</span><span>Compose</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="Docker" data-detail-text="Uso Docker per creare ambienti riproducibili, isolare servizi e semplificare sviluppo e test. La gestione di immagini, container e compose consente di ridurre differenze tra ambienti locali e deploy.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="development" data-technologies="Next.js, routing, SEO, performance">
-              <div class="technical-lab__body">
-                <h3>Next.js</h3>
-                <p>Sviluppo frontend moderno con Next.js, ottimizzazione SEO, routing e performance.</p>
-                <div class="technical-lab__tags"><span>Next.js</span><span>Routing</span><span>SEO</span><span>Performance</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="Next.js" data-detail-text="Utilizzo Next.js per realizzare interfacce moderne, responsive e ottimizzate. L'attenzione principale &egrave; su routing, organizzazione dei componenti, performance, SEO tecnica e qualit&agrave; dell'esperienza utente.">Visualizza Lab</button>
-              </div>
-            </article>
-
-            <article class="technical-lab__card reveal" data-category="cloud development" data-technologies="Supabase, PostgreSQL, Auth, REST API">
-              <div class="technical-lab__body">
-                <h3>Supabase</h3>
-                <p>Backend-as-a-Service, autenticazione, database PostgreSQL, API REST, realtime e storage.</p>
-                <div class="technical-lab__tags"><span>Supabase</span><span>PostgreSQL</span><span>Auth</span><span>REST API</span></div>
-                <button class="button action-button lab-details-btn" type="button" data-detail-title="Supabase" data-detail-text="Uso Supabase per prototipare backend strutturati con database PostgreSQL, autenticazione, API e storage. &Egrave; utile per sviluppare applicazioni complete mantenendo velocit&agrave; operativa e controllo dei dati.">Visualizza Lab</button>
-              </div>
-            </article>
-          </div>
+    <section class="section cv-section" id="curriculum">
+      <div class="shell cv-card reveal">
+        <div>
+          <p class="kicker">Curriculum Vitae</p>
+          <h2 data-i18n-it="Esperienze e formazione, nel CV." data-i18n-en="Experience and training, in the CV.">Esperienze e formazione, nel CV.</h2>
+          <p data-i18n-it="Esperienze, competenze, certificazioni e progetti. La consultazione richiede la conferma dell’informativa privacy." data-i18n-en="Experience, skills, certifications and projects. Viewing requires confirmation of the privacy notice.">Esperienze, competenze, certificazioni e progetti. La consultazione richiede la conferma dell’informativa privacy.</p>
         </div>
-      </section>
-      <section id="esperienze" class="section section--bg">
-        <div class="container">
-          <div class="section__heading">
-            <span class="section__tag" data-i18n="experience.tag">Esperienze</span>
-            <h2 data-i18n="experience.title">Esperienze professionali</h2>
-          </div>
-          <div class="timeline">
-            <div class="timeline-item reveal">
-              <div class="dot">24</div>
-              <div>
-                <h3>ZILMET S.P.A. — IT Infrastructure Specialist | System Administrator | SAP Support | Windows Server | Networking</h3>
-                <p class="text-muted">01/2024 - Presente · Gestione infrastruttura IT, VMware, Windows Server, Active Directory, VPN e supporto operativo per ambiente produttivo.</p>
-              </div>
-            </div>
-            <div class="timeline-item reveal">
-              <div class="dot">23</div>
-              <div>
-                <h3>LET’S CO S.R.L. — Tecnico IT</h3>
-                <p class="text-muted">01/2023 - 12/2023 · Supporto utente, networking aziendale, configurazione VPN, Google Workspace e gestione workstation e periferiche.</p>
-              </div>
-            </div>
-            <div class="timeline-item reveal">
-              <div class="dot">21</div>
-              <div>
-                <h3>MINDSET S.R.L. — ABAP Developer / Stage SAP Developer</h3>
-                <p class="text-muted">11/2021 - 02/2022 · Sviluppo ABAP, assistenza SAP, SAP Router e troubleshooting in ambiente ERP.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="certificazioni" class="section">
-        <div class="container">
-          <div class="section__heading">
-            <span class="section__tag" data-i18n="certifications.tag">Certificazioni e Attestati</span>
-            <h2 data-i18n="certifications.title">Formazione certificata</h2>
-          </div>
-          <div class="services-grid">
-            <div class="card reveal">
-              <h3>IFOA Academy Developer</h3>
-              <p class="text-muted">Programmatore ABAP<br>Attestato di frequenza<br>Competenze: sviluppo ABAP, logiche SAP, formazione tecnica.</p>
-              <a class="button button--secondary certificate-link" href="immagini/Attestato ABAP.png" data-certificate-image="immagini/Attestato ABAP.png" data-certificate-title="IFOA Academy Developer" data-i18n="action.viewCertificate">Visualizza attestato</a>
-            </div>
-            <div class="card reveal">
-              <h3>TelsySkills</h3>
-              <p class="text-muted">CyberSecurity Awareness<br>Attestato di partecipazione<br>Competenze: consapevolezza cyber, sicurezza informatica, protezione degli ambienti aziendali.</p>
-              <a class="button button--secondary certificate-link" href="immagini/Attestato Telsy.png" data-certificate-image="immagini/Attestato Telsy.png" data-certificate-title="TelsySkills Cybersecurity Awareness" data-i18n="action.viewCertificate">Visualizza attestato</a>
-            </div>
-
-          </div>
-        </div>
-      </section>
-
-      <section id="projects" class="section section--bg">
-        <div class="container">
-          <div class="section__heading">
-            <span class="section__tag">Progetti</span>
-            <h2>Progetti selezionati</h2>
-          </div>
-          <div class="projects-grid">
-            <article class="project-card reveal">
-              <h3>Gestione infrastruttura IT enterprise</h3>
-              <p class="text-muted">Amministrazione server, Active Directory e datacenter esterni con attenzione alla continuità operativa.</p>
-            </article>
-            <article class="project-card reveal">
-              <h3>Supporto SAP e troubleshooting</h3>
-              <p class="text-muted">Assistenza SAP, SAP Router, trasporti CR e troubleshooting applicativo in contesti mission-critical.</p>
-            </article>
-            <article class="project-card reveal">
-              <h3>Reti e Wi-Fi industriale</h3>
-              <p class="text-muted">Progettazione networking aziendale, indirizzamenti IP e Wi-Fi survey in ambienti di produzione.</p>
-            </article>
-          </div>
-        </div>
-      </section>
-
-    <section id="servizi" class="section section--bg">
-      <div class="container">
-        <div class="section__heading">
-          <span class="section__tag" data-i18n="services.tag">Servizi</span>
-          <h2 data-i18n="services.title">Proposte di valore</h2>
-        </div>
-        <div class="services-grid">
-          <article class="service-card">
-            <h3>IT Infrastructure</h3>
-            <p>Supporto infrastrutture Windows Server, datacenter esterni, migrazioni server e gestione operativa delle risorse IT.</p>
-          </article>
-          <article class="service-card">
-            <h3>Windows Server & Active Directory</h3>
-            <p>Amministrazione Domain Controller, policy AD e gestione utenti in ambienti enterprise.</p>
-          </article>
-          <article class="service-card">
-            <h3>SAP Administration</h3>
-            <p>Supporto SAP, SAP Router, trasporti CR e troubleshooting per piattaforme ERP critiche.</p>
-          </article>
-          <article class="service-card">
-            <h3>Networking & VPN</h3>
-            <p>Progetto reti aziendali, VPN sicure, indirizzamenti IP e Wi-Fi survey per stabilità in ambienti produttivi.</p>
-          </article>
-        </div>
+        <button class="button button-primary" type="button" data-open-cv data-i18n-it="Consulta il CV" data-i18n-en="View CV">Consulta il CV</button>
       </div>
     </section>
 
-    <section id="blog" class="section">
-      <div class="container">
-        <div class="section__heading">
-          <span class="section__tag" data-i18n="blog.tag">Blog</span>
-          <h2 data-i18n="blog.title">Approfondimenti tecnici</h2>
-        </div>
-        <div class="blog-grid">
-          <article class="blog-card">
-            <div class="blog-card__meta">Windows Server</div>
-            <h3>Guida a Windows Server e Active Directory</h3>
-            <p>Best practice per assicurare disponibilità, domain controller corretti e gestione degli utenti in ambienti enterprise.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Windows Server e Active Directory" data-detail-text="La mia esperienza include amministrazione di domini Windows, gestione utenti, gruppi, policy e risorse condivise. Lavoro con un approccio orientato alla continuit&agrave; operativa, al controllo degli accessi e alla risoluzione rapida delle criticit&agrave; infrastrutturali.">Leggi di più</button>
-          </article>
-          <article class="blog-card">
-            <div class="blog-card__meta">Cybersecurity</div>
-            <h3>Strategie di difesa per infrastrutture aziendali</h3>
-            <p>Approccio concreto alla protezione di reti, VPN e sistemi SAP in contesti multinazionali.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Cybersecurity" data-detail-text="Affronto la sicurezza con attenzione a consapevolezza utente, protezione degli accessi, VPN, aggiornamenti e continuit&agrave; dei servizi. In ambito operativo considero la cybersecurity come parte quotidiana della gestione IT, non come attivit&agrave; separata.">Leggi di più</button>
-          </article>
-          <article class="blog-card reveal">
-            <div class="blog-card__meta">SAP</div>
-            <h3>SAP Support &amp; Administration</h3>
-            <p>Gestione del supporto tecnico SAP, utenti, SAP GUI, SAP Router e troubleshooting applicativo.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="SAP Support &amp; Administration" data-detail-text="Ho maturato esperienza nel supporto tecnico SAP, nella gestione utenti e nel troubleshooting applicativo. Lavoro su SAP GUI, SAP Router e attivit&agrave; di assistenza con l'obiettivo di ridurre i fermi operativi e supportare gli utenti in modo chiaro.">Leggi di più</button>
-          </article>
-          <article class="blog-card reveal">
-            <div class="blog-card__meta">Networking</div>
-            <h3>Enterprise Networking</h3>
-            <p>Routing, switching, VLAN, indirizzamenti IP e continuit&agrave; operativa nelle reti aziendali.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Enterprise Networking" data-detail-text="Gestisco e analizzo reti aziendali con attenzione a routing, switching, VLAN e indirizzamenti IP. L'esperienza pratica riguarda soprattutto troubleshooting, stabilit&agrave; della connettivit&agrave; e supporto a sedi e reparti operativi.">Leggi di più</button>
-          </article>
-          <article class="blog-card reveal">
-            <div class="blog-card__meta">Industry 4.0</div>
-            <h3>Wi-Fi Survey &amp; Industry 4.0</h3>
-            <p>Analisi della copertura wireless e ottimizzazione della connettivit&agrave; in ambienti produttivi.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Wi-Fi Survey &amp; Industry 4.0" data-detail-text="Mi occupo di analisi della copertura wireless, qualit&agrave; del segnale e ottimizzazione della connettivit&agrave; in ambienti produttivi. In contesti Industry 4.0 considero stabilit&agrave;, interferenze e continuit&agrave; come fattori centrali.">Leggi di più</button>
-          </article>
-          <article class="blog-card reveal">
-            <div class="blog-card__meta">Infrastructure</div>
-            <h3>Virtualizzazione e gestione ambienti</h3>
-            <p>Creazione di ambienti di test, snapshot, reti virtuali e laboratori per infrastrutture IT.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Virtualizzazione e gestione ambienti" data-detail-text="Utilizzo ambienti virtualizzati per testare configurazioni, simulare scenari e validare procedure tecniche. Questo approccio permette di imparare, documentare e risolvere problemi riducendo i rischi sugli ambienti reali.">Leggi di più</button>
-          </article>
-          <article class="blog-card reveal">
-            <div class="blog-card__meta">Container</div>
-            <h3>Docker &amp; Container</h3>
-            <p>Containerizzazione, gestione immagini, compose e ambienti riproducibili per sviluppo e test.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Docker &amp; Container" data-detail-text="Uso Docker per creare ambienti coerenti, isolare servizi e semplificare test e sviluppo. Lavorare con immagini, container e compose aiuta a rendere i progetti pi&ugrave; ordinati, replicabili e gestibili.">Leggi di più</button>
-          </article>
-          <article class="blog-card reveal">
-            <div class="blog-card__meta">Deployment</div>
-            <h3>Git, GitHub &amp; Deployment</h3>
-            <p>Workflow di versionamento, repository, branch, deploy e gestione del ciclo di rilascio.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Git, GitHub &amp; Deployment" data-detail-text="Utilizzo Git e GitHub per versionare il codice, organizzare modifiche e gestire workflow di rilascio. L'attenzione &egrave; su tracciabilit&agrave;, ordine dei branch, commit chiari e deploy controllati.">Leggi di più</button>
-          </article>
-          <article class="blog-card reveal">
-            <div class="blog-card__meta">Portfolio</div>
-            <h3>Come ho sviluppato questo Portfolio</h3>
-            <p>Struttura del sito, organizzazione dei contenuti, responsive design e integrazione del form contatti.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Come ho sviluppato questo Portfolio" data-detail-text="Ho costruito questo portfolio come progetto personale per presentare competenze IT, contenuti tecnici e contatti professionali. Ho curato struttura HTML, stile responsive, video di sfondo, animazioni leggere e integrazione del form tramite EmailJS.">Leggi di più</button>
-          </article>
-          <article class="blog-card reveal">
-            <div class="blog-card__meta">Full Stack</div>
-            <h3>Sviluppo Full Stack - Barber Booking Platform</h3>
-            <p>Architettura di una piattaforma booking con frontend moderno, backend, autenticazione e database.</p>
-            <button class="button button--secondary action-button blog-card__link" type="button" data-detail-title="Sviluppo Full Stack - Barber Booking Platform" data-detail-text="Ho lavorato su una piattaforma di prenotazione full stack con attenzione a frontend, gestione disponibilit&agrave;, database, autenticazione e flussi utente. Il progetto unisce logica applicativa, UI responsive e gestione dati strutturata.">Leggi di più</button>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <section id="curriculum" class="section section--bg">
-      <div class="container">
-        <div class="cv-panel card reveal">
-          <div>
-            <span class="section__tag">CV</span>
-            <h2 data-i18n="cv.title">Curriculum Vitae</h2>
-            <p>Consulta il mio curriculum aggiornato con esperienze professionali, competenze tecniche, certificazioni e progetti sviluppati nel settore IT Infrastructure e Software Development.</p>
-          </div>
-          <div class="cv-actions">
-            <button id="viewCvButton" class="button button--primary action-button" type="button" data-i18n="action.viewCv">Visualizza CV</button>
+    <section class="section contact-section" id="contatti">
+      <div class="shell contact-layout">
+        <div class="contact-copy reveal">
+          <p class="kicker" data-i18n-it="Contatti" data-i18n-en="Contact">Contatti</p>
+          <h2 data-i18n-it="Vuoi approfondire il mio profilo?" data-i18n-en="Would you like to know more about my profile?">Vuoi approfondire il mio profilo?</h2>
+          <p data-i18n-it="Se vuoi conoscere meglio la mia esperienza, approfondire un progetto o valutare un’opportunità professionale, puoi contattarmi qui." data-i18n-en="If you would like to learn more about my experience, discuss a project or explore a professional opportunity, you can contact me here.">Se vuoi conoscere meglio la mia esperienza, approfondire un progetto o valutare un’opportunità professionale, puoi contattarmi qui.</p>
+          <div class="contact-direct">
+            <a href="mailto:gaetano.russoits1994@gmail.com">gaetano.russoits1994@gmail.com <span>↗</span></a>
+            <a href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noopener noreferrer">LinkedIn <span>↗</span></a>
           </div>
         </div>
-      </div>
-    </section>
-
-    <section id="contatti" class="section section--accent">
-      <div class="container">
-        <div class="contact-panel">
-          <div>
-            <span class="section__tag section__tag--light" data-i18n="contact.tag">Contatti</span>
-            <h2 data-i18n="contact.title">Parliamo del tuo progetto IT</h2>
-            <div class="contact-copy">
-              <p>Aiuto aziende e team a migliorare affidabilità, sicurezza e continuità operativa delle infrastrutture IT.</p>
-              <p>Nel portfolio sono raccolte esperienze professionali, competenze tecniche, certificazioni e approfondimenti relativi a sistemi enterprise, networking, Active Directory, SAP e cybersecurity.</p>
-              <p>Per informazioni, collaborazioni professionali o confronto tecnico, puoi contattarmi tramite il modulo sottostante o attraverso LinkedIn.</p>
-            </div>
-            <div class="contact-actions">
-              <a class="button button--secondary whatsapp-button" href="https://wa.me/393515056145" target="_blank" rel="noreferrer">
-                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.08 0C5.5 0 .15 5.35.15 11.93c0 2.1.55 4.16 1.6 5.98L.05 24l6.24-1.64a11.9 11.9 0 0 0 5.79 1.48h.01c6.58 0 11.93-5.35 11.93-11.93 0-3.19-1.24-6.18-3.5-8.43ZM12.09 21.82h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.7.97.99-3.61-.23-.37a9.87 9.87 0 0 1-1.51-5.29c0-5.47 4.45-9.91 9.92-9.91 2.65 0 5.14 1.03 7.01 2.91a9.84 9.84 0 0 1 2.9 7.01c-.01 5.45-4.46 9.88-9.96 9.88Zm5.44-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.11 3.22 5.11 4.51.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.19-.57-.34Z"/></svg>
-                <span>Contattami su WhatsApp</span>
-              </a>
-              <a class="button button--secondary" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer">Visualizza il mio profilo LinkedIn</a>
-            </div>
+        <form id="contactForm" class="contact-form reveal" novalidate aria-label="Modulo di contatto" data-i18n-label-it="Modulo di contatto" data-i18n-label-en="Contact form">
+          <p class="required-note" data-i18n-it="I campi contrassegnati con * sono obbligatori." data-i18n-en="Fields marked with * are required.">I campi contrassegnati con * sono obbligatori.</p>
+          <div class="field-pair">
+            <label for="name"><span><span data-i18n-it="Nome" data-i18n-en="Name">Nome</span> <b class="required-mark" aria-hidden="true">*</b></span><input id="name" name="name" type="text" autocomplete="name" required aria-required="true"></label>
+            <label for="email"><span>Email <b class="required-mark" aria-hidden="true">*</b></span><input id="email" name="email" type="email" autocomplete="email" required aria-required="true"></label>
           </div>
-
-          <form id="contactForm" class="contact-form" aria-label="Modulo di contatto" novalidate>
-            <div class="form-row">
-              <label for="name" data-i18n="form.name">Nome</label>
-              <input id="name" name="name" type="text" placeholder="Il tuo nome" required />
-            </div>
-
-            <div class="form-row">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" placeholder="tua@email.com" required />
-            </div>
-
-            <div class="form-row">
-              <label for="company" data-i18n="form.company">Azienda (opzionale)</label>
-              <input id="company" name="company" type="text" placeholder="Nome azienda" />
-            </div>
-
-            <div class="form-row">
-              <label for="message" data-i18n="form.message">Messaggio</label>
-              <textarea id="message" name="message" rows="5" placeholder="Descrivi il progetto o la richiesta" required></textarea>
-            </div>
-
-            <div class="form-row privacy-consent">
-              <input id="privacyConsent" name="privacy_consent" type="checkbox" required />
-              <label for="privacyConsent" data-i18n-skip>
-                <span data-i18n-it="Ho letto e accetto la" data-i18n-en="I have read and accept the">Ho letto e accetto la</span>
-                <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-                <span data-i18n-it="e l’informativa sul" data-i18n-en="and the">e l’informativa sul</span>
-                <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer">trattamento dei dati</a>.
-              </label>
-            </div>
-
-            <div class="form-row form-row--actions">
-              <button type="submit" class="button button--primary" data-i18n="action.send">Invia messaggio</button>
-            </div>
-
-            <div class="form-message" id="formMessage" aria-live="polite"></div>
-          </form>
-        </div>
+          <label for="company"><span data-i18n-it="Azienda (opzionale)" data-i18n-en="Company (optional)">Azienda (opzionale)</span><input id="company" name="company" type="text" autocomplete="organization"></label>
+          <label for="message"><span><span data-i18n-it="Messaggio" data-i18n-en="Message">Messaggio</span> <b class="required-mark" aria-hidden="true">*</b></span><textarea id="message" name="message" rows="4" required aria-required="true"></textarea></label>
+          <label class="consent-row" for="privacyConsent"><input id="privacyConsent" name="privacy_consent" type="checkbox" required aria-required="true"><span><span data-i18n-it="Ho letto e accetto la" data-i18n-en="I have read and accept the">Ho letto e accetto la</span> <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> <span data-i18n-it="e l’informativa sul" data-i18n-en="and the notice on">e l’informativa sul</span> <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer" data-i18n-it="trattamento dati" data-i18n-en="data processing">trattamento dati</a>. <b class="required-mark" aria-hidden="true">*</b></span></label>
+          <div class="form-footer"><button class="button button-primary" type="submit" data-i18n-it="Invia messaggio" data-i18n-en="Send message">Invia messaggio</button><span id="formMessage" class="form-message" aria-live="polite"></span></div>
+        </form>
       </div>
     </section>
   </main>
 
-  <footer class="footer">
-    <div class="container footer__inner">
-      <p>Gaetano Russo | IT Infrastructure Specialist | System Administrator | SAP Support | Windows Server | Networking</p>
-      <div class="footer__links">
-        <div class="footer__btns">
-          <a class="footer-button footer-button--legal" href="privacy.html" data-i18n="footer.privacy">Privacy Policy</a>
-          <a class="footer-button footer-button--legal" href="trattamento-dati.html" data-i18n="footer.data">Trattamento dati</a>
-          <a class="footer-button" href="https://www.linkedin.com/in/gaetano-russo-b11664220/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M4.98 3.5C4.98 4.88 3.9 6 2.49 6S0 4.88 0 3.5 1.08 1 2.49 1 4.98 2.12 4.98 3.5zM0 8.98h4.98V24H0V8.98zM8.21 8.98h4.78v2.05h.07c.67-1.27 2.31-2.6 4.76-2.6 5.09 0 6.03 3.35 6.03 7.69V24h-4.98v-7.43c0-1.77-.03-4.05-2.47-4.05-2.48 0-2.86 1.93-2.86 3.92V24H8.21V8.98z"/></svg>
-            <span>LinkedIn</span>
-          </a>
-
-          <a class="footer-button" href="mailto:gaetano.russoits1994@gmail.com" aria-label="Invia Email">
-            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5L4 8V6l8 5 8-5v2z"/></svg>
-            <span>Email</span>
-          </a>
-        </div>
+  <footer class="footer" data-preserve-footer>
+    <div class="shell footer-inner">
+      <p>© <span data-current-year></span> Gaetano Russo</p>
+      <div class="footer-links">
+        <a href="privacy.html">Privacy</a>
+        <a href="cookie-policy.html">Cookie</a>
+        <a href="trattamento-dati.html" data-i18n-it="Trattamento dati" data-i18n-en="Data processing">Trattamento dati</a>
+        <button type="button" data-cookie-settings data-site-it="Gestisci cookie" data-site-en="Manage cookies">Gestisci cookie</button>
       </div>
+      <a class="back-top" href="#home" aria-label="Torna all’inizio" data-i18n-label-it="Torna all’inizio" data-i18n-label-en="Back to the top">↑</a>
     </div>
   </footer>
 
-  <div class="lightbox" id="certificateLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Attestato">
-    <button class="lightbox__close" type="button" aria-label="Chiudi attestato">&times;</button>
-    <figure class="lightbox__content">
-      <img id="certificateLightboxImage" src="" alt="" />
-      <figcaption id="certificateLightboxCaption"></figcaption>
-    </figure>
-  </div>
+  <dialog class="modal certificate-modal" data-certificate-modal aria-labelledby="certificate-title">
+    <button class="modal-close" type="button" data-close-modal aria-label="Chiudi" data-i18n-label-it="Chiudi attestato" data-i18n-label-en="Close certificate">×</button>
+    <figure><img alt="" hidden><figcaption id="certificate-title"></figcaption></figure>
+  </dialog>
 
-  <div class="lightbox text-lightbox" id="detailLightbox" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Approfondimento">
-    <button class="lightbox__close" type="button" aria-label="Chiudi approfondimento">&times;</button>
-    <div class="lightbox__content text-lightbox__content">
-      <span class="section__tag">Approfondimento</span>
-      <h3 id="detailLightboxTitle"></h3>
-      <p id="detailLightboxText"></p>
+  <dialog class="modal cv-modal" data-cv-modal aria-labelledby="cv-title">
+    <button class="modal-close" type="button" data-close-modal aria-label="Chiudi" data-i18n-label-it="Chiudi finestra CV" data-i18n-label-en="Close CV dialog">×</button>
+    <p class="kicker">Curriculum Vitae</p>
+    <h2 id="cv-title" data-i18n-it="Prima di consultare il CV" data-i18n-en="Before viewing the CV">Prima di consultare il CV</h2>
+    <p data-i18n-it="Il documento contiene dati personali e professionali ed è disponibile esclusivamente per finalità di consultazione professionale." data-i18n-en="This document contains personal and professional data and is available exclusively for professional review.">Il documento contiene dati personali e professionali ed è disponibile esclusivamente per finalità di consultazione professionale.</p>
+    <label class="consent-row"><input type="checkbox" data-cv-consent><span><span data-i18n-it="Confermo di aver letto la" data-i18n-en="I confirm that I have read the">Confermo di aver letto la</span> <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> <span data-i18n-it="e l’informativa sul" data-i18n-en="and the notice on">e l’informativa sul</span> <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer" data-i18n-it="trattamento dati" data-i18n-en="data processing">trattamento dati</a>.</span></label>
+    <div class="modal-actions">
+      <a class="button button-primary is-disabled" href="Gaetano_Russo_CV.pdf" target="_blank" rel="noopener noreferrer" data-view-cv aria-disabled="true" data-i18n-it="Visualizza CV" data-i18n-en="View CV">Visualizza CV</a>
+      <a class="button button-ghost is-disabled" href="Gaetano_Russo_CV.pdf" download data-download-cv aria-disabled="true" data-i18n-it="Scarica PDF" data-i18n-en="Download PDF">Scarica PDF</a>
     </div>
-  </div>
-
-  <div class="lightbox cv-modal cv-consent-modal" id="cvConsentModal" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="cvConsentTitle">
-    <div class="lightbox__content cv-modal__dialog cv-consent-modal__content">
-      <button class="lightbox__close" type="button" aria-label="Chiudi">&times;</button>
-      <span class="section__tag">CV</span>
-      <h2 id="cvConsentTitle" data-i18n="cv.modal.title">Prima di visualizzare il CV</h2>
-      <p>Prima di visualizzare il CV, conferma di aver letto la Privacy Policy e l’informativa sul trattamento dei dati. Il documento contiene dati personali e professionali di Gaetano Russo ed è reso disponibile esclusivamente per finalità di consultazione professionale.</p>
-      <div class="privacy-consent">
-        <input id="cvConsentCheckbox" type="checkbox" />
-        <label for="cvConsentCheckbox" data-i18n-skip>
-          <span data-i18n-it="Confermo di aver letto e accettato" data-i18n-en="I confirm that I have read and accepted the">Confermo di aver letto e accettato</span>
-          <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
-          <span data-i18n-it="e il" data-i18n-en="and the">e il</span>
-          <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer">trattamento dati</a>.
-        </label>
-      </div>
-      <p id="cvConsentMessage" class="consent-message" aria-live="polite"></p>
-      <div class="cv-consent-modal__actions">
-        <button id="cancelCvButton" class="button button--secondary action-button" type="button" data-i18n-it="Annulla" data-i18n-en="Cancel">Annulla</button>
-        <button id="openCvButton" class="button button--primary action-button" type="button" disabled data-i18n="action.openCv">Apri CV</button>
-      </div>
-    </div>
-  </div>
-  </div>
+    <p class="modal-note" aria-live="polite" data-cv-message></p>
+  </dialog>
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+  <script src="vendor/supabase.js" defer></script>
+  <script src="runtime-config.js" defer></script>
+  <script src="js/portfolio-data.js?v=1" defer></script>
+  <script src="js/supabase-client.js?v=1" defer></script>
+  <script src="js/content-service.js?v=1" defer></script>
   <script src="js/i18n.js?v=privacy-i18n-2" defer></script>
-  <script src="script.js?v=privacy-i18n-2" defer></script>
+  <script src="js/contact.js?v=privacy-i18n-2" defer></script>
   <script src="js/site.js?v=agency-1" defer></script>
+  <script src="js/home.js?v=2" defer></script>
 </body>
 </html>

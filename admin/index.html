@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow, noarchive">
+  <meta name="theme-color" content="#07111f">
+  <title>Amministrazione portfolio | Gaetano Russo</title>
+  <script>try{document.documentElement.dataset.theme=localStorage.getItem('site-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}</script>
+  <script>
+    window.__adminBootTimeout = window.setTimeout(function () {
+      var loading = document.querySelector('[data-auth-loading]');
+      var auth = document.querySelector('[data-auth-view]');
+      var app = document.querySelector('[data-admin-app]');
+      var message = document.querySelector('[data-auth-message]');
+      if (loading) loading.hidden = true;
+      if (app) app.hidden = true;
+      if (auth) auth.hidden = false;
+      if (message && !message.textContent) message.textContent = 'Impossibile inizializzare l\u2019area amministrativa. Ricarica la pagina oppure riprova tra poco.';
+      console.error('Admin bootstrap timeout: lo script applicativo non ha completato l\u2019inizializzazione.');
+    }, 10000);
+  </script>
+  <link rel="icon" href="../favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="admin.css?v=1">
+</head>
+<body>
+  <a class="skip-link" href="#admin-main">Vai al contenuto</a>
+  <div class="admin-loading" data-auth-loading role="status"><span></span><p>Verifica della sessione…</p></div>
+
+  <main class="auth-page" data-auth-view hidden>
+    <section class="auth-card" aria-labelledby="login-title">
+      <a class="admin-brand" href="../index.html"><span>GR</span><strong>Portfolio Admin</strong></a>
+      <div class="config-warning" data-config-warning hidden>
+        <h1>Configurazione richiesta</h1>
+        <p>Supabase non è ancora configurato. Inserisci URL e anon key in <code>.env.local</code>, quindi riavvia il server locale.</p>
+      </div>
+      <form data-login-form novalidate>
+        <p class="eyebrow">Area riservata</p>
+        <h1 id="login-title">Accedi</h1>
+        <p>Usa l’account amministratore autorizzato. Non è disponibile alcuna registrazione pubblica.</p>
+        <label>Email<input name="email" type="email" autocomplete="username" required maxlength="254"></label>
+        <label>Password<span class="password-field"><input name="password" type="password" autocomplete="current-password" required minlength="8" maxlength="128"><button class="password-toggle" type="button" data-password-toggle aria-label="Mostra password" aria-pressed="false">Mostra</button></span></label>
+        <button class="button primary" type="submit">Accedi</button>
+        <button class="text-button" type="button" data-show-recovery>Password dimenticata?</button>
+      </form>
+      <form data-recovery-form novalidate hidden>
+        <p class="eyebrow">Recupero password</p>
+        <h1>Richiedi un nuovo link</h1>
+        <p>Se l’indirizzo appartiene a un account valido, Supabase invierà le istruzioni di recupero.</p>
+        <label>Email<input name="email" type="email" autocomplete="email" required maxlength="254"></label>
+        <button class="button primary" type="submit">Invia email</button>
+        <button class="text-button" type="button" data-show-login>Torna all’accesso</button>
+      </form>
+      <p class="form-status" data-auth-message aria-live="polite"></p>
+      <a class="back-public" href="../index.html">← Torna al portfolio pubblico</a>
+    </section>
+  </main>
+
+  <div class="admin-app" data-admin-app hidden>
+    <header class="admin-topbar">
+      <button class="icon-button menu-button" type="button" data-menu-toggle aria-label="Apri menu" aria-expanded="false">☰</button>
+      <a class="admin-brand" href="../index.html"><span>GR</span><strong>Portfolio Admin</strong></a>
+      <div class="topbar-actions">
+        <label class="locale-picker">Lingua contenuti<select data-admin-locale aria-label="Lingua dei contenuti amministrativi"><option value="it">IT</option><option value="en">EN</option></select></label>
+        <span class="user-chip" data-user-email></span>
+        <button class="icon-button" type="button" data-theme-toggle aria-label="Cambia tema">◐</button>
+        <button class="button compact" type="button" data-logout>Logout</button>
+      </div>
+    </header>
+    <aside class="admin-sidebar" data-sidebar>
+      <nav aria-label="Sezioni amministrative">
+        <button class="is-active" type="button" data-view="dashboard">Dashboard</button>
+        <button type="button" data-view="content" data-content-type="hero">Hero</button>
+        <button type="button" data-view="content" data-content-type="profile">Profilo</button>
+        <button type="button" data-view="content" data-content-type="infrastructure_case">Case study</button>
+        <button type="button" data-view="content" data-content-type="web_project">Progetti tecnici</button>
+        <button type="button" data-view="content" data-content-type="skill">Competenze</button>
+        <button type="button" data-view="content" data-content-type="technical_lab">Technical Lab</button>
+        <button type="button" data-view="content" data-content-type="experience">Esperienze</button>
+        <button type="button" data-view="content" data-content-type="certificate">Attestati</button>
+        <button type="button" data-view="content" data-content-type="contact_copy">Contatti</button>
+        <button type="button" data-view="content" data-content-type="contact_link">Link di contatto</button>
+        <button type="button" data-view="content" data-content-type="seo">SEO e impostazioni</button>
+        <button type="button" data-view="content" data-content-type="section">Ordine sezioni</button>
+        <button type="button" data-view="settings">Impostazioni generali</button>
+        <button type="button" data-view="media">Media</button>
+        <button type="button" data-view="qr">QR Code</button>
+        <button type="button" data-view="account">Account</button>
+      </nav>
+    </aside>
+
+    <main class="admin-main" id="admin-main">
+      <p class="global-status" data-global-message aria-live="polite"></p>
+      <section class="admin-view" data-panel="dashboard">
+        <div class="view-heading"><div><p class="eyebrow">Panoramica</p><h1>Dashboard</h1></div><button class="button" type="button" data-refresh>Ricarica dati</button></div>
+        <div class="metric-grid">
+          <article><span>Contenuti</span><strong data-count-all>0</strong></article>
+          <article><span>Pubblicati</span><strong data-count-published>0</strong></article>
+          <article><span>Bozze</span><strong data-count-draft>0</strong></article>
+          <article><span>Media</span><strong data-count-media>0</strong></article>
+        </div>
+        <section class="panel"><h2>Ultime modifiche</h2><div class="activity-list" data-recent-list></div></section>
+      </section>
+
+      <section class="admin-view" data-panel="content" hidden>
+        <div class="view-heading"><div><p class="eyebrow">Gestione contenuti</p><h1 data-content-heading>Contenuti</h1></div><button class="button primary" type="button" data-new-content>Nuovo elemento</button></div>
+        <form class="editor panel" data-content-form novalidate hidden>
+          <input type="hidden" name="id"><input type="hidden" name="content_type">
+          <div class="editor-heading"><h2 data-editor-title>Nuovo contenuto</h2><button class="icon-button" type="button" data-cancel-edit aria-label="Chiudi editor">×</button></div>
+          <div class="form-grid compact-grid">
+            <label>Slug *<input name="slug" required pattern="[a-z0-9]+(?:-[a-z0-9]+)*" maxlength="100"></label>
+            <label>Categoria<input name="category" maxlength="80"></label>
+            <label>Stato *<select name="status" required><option value="draft">Bozza</option><option value="published">Pubblicato</option><option value="hidden">Nascosto</option></select></label>
+            <label>Ordine *<input name="sort_order" type="number" required min="-10000" max="10000" value="0"></label>
+          </div>
+          <div class="language-grid">
+            <fieldset><legend>Italiano</legend><label>Titolo *<input name="title_it" required maxlength="180"></label><label>Sommario<textarea name="summary_it" rows="3" maxlength="600"></textarea></label><label>Testo<textarea name="body_it" rows="7" maxlength="12000"></textarea></label></fieldset>
+            <fieldset><legend>English</legend><label>Title *<input name="title_en" required maxlength="180"></label><label>Summary<textarea name="summary_en" rows="3" maxlength="600"></textarea></label><label>Text<textarea name="body_en" rows="7" maxlength="12000"></textarea></label></fieldset>
+          </div>
+          <div class="form-grid">
+            <label>Media associato<select name="media_id"><option value="">Nessun media</option></select></label>
+            <label>URL pubblico opzionale<input name="public_url" type="url" inputmode="url" maxlength="500" placeholder="https://"></label>
+          </div>
+          <label>Dati strutturati JSON<textarea name="data" rows="8" spellcheck="false">{}</textarea><small>Solo JSON valido. Script, markup HTML e URL javascript: vengono rifiutati.</small></label>
+          <div class="form-actions"><button class="button primary" type="submit">Salva</button><button class="button" type="button" data-preview-form>Anteprima</button><button class="button" type="button" data-cancel-edit>Annulla</button></div>
+        </form>
+        <div class="content-list" data-content-list></div>
+      </section>
+
+      <section class="admin-view" data-panel="media" hidden>
+        <div class="view-heading"><div><p class="eyebrow">Supabase Storage</p><h1>Media</h1></div></div>
+        <form class="panel media-form" data-media-form novalidate>
+          <input type="hidden" name="id"><input type="hidden" name="existing_path">
+          <div class="form-grid"><label>File *<input name="file" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required></label><label>Stato<select name="status"><option value="draft">Bozza</option><option value="published">Pubblicato</option><option value="hidden">Nascosto</option></select></label></div>
+          <div class="language-grid"><label>Alt text italiano *<input name="alt_it" required maxlength="300"></label><label>Alt text English *<input name="alt_en" required maxlength="300"></label></div>
+          <div class="media-preview" data-upload-preview><span>Nessun file selezionato</span></div>
+          <div class="form-actions"><button class="button primary" type="submit">Carica media</button><button class="button" type="button" data-cancel-media hidden>Annulla sostituzione</button></div>
+          <small>Formati: JPEG, PNG, WebP, PDF. Dimensione massima: 8 MB. Ogni file caricato nel bucket è destinato alla pubblicazione.</small>
+        </form>
+        <div class="media-grid" data-media-list></div>
+      </section>
+
+      <section class="admin-view" data-panel="qr" hidden>
+        <div class="view-heading"><div><p class="eyebrow">Condivisione</p><h1>QR Code</h1></div></div>
+        <div class="qr-layout panel">
+          <form data-qr-form><label>URL pubblico del portfolio<input name="url" type="url" required inputmode="url"></label><button class="button primary" type="submit">Rigenera QR</button><p>Il QR Code rimanda esclusivamente alla pagina pubblica del portfolio.</p></form>
+          <div class="qr-preview"><canvas width="1024" height="1024" data-qr-canvas aria-label="Anteprima QR Code"></canvas><code data-qr-url></code><div class="form-actions"><button class="button" type="button" data-download-png>Download PNG</button><button class="button" type="button" data-download-svg>Download SVG</button></div></div>
+        </div>
+      </section>
+
+      <section class="admin-view" data-panel="settings" hidden>
+        <div class="view-heading"><div><p class="eyebrow">Configurazione sito</p><h1>Impostazioni generali</h1></div></div>
+        <form class="panel" data-settings-form novalidate>
+          <div class="form-grid">
+            <label>Lingua predefinita<select name="language"><option value="it">Italiano</option><option value="en">English</option></select></label>
+            <label>Tema predefinito<select name="theme"><option value="system">Sistema</option><option value="light">Chiaro</option><option value="dark">Scuro</option></select></label>
+          </div>
+          <label>URL pubblico del portfolio<input name="public_url" type="url" inputmode="url" placeholder="https://"></label>
+          <label>Ordine sezioni<input name="section_order" type="text" placeholder="hero,profile,case-study,skills"><small>Elenco di slug separati da virgola. La visibilità e l’ordine effettivo sono gestibili anche nella sezione “Ordine sezioni”.</small></label>
+          <div class="form-actions"><button class="button primary" type="submit">Salva impostazioni</button></div>
+        </form>
+      </section>
+
+      <section class="admin-view" data-panel="account" hidden>
+        <div class="view-heading"><div><p class="eyebrow">Sessione</p><h1>Account</h1></div></div>
+        <div class="panel account-card"><dl><div><dt>Email autenticata</dt><dd data-account-email></dd></div><div><dt>Autorizzazione database</dt><dd><span class="status published">Amministratore attivo</span></dd></div></dl><a class="button" href="reset-password.html">Cambia password</a><button class="button danger" type="button" data-logout>Logout</button></div>
+      </section>
+    </main>
+  </div>
+
+  <dialog class="preview-dialog" data-preview-dialog><button class="icon-button close-dialog" type="button" data-close-dialog aria-label="Chiudi">×</button><p class="eyebrow" data-preview-type></p><h2 data-preview-title></h2><p data-preview-summary></p><div class="preview-body" data-preview-body></div></dialog>
+  <dialog class="confirm-dialog" data-confirm-dialog><h2 data-confirm-title>Conferma operazione</h2><p data-confirm-text></p><div class="form-actions"><button class="button danger" type="button" data-confirm-yes>Conferma</button><button class="button" type="button" data-confirm-no>Annulla</button></div></dialog>
+
+  <script src="../vendor/supabase.js"></script>
+  <script src="../vendor/qrcode.js"></script>
+  <script src="../runtime-config.js"></script>
+  <script src="../js/supabase-client.js"></script>
+  <script src="common.js" defer></script>
+  <script src="app.js" defer></script>
+</body>
+</html>

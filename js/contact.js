@@ -25,38 +25,31 @@ function updateDebugStatus(message, isError) {
 }
 
 function initEmailJS() {
-  console.log('Form contact: inizializzazione EmailJS');
-  console.log('Public Key utilizzata:', EMAILJS_CONFIG.PUBLIC_KEY);
-  console.log('Service ID utilizzato:', EMAILJS_CONFIG.SERVICE_ID);
-  console.log('Template ID utilizzato:', EMAILJS_CONFIG.TEMPLATE_ID);
-
   if (typeof emailjs === 'undefined') {
-    console.error('Errore: EmailJS non è stato caricato. Controlla il CDN in contact.html.');
-    updateDebugStatus('Errore: EmailJS non è stato caricato. Apri la console per dettagli.', true);
+    updateDebugStatus(contactText('Il servizio di invio non è disponibile.', 'The sending service is unavailable.'), true);
     return false;
   }
 
   if (window.location.protocol === 'file:') {
-    console.warn('Attenzione: la pagina è servita tramite file://. EmailJS potrebbe considerare questo un ambiente non browser.');
     updateDebugStatus('Attenzione: sei su file://. Servi la pagina via HTTP/HTTPS o abilita "API access from non-browser environments" in EmailJS.', true);
   }
 
   emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
-  console.log('EmailJS inizializzato con Public Key:', EMAILJS_CONFIG.PUBLIC_KEY);
-  updateDebugStatus('EmailJS caricato e pronto.');
+  updateDebugStatus(contactText('Modulo pronto.', 'Form ready.'));
   return true;
+}
+
+function contactText(it, en) {
+  const language = window.portfolioI18n ? window.portfolioI18n.getLanguage() : document.documentElement.lang;
+  return language === 'en' ? en : it;
 }
 
 async function handleContactFormSubmit(event) {
   event.preventDefault();
-  console.log('Form intercettato');
-
   const form = document.getElementById('contactForm');
   const messageContainer = document.getElementById('formMessage');
 
   if (!form) {
-    console.error('Errore: form di contatto non trovato.');
-    updateDebugStatus('Errore: form di contatto non trovato.', true);
     return;
   }
 
@@ -67,28 +60,44 @@ async function handleContactFormSubmit(event) {
   const privacyConsent = form.querySelector('#privacyConsent');
 
   if (!nameInput || !emailInput || !companyInput || !messageInput) {
-    console.error('Errore: uno o più campi del form non sono presenti.');
-    updateDebugStatus('Errore: uno o più campi del form non sono presenti.', true);
-    return;
-  }
-
-  if (!privacyConsent || !privacyConsent.checked) {
-    const language = window.portfolioI18n ? window.portfolioI18n.getLanguage() : 'it';
-    showMessage(
-      messageContainer,
-      language === 'en'
-        ? 'To send the message, you must accept the Privacy Policy and the data processing notice.'
-        : 'Per inviare il messaggio è necessario accettare la Privacy Policy e l’informativa sul trattamento dei dati.',
-      'error'
-    );
-    if (privacyConsent) privacyConsent.focus();
+    showMessage(messageContainer, contactText('Il modulo non è completo. Ricarica la pagina e riprova.', 'The form is incomplete. Reload the page and try again.'), 'error');
     return;
   }
 
   const fromName = nameInput.value.trim();
   const fromEmail = emailInput.value.trim();
-  const companyLabel = companyInput.value.trim() || 'Non indicata';
   const rawMessage = messageInput.value.trim();
+  [nameInput, emailInput, messageInput, privacyConsent].filter(Boolean).forEach((field) => field.removeAttribute('aria-invalid'));
+
+  const firstEmptyField = !fromName ? nameInput : (!fromEmail ? emailInput : (!rawMessage ? messageInput : null));
+  if (firstEmptyField) {
+    firstEmptyField.setAttribute('aria-invalid', 'true');
+    firstEmptyField.focus();
+    showMessage(messageContainer, contactText('Compila nome, email e messaggio.', 'Complete your name, email and message.'), 'error');
+    return;
+  }
+
+  if (!isValidEmail(fromEmail)) {
+    emailInput.setAttribute('aria-invalid', 'true');
+    emailInput.focus();
+    showMessage(messageContainer, contactText('Inserisci un indirizzo email valido.', 'Enter a valid email address.'), 'error');
+    return;
+  }
+
+  if (!privacyConsent || !privacyConsent.checked) {
+    if (privacyConsent) {
+      privacyConsent.setAttribute('aria-invalid', 'true');
+      privacyConsent.focus();
+    }
+    showMessage(
+      messageContainer,
+      contactText('Per inviare il messaggio è necessario accettare la Privacy Policy e l’informativa sul trattamento dei dati.', 'To send the message, you must accept the Privacy Policy and the data processing notice.'),
+      'error'
+    );
+    return;
+  }
+
+  const companyLabel = companyInput.value.trim() || contactText('Non indicata', 'Not provided');
   const formattedMessage = [
     'Nome: ' + fromName,
     'Email: ' + fromEmail,
@@ -108,33 +117,12 @@ async function handleContactFormSubmit(event) {
     to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL
   };
 
-  console.log('Dati raccolti:', formData);
-  console.log('Contenuto di formData:', JSON.stringify(formData));
-
-  if (!formData.from_name || !formData.from_email || !formData.message) {
-    showMessage(messageContainer, 'Errore durante l\'invio', 'error');
-    updateDebugStatus('Errore: compila Nome, Email e Messaggio.', true);
-    return;
-  }
-
-  if (!isValidEmail(formData.from_email)) {
-    showMessage(messageContainer, 'Errore durante l\'invio', 'error');
-    updateDebugStatus('Errore: indirizzo email non valido.', true);
-    return;
-  }
-
   const submitButton = form.querySelector('button[type="submit"]');
-  const originalButtonText = submitButton ? submitButton.textContent : 'Invio in corso...';
+  const originalButtonText = submitButton ? submitButton.textContent : contactText('Invio in corso…', 'Sending…');
   if (submitButton) {
     submitButton.disabled = true;
-    submitButton.textContent = 'Invio in corso...';
+    submitButton.textContent = contactText('Invio in corso…', 'Sending…');
   }
-
-  console.log('Invio verso EmailJS');
-  console.log('Public Key:', EMAILJS_CONFIG.PUBLIC_KEY);
-  console.log('Service ID:', EMAILJS_CONFIG.SERVICE_ID);
-  console.log('Template ID:', EMAILJS_CONFIG.TEMPLATE_ID);
-  console.log('formData:', JSON.stringify(formData));
 
   try {
     const response = await emailjs.send(
@@ -143,29 +131,17 @@ async function handleContactFormSubmit(event) {
       formData
     );
 
-    console.log('Risposta completa ricevuta da EmailJS:', response);
-
     if (response && response.status === 200) {
-      console.log('Email inviata con successo');
-      showMessage(messageContainer, 'Messaggio inviato correttamente', 'success');
-      updateDebugStatus('Messaggio inviato correttamente.');
+      showMessage(messageContainer, contactText('Messaggio inviato correttamente.', 'Message sent successfully.'), 'success');
+      updateDebugStatus(contactText('Messaggio inviato correttamente.', 'Message sent successfully.'));
       form.reset();
     } else {
-      console.warn('Risposta EmailJS non valida:', response);
-      showMessage(messageContainer, 'Errore durante l\'invio', 'error');
-      updateDebugStatus('Errore durante l\'invio: risposta non valida da EmailJS.', true);
+      showMessage(messageContainer, contactText('Invio non riuscito. Riprova più tardi.', 'Sending failed. Please try again later.'), 'error');
+      updateDebugStatus(contactText('Invio non riuscito.', 'Sending failed.'), true);
     }
   } catch (error) {
-    console.error('Errore completo ricevuto da EmailJS:', error);
-    console.error('  • Status:', error && error.status);
-    console.error('  • Status Text:', error && error.statusText);
-    console.error('  • Text:', error && error.text);
-    console.error('  • Message:', error && error.message);
-    console.error('  • Response:', error && error.response);
-    console.error('  • Stack:', error && error.stack);
-
-    showMessage(messageContainer, 'Errore durante l\'invio', 'error');
-    updateDebugStatus('Errore durante l\'invio. Controlla la console per dettagli.', true);
+    showMessage(messageContainer, contactText('Invio non riuscito. Riprova più tardi.', 'Sending failed. Please try again later.'), 'error');
+    updateDebugStatus(contactText('Invio non riuscito.', 'Sending failed.'), true);
   } finally {
     if (submitButton) {
       submitButton.disabled = false;
@@ -183,21 +159,19 @@ function showMessage(container, text, type) {
   if (!container) return;
   container.classList.remove('success', 'error');
   container.classList.add(type);
+  container.setAttribute('role', type === 'error' ? 'alert' : 'status');
+  container.setAttribute('aria-live', type === 'error' ? 'assertive' : 'polite');
   container.textContent = text;
   container.style.display = 'block';
 }
 
 window.addEventListener('DOMContentLoaded', function() {
   const contactForm = document.getElementById('contactForm');
-  if (!contactForm) {
-    console.error('Errore: form di contatto non trovato in DOM.');
-    return;
-  }
+  if (!contactForm) return;
 
   contactForm.addEventListener('submit', handleContactFormSubmit);
-  console.log('addEventListener("submit") impostato sul form');
   initEmailJS();
-  setupDarkModeAndReveal();
+  if (!document.body.classList.contains('enhanced-home')) setupDarkModeAndReveal();
 });
 
 function setupDarkModeAndReveal() {

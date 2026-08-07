@@ -8,7 +8,7 @@
       'nav.about': 'Chi sono',
       'nav.skills': 'Competenze',
       'nav.lab': 'Technical Lab',
-      'nav.services': 'Servizi',
+      'nav.services': 'Attività',
       'nav.experience': 'Esperienze',
       'nav.certifications': 'Certificazioni',
       'nav.blog': 'Blog',
@@ -36,13 +36,13 @@
       'experience.title': 'Esperienze professionali',
       'certifications.tag': 'Certificazioni e Attestati',
       'certifications.title': 'Formazione certificata',
-      'services.tag': 'Servizi',
-      'services.title': 'Proposte di valore',
+      'services.tag': 'Ambiti tecnici',
+      'services.title': 'Esperienza applicata',
       'blog.tag': 'Blog',
       'blog.title': 'Approfondimenti tecnici',
       'cv.title': 'Curriculum Vitae',
       'contact.tag': 'Contatti',
-      'contact.title': 'Parliamo del tuo progetto IT',
+      'contact.title': 'Vuoi approfondire il mio profilo?',
       'form.name': 'Nome',
       'form.company': 'Azienda (opzionale)',
       'form.message': 'Messaggio',
@@ -54,7 +54,7 @@
       'nav.about': 'About me',
       'nav.skills': 'Skills',
       'nav.lab': 'Technical Lab',
-      'nav.services': 'Services',
+      'nav.services': 'Work',
       'nav.experience': 'Experience',
       'nav.certifications': 'Certifications',
       'nav.blog': 'Blog',
@@ -82,13 +82,13 @@
       'experience.title': 'Professional experience',
       'certifications.tag': 'Certifications and awards',
       'certifications.title': 'Certified training',
-      'services.tag': 'Services',
-      'services.title': 'How I can help',
+      'services.tag': 'Technical areas',
+      'services.title': 'Applied experience',
       'blog.tag': 'Blog',
       'blog.title': 'Technical insights',
       'cv.title': 'Curriculum Vitae',
       'contact.tag': 'Contact',
-      'contact.title': 'Let’s talk about your IT project',
+      'contact.title': 'Would you like to know more about my profile?',
       'form.name': 'Name',
       'form.company': 'Company (optional)',
       'form.message': 'Message',
@@ -102,7 +102,7 @@
     en: {
       'Chi sono': 'About me',
       'Competenze': 'Skills',
-      'Servizi': 'Services',
+      'Servizi': 'Technical areas',
       'Esperienze': 'Experience',
       'Certificazioni': 'Certifications',
       'Certificazioni e Attestati': 'Certifications and awards',
@@ -147,7 +147,7 @@
       'Amministrazione server, Active Directory e datacenter esterni con attenzione alla continuità operativa.': 'Server, Active Directory and external data centre administration with a focus on operational continuity.',
       'Assistenza SAP, SAP Router, trasporti CR e troubleshooting applicativo in contesti mission-critical.': 'SAP assistance, SAP Router, CR transports and application troubleshooting in mission-critical environments.',
       'Progettazione networking aziendale, indirizzamenti IP e Wi-Fi survey in ambienti di produzione.': 'Corporate network design, IP addressing and Wi-Fi surveys in production environments.',
-      'Proposte di valore': 'How I can help',
+      'Proposte di valore': 'Applied experience',
       'Supporto infrastrutture Windows Server, datacenter esterni, migrazioni server e gestione operativa delle risorse IT.': 'Support for Windows Server infrastructure, external data centres, server migrations and operational IT resource management.',
       'Amministrazione Domain Controller, policy AD e gestione utenti in ambienti enterprise.': 'Domain Controller administration, AD policies and user management in enterprise environments.',
       'Supporto SAP, SAP Router, trasporti CR e troubleshooting per piattaforme ERP critiche.': 'SAP support, SAP Router, CR transports and troubleshooting for critical ERP platforms.',
@@ -165,14 +165,10 @@
       'Workflow di versionamento, repository, branch, deploy e gestione del ciclo di rilascio.': 'Version control workflows, repositories, branches, deployments and release cycle management.',
       'Come ho sviluppato questo Portfolio': 'How I built this portfolio',
       'Struttura del sito, organizzazione dei contenuti, responsive design e integrazione del form contatti.': 'Website structure, content organisation, responsive design and contact form integration.',
-      'Sviluppo Full Stack - Barber Booking Platform': 'Full-stack development - Barber Booking Platform',
-      'Architettura di una piattaforma booking con frontend moderno, backend, autenticazione e database.': 'Architecture of a booking platform with a modern frontend, backend, authentication and database.',
       'Leggi di più': 'Read more',
       'Curriculum Vitae': 'Curriculum Vitae',
       'Consulta il mio curriculum aggiornato con esperienze professionali, competenze tecniche, certificazioni e progetti sviluppati nel settore IT Infrastructure e Software Development.': 'View my updated CV with professional experience, technical skills, certifications and projects in IT Infrastructure and Software Development.',
       'Visualizza CV': 'View CV',
-      'Parliamo del tuo progetto IT': 'Let’s talk about your IT project',
-      'Aiuto aziende e team a migliorare affidabilità, sicurezza e continuità operativa delle infrastrutture IT.': 'I help companies and teams improve the reliability, security and continuity of their IT infrastructure.',
       'Nel portfolio sono raccolte esperienze professionali, competenze tecniche, certificazioni e approfondimenti relativi a sistemi enterprise, networking, Active Directory, SAP e cybersecurity.': 'This portfolio presents professional experience, technical skills, certifications and insights into enterprise systems, networking, Active Directory, SAP and cybersecurity.',
       'Per informazioni, collaborazioni professionali o confronto tecnico, puoi contattarmi tramite il modulo sottostante o attraverso LinkedIn.': 'For information, professional collaborations or a technical discussion, contact me through the form below or LinkedIn.',
       'Contattami su WhatsApp': 'Contact me on WhatsApp',
@@ -203,6 +199,7 @@
       'Il tuo nome': 'Your name',
       'Nome azienda': 'Company name',
       'Descrivi il progetto o la richiesta': 'Describe your project or request',
+      'Descrivi il motivo del contatto': 'Describe the reason for contacting me',
       'Blog professionale IT': 'Professional IT blog',
       'Approfondimenti su infrastrutture enterprise, reti, SAP e cybersecurity per recruiter e professionisti del settore.': 'Insights into enterprise infrastructure, networking, SAP and cybersecurity for recruiters and IT professionals.',
       'Categorie': 'Categories',
@@ -266,6 +263,14 @@
     document.querySelectorAll('[data-i18n-it][data-i18n-en]').forEach(function (element) {
       element.textContent = language === 'en' ? element.dataset.i18nEn : element.dataset.i18nIt;
     });
+
+    document.querySelectorAll('[data-i18n-label-it][data-i18n-label-en]').forEach(function (element) {
+      element.setAttribute('aria-label', language === 'en' ? element.dataset.i18nLabelEn : element.dataset.i18nLabelIt);
+    });
+
+    document.querySelectorAll('[data-i18n-alt-it][data-i18n-alt-en]').forEach(function (element) {
+      element.setAttribute('alt', language === 'en' ? element.dataset.i18nAltEn : element.dataset.i18nAltIt);
+    });
   }
 
   function updateSwitcher(language) {
@@ -273,6 +278,13 @@
       var active = button.dataset.lang === language;
       button.classList.toggle('is-active', active);
       button.setAttribute('aria-pressed', active ? 'true' : 'false');
+      if (active) button.setAttribute('aria-current', 'true'); else button.removeAttribute('aria-current');
+      var isItalian = button.dataset.lang === 'it';
+      var label = language === 'en'
+        ? (active ? (isItalian ? 'Italian, active language' : 'English, active language') : (isItalian ? 'Switch to Italian' : 'Switch to English'))
+        : (active ? (isItalian ? 'Italiano, lingua attiva' : 'Inglese, lingua attiva') : (isItalian ? 'Passa all’italiano' : 'Passa all’inglese'));
+      button.setAttribute('aria-label', label);
+      button.title = label;
     });
   }
 

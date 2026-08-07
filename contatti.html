@@ -37,8 +37,8 @@
 
       <div>
         <span class="section__tag section__tag--light">Contatti</span>
-        <h1>Parliamo del tuo progetto IT</h1>
-        <p>Invia una richiesta per supporto su reti, Active Directory, SAP, VPN e cybersecurity in contesti industriali e multinazionali.</p>
+        <h1 data-i18n-it="Vuoi approfondire il mio profilo?" data-i18n-en="Would you like to know more about my profile?">Vuoi approfondire il mio profilo?</h1>
+        <p data-i18n-it="Se vuoi conoscere meglio la mia esperienza, approfondire un progetto o valutare un’opportunità professionale, puoi contattarmi qui." data-i18n-en="If you would like to learn more about my experience, discuss a project or explore a professional opportunity, you can contact me here.">Se vuoi conoscere meglio la mia esperienza, approfondire un progetto o valutare un’opportunità professionale, puoi contattarmi qui.</p>
         <div class="contact-actions">
           <a class="button button--secondary whatsapp-button" href="https://wa.me/393515056145" target="_blank" rel="noreferrer">
             <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false" xmlns="http://www.w3.org/2000/svg"><path d="M20.52 3.48A11.86 11.86 0 0 0 12.08 0C5.5 0 .15 5.35.15 11.93c0 2.1.55 4.16 1.6 5.98L.05 24l6.24-1.64a11.9 11.9 0 0 0 5.79 1.48h.01c6.58 0 11.93-5.35 11.93-11.93 0-3.19-1.24-6.18-3.5-8.43ZM12.09 21.82h-.01a9.9 9.9 0 0 1-5.05-1.38l-.36-.21-3.7.97.99-3.61-.23-.37a9.87 9.87 0 0 1-1.51-5.29c0-5.47 4.45-9.91 9.92-9.91 2.65 0 5.14 1.03 7.01 2.91a9.84 9.84 0 0 1 2.9 7.01c-.01 5.45-4.46 9.88-9.96 9.88Zm5.44-7.41c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.65.07-.3-.15-1.26-.46-2.4-1.48-.89-.79-1.49-1.77-1.66-2.07-.17-.3-.02-.46.13-.61.13-.13.3-.35.45-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.02-.52-.08-.15-.67-1.62-.92-2.22-.24-.58-.49-.5-.67-.51h-.57c-.2 0-.52.07-.79.37-.27.3-1.04 1.02-1.04 2.49s1.07 2.89 1.22 3.09c.15.2 2.11 3.22 5.11 4.51.71.31 1.27.49 1.7.63.71.23 1.36.2 1.87.12.57-.09 1.76-.72 2.01-1.42.25-.7.25-1.29.17-1.42-.07-.12-.27-.19-.57-.34Z"/></svg>
@@ -48,30 +48,31 @@
         </div>
       </div>
 
-      <form id="contactForm" class="contact-form" aria-label="Modulo di contatto" novalidate>
+      <form id="contactForm" class="contact-form" aria-label="Modulo di contatto" data-i18n-label-it="Modulo di contatto" data-i18n-label-en="Contact form" novalidate>
+        <p class="required-note" data-i18n-it="I campi contrassegnati con * sono obbligatori." data-i18n-en="Fields marked with * are required.">I campi contrassegnati con * sono obbligatori.</p>
         <div class="form-row reveal">
-          <label for="name">Nome</label>
-          <input id="name" name="name" type="text" placeholder="Il tuo nome" required />
+          <label for="name" data-i18n-it="Nome *" data-i18n-en="Name *">Nome *</label>
+          <input id="name" name="name" type="text" placeholder="Il tuo nome" required aria-required="true" />
         </div>
         <div class="form-row reveal">
-          <label for="email">Email</label>
-          <input id="email" name="email" type="email" placeholder="tua@email.com" required />
+          <label for="email">Email *</label>
+          <input id="email" name="email" type="email" placeholder="tua@email.com" required aria-required="true" />
         </div>
         <div class="form-row reveal">
           <label for="company">Azienda (opzionale)</label>
           <input id="company" name="company" type="text" placeholder="Nome azienda" />
         </div>
         <div class="form-row reveal">
-          <label for="message">Messaggio</label>
-          <textarea id="message" name="message" rows="6" placeholder="Descrivi il progetto o la richiesta" required></textarea>
+          <label for="message" data-i18n-it="Messaggio *" data-i18n-en="Message *">Messaggio *</label>
+          <textarea id="message" name="message" rows="6" placeholder="Descrivi il motivo del contatto" required aria-required="true"></textarea>
         </div>
         <div class="form-row privacy-consent reveal">
-          <input id="privacyConsent" name="privacy_consent" type="checkbox" required />
+          <input id="privacyConsent" name="privacy_consent" type="checkbox" required aria-required="true" />
           <label for="privacyConsent" data-i18n-skip>
             <span data-i18n-it="Ho letto e accetto la" data-i18n-en="I have read and accept the">Ho letto e accetto la</span>
             <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
             <span data-i18n-it="e l’informativa sul" data-i18n-en="and the">e l’informativa sul</span>
-            <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer">trattamento dei dati</a>.
+            <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer" data-i18n-it="trattamento dei dati" data-i18n-en="data processing notice">trattamento dei dati</a>. <span aria-hidden="true">*</span>
           </label>
         </div>
         <div class="form-row form-row--actions reveal">
@@ -104,7 +105,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
   <script src="js/i18n.js?v=privacy-i18n-2" defer></script>
-  <script src="script.js?v=privacy-i18n-2" defer></script>
+  <script src="js/contact.js?v=privacy-i18n-2" defer></script>
   <script src="js/site.js?v=agency-1" defer></script>
 </body>
 </html>
