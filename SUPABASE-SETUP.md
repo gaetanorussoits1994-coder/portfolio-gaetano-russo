@@ -10,6 +10,7 @@ Creare un progetto Supabase dedicato, quindi applicare in ordine i file presenti
 2. `002_row_level_security.sql`
 3. `003_storage.sql`
 4. `004_seed_current_content.sql`
+5. `005_media_messages_and_replies.sql`
 
 È possibile usare Supabase CLI oppure SQL Editor. Le migrazioni creano schema, funzioni, trigger, RLS, bucket Storage e seed iniziale. Non copiare la service role key nel browser o in `.env.local`.
 
@@ -110,13 +111,30 @@ Controllare che tutte le tabelle abbiano RLS attiva. Non disabilitare RLS per ri
 
 ## 10. Storage
 
-Il bucket privato `portfolio-media` accetta JPEG, PNG, WebP e PDF fino a 8 MB. Solo l’amministratore può caricare, sostituire o eliminare. I file sono salvati sotto `media/`; RLS permette di generare URL firmati pubblici soltanto per i record `media_assets` con stato `published`. I file in bozza o nascosti restano leggibili esclusivamente dall’amministratore. Non caricare CV, attestati non oscurati, messaggi o documenti personali senza revisione.
+L’interfaccia Media accetta JPEG, PNG e WebP fino a 12 MB e MP4/WebM fino a 100 MB. Il bucket privato `portfolio-media` conserva anche `application/pdf` nella allow-list esclusivamente per compatibilità non distruttiva con i file ammessi dalle migrazioni 001–003; l’admin non propone nuovi upload PDF. Solo l’amministratore può caricare, sostituire o eliminare. I file sono salvati sotto `media/`; RLS permette di generare URL firmati pubblici soltanto per i record `media_assets` con stato `published`. I file in bozza o nascosti restano leggibili esclusivamente dall’amministratore. Non caricare CV, attestati non oscurati, messaggi o documenti personali senza revisione.
 
-## 11. Fallback pubblico
+## 11. Risposte email dall’admin
+
+Il form pubblico continua a usare EmailJS e, dopo la migrazione 005, registra anche il messaggio in Supabase tramite una funzione con rate limit. Le risposte admin passano esclusivamente da `api/reply-message.js`, che verifica il JWT Supabase e l’amministratore attivo prima dell’invio.
+
+Creare in EmailJS un template dedicato alle risposte con questi parametri: `to_email`, `to_name`, `subject`, `reply_text`, `original_subject`, `original_message`, `signature`. Configurare il destinatario su `{{to_email}}` e l’oggetto su `{{subject}}`. Non inserire HTML non escapato nel template.
+
+Configurare localmente e nell’hosting, senza esporle nel frontend:
+
+```text
+EMAILJS_PUBLIC_KEY=
+EMAILJS_PRIVATE_KEY=
+EMAILJS_SERVICE_ID=
+EMAILJS_REPLY_TEMPLATE_ID=
+```
+
+`EMAILJS_PRIVATE_KEY` deve esistere soltanto nell’ambiente server. Per il deploy Vercel, impostare le variabili nelle impostazioni del progetto; `vercel.json` mantiene `dist` come output statico e la cartella root `api/` come funzione serverless.
+
+## 12. Fallback pubblico
 
 Se URL/anon key mancano, Supabase non risponde o il seed non è ancora applicato, la homepage continua a usare `js/portfolio-data.js`. Gli errori tecnici non vengono mostrati ai visitatori.
 
-## 12. Checklist prima della produzione
+## 13. Checklist prima della produzione
 
 - verificare tutte le policy con utenti anonimo, non autorizzato e amministratore;
 - limitare Redirect URL e origini consentite;

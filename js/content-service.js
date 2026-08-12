@@ -9,6 +9,7 @@
     technical_lab: 'labs',
     certificate: 'certifications'
   };
+  const sectionSelectors = { hero: '#home', profile: '#profilo', infrastructure_case: '#case-study', web_project: '#case-study', skill: '#competenze', technical_lab: '#technical-lab', experience: '#esperienze', certificate: '#certificazioni', contact_copy: '#contatti', contact_link: '#contatti', seo: 'main', section: 'main' };
 
   function rowToPortfolioItem(row, mediaUrls) {
     const item = { ...(row.data || {}) };
@@ -71,6 +72,30 @@
     });
   }
 
+  function renderManagedMedia(placements, mediaMap) {
+    document.querySelectorAll('[data-managed-section-media]').forEach((element) => element.remove());
+    Object.entries(sectionSelectors).forEach(([sectionKey, selector]) => {
+      const target = document.querySelector(selector);
+      const matches = placements.filter((placement) => placement.section_key === sectionKey && placement.is_visible).sort((a, b) => a.sort_order - b.sort_order);
+      if (!target || !matches.length) return;
+      const gallery = document.createElement('div'); gallery.className = 'managed-section-media'; gallery.dataset.managedSectionMedia = sectionKey;
+      matches.forEach((placement) => {
+        const media = mediaMap.get(placement.media_id); if (!media?.url) return;
+        if (!['image', 'video'].includes(media.media_type)) return;
+        const figure = document.createElement('figure'); figure.className = 'managed-media';
+        figure.style.setProperty('--media-ratio', placement.aspect_ratio === 'auto' ? 'auto' : placement.aspect_ratio);
+        figure.style.setProperty('--media-max-width', placement.max_width ? `${placement.max_width}px` : '100%');
+        figure.style.setProperty('--media-max-height', placement.max_height ? `${placement.max_height}px` : 'none');
+        figure.style.setProperty('--media-radius', `${placement.border_radius}px`); figure.style.setProperty('--media-opacity', String(placement.opacity)); figure.style.setProperty('--media-position', `${placement.focal_x}% ${placement.focal_y}%`);
+        figure.dataset.desktop = placement.desktop_behavior; figure.dataset.mobile = placement.mobile_behavior;
+        const element = media.media_type === 'video' ? document.createElement('video') : document.createElement('img'); element.src = media.url; element.style.objectFit = placement.fit === 'natural' ? 'contain' : placement.fit; element.alt = media.alt || '';
+        if (element instanceof HTMLVideoElement) { element.poster = media.poster_url || ''; element.autoplay = placement.autoplay; element.loop = placement.loop; element.muted = placement.muted; element.controls = placement.controls; element.preload = placement.preload; element.playsInline = true; }
+        figure.append(element); if (media.caption) { const caption = document.createElement('figcaption'); caption.textContent = media.caption; figure.append(caption); } gallery.append(figure);
+      });
+      if (gallery.childElementCount) target.append(gallery);
+    });
+  }
+
   async function loadPublishedContent() {
     const client = window.portfolioBackend?.getClient();
     if (!client) return { source: 'fallback', reason: 'not-configured' };
@@ -83,9 +108,10 @@
       if (error) throw error;
       if (!Array.isArray(rows) || !rows.length) return { source: 'fallback', reason: 'empty' };
 
-      const { data: mediaRows, error: mediaError } = await client.from('media_assets').select('id,object_path').eq('status', 'published');
+      const { data: mediaRows, error: mediaError } = await client.from('media_assets').select('id,object_path,media_type,external_url,poster_media_id,alt_it,alt_en,caption').eq('status', 'published');
       if (mediaError) throw mediaError;
       const signedMedia = await Promise.all((mediaRows || []).map(async (media) => {
+        if (media.external_url) return [media.id, media.external_url];
         const { data: signed, error: signedError } = await client.storage.from('portfolio-media').createSignedUrl(media.object_path, 3600);
         return [media.id, signedError ? '' : signed.signedUrl];
       }));
@@ -98,6 +124,12 @@
       applyManagedText(rows.filter((row) => ['hero', 'profile', 'contact_copy', 'seo'].includes(row.content_type)));
       applyContactLinks(rows.filter((row) => row.content_type === 'contact_link'));
       applySections(rows.filter((row) => row.content_type === 'section'));
+      const { data: placements, error: placementError } = await client.from('media_placements').select('*').eq('is_visible', true).order('sort_order');
+      if (!placementError) {
+        const mediaMap = new Map((mediaRows || []).map((media) => [media.id, { ...media, url: mediaUrls.get(media.id) || '', alt: document.documentElement.lang === 'en' ? (media.alt_en || media.alt_it) : media.alt_it }]));
+        mediaMap.forEach((media) => { media.poster_url = media.poster_media_id ? (mediaMap.get(media.poster_media_id)?.url || '') : ''; });
+        renderManagedMedia(placements || [], mediaMap);
+      }
       return { source: 'supabase' };
     } catch (error) {
       return { source: 'fallback', reason: 'unavailable' };

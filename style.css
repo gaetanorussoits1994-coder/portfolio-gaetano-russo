@@ -2471,3 +2471,5 @@ img,
     padding: 2.5rem 0;
   }
 }
+/* Anti-spam field: kept in the DOM for bots, never visible to people. */
+.honeypot{position:absolute!important;left:-10000px!important;width:1px!important;height:1px!important;overflow:hidden!important}

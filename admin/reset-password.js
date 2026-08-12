@@ -10,7 +10,15 @@
   let clientInitialisationError = null;
   try { client = backend?.getClient() || null; } catch (error) { clientInitialisationError = error; }
 
-  function reportError(context, error) { console.error(`[Portfolio Admin] ${context}`, error); }
+  function reportError(phase, error) {
+    if (!['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)) return;
+    let hostname = 'configurazione_non_valida';
+    try { hostname = new URL(backend?.config?.supabaseUrl || '').hostname; } catch (urlError) { /* Safe diagnostic fallback. */ }
+    const httpStatus = typeof error?.status === 'number' ? error.status : null;
+    const supabaseCode = typeof error?.code === 'string' ? error.code : (error?.name || 'client_error');
+    const errorMessage = typeof error?.message === 'string' ? error.message : 'Errore senza messaggio';
+    console.error('[Portfolio Admin]', { phase, httpStatus, supabaseCode, message: errorMessage, hostname });
+  }
 
   function withTimeout(promise, context) {
     let timer;
@@ -36,7 +44,7 @@
       if (error) throw error;
       if (!data.session) return showState('Link non valido o scaduto', 'Richiedi una nuova email di recupero dalla pagina di accesso.');
       const { data: authorization, error: authorizationError } = await withTimeout(
-        client.from('admin_users').select('user_id,is_active').eq('user_id', data.session.user.id).maybeSingle(),
+        client.from('admin_users').select('user_id,is_active').eq('user_id', data.session.user.id).eq('is_active', true).maybeSingle(),
         'Verifica autorizzazione recupero'
       );
       if (authorizationError) throw authorizationError;

@@ -20,7 +20,7 @@
   const previewDialog = document.querySelector('[data-preview-dialog]');
   const confirmDialog = document.querySelector('[data-confirm-dialog]');
   const AUTH_TIMEOUT_MS = 8000;
-  const state = { user: null, items: [], media: [], settings: [], currentType: 'hero', qrSvg: '', uploadUrl: '', locale: 'it' };
+  const state = { user: null, items: [], media: [], placements: [], messages: [], replies: [], settings: [], currentType: 'hero', qrSvg: '', qrUrl: '', uploadUrl: '', locale: 'it' };
   const labels = {
     hero: 'Hero', profile: 'Profilo', infrastructure_case: 'Case study', web_project: 'Progetti tecnici',
     skill: 'Competenze', technical_lab: 'Technical Lab', experience: 'Esperienze', certificate: 'Attestati',
@@ -29,8 +29,40 @@
 
   try { state.locale = localStorage.getItem('admin-locale') === 'en' ? 'en' : 'it'; } catch (error) { /* Optional preference. */ }
 
-  function reportError(context, error) {
-    console.error(`[Portfolio Admin] ${context}`, error);
+  function isDevelopmentEnvironment() {
+    return ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname);
+  }
+
+  function reportError(phase, error) {
+    if (!isDevelopmentEnvironment()) return;
+    let hostname = 'configurazione_non_valida';
+    try { hostname = new URL(backend?.config?.supabaseUrl || '').hostname; } catch (urlError) { /* Safe diagnostic fallback. */ }
+    const httpStatus = typeof error?.status === 'number' ? error.status : null;
+    const supabaseCode = typeof error?.code === 'string' ? error.code : (error?.name || 'client_error');
+    const message = typeof error?.message === 'string' ? error.message : 'Errore senza messaggio';
+    console.error('[Portfolio Admin]', { phase, httpStatus, supabaseCode, message, hostname });
+  }
+
+  function isNetworkError(error) {
+    return error?.name === 'AuthRetryableFetchError'
+      || error?.status === 0
+      || /fetch|network|name_not_resolved|failed to connect/i.test(error?.message || '');
+  }
+
+  function authenticationMessage(error) {
+    if (isNetworkError(error)) return 'Servizio Supabase non raggiungibile. Controlla la connessione e riprova.';
+    if (error?.code === 'invalid_credentials') return 'Autenticazione rifiutata: email o password non corrette.';
+    if (error?.code === 'email_not_confirmed') return 'L’indirizzo email non risulta confermato.';
+    return 'Errore inatteso durante l’autenticazione. Riprova tra poco.';
+  }
+
+  async function rejectAuthorization(message) {
+    try {
+      await withTimeout(client.auth.signOut(), 'Logout dopo autorizzazione negata');
+    } catch (error) {
+      reportError('logout_autorizzazione', error);
+    }
+    showAuth(message);
   }
 
   function withTimeout(promise, context, timeout = AUTH_TIMEOUT_MS) {
@@ -105,25 +137,37 @@
     notify.timer = setTimeout(() => tools.setMessage(globalMessage, ''), 5000);
   }
 
-  function applyTheme(theme) {
-    document.documentElement.dataset.theme = theme;
-    try { localStorage.setItem('site-theme', theme); } catch (error) { /* Optional preference. */ }
-  }
-
   async function verifyAuthorization(user) {
     const { data, error } = await withTimeout(
-      client.from('admin_users').select('user_id,is_active').eq('user_id', user.id).maybeSingle(),
+      client.from('admin_users').select('user_id,is_active').eq('user_id', user.id).eq('is_active', true).maybeSingle(),
       'Verifica autorizzazione'
     );
     if (error) throw error;
     if (!data?.is_active) {
-      try { await withTimeout(client.auth.signOut(), 'Logout account non autorizzato'); } catch (signOutError) { reportError('Logout account non autorizzato', signOutError); }
-      showAuth('Account autenticato ma non autorizzato come amministratore.');
+      await rejectAuthorization('Account autenticato ma non autorizzato come amministratore.');
       return false;
     }
     state.user = user;
     showApp();
-    await refreshAll();
+    return true;
+  }
+
+  async function authorizeAndLoad(user, failureMessage) {
+    let authorized;
+    try {
+      authorized = await verifyAuthorization(user);
+    } catch (error) {
+      reportError('autorizzazione_admin', error);
+      await rejectAuthorization(failureMessage);
+      return false;
+    }
+    if (!authorized) return false;
+    try {
+      await refreshAll();
+    } catch (error) {
+      reportError('caricamento_dati_admin', error);
+      notify('Accesso autorizzato, ma i dati amministrativi non sono disponibili.', 'error');
+    }
     return true;
   }
 
@@ -135,7 +179,7 @@
       const { data, error } = await withTimeout(client.auth.getSession(), 'Verifica sessione');
       if (error) throw error;
       if (!data.session) return showAuth();
-      await verifyAuthorization(data.session.user);
+      await authorizeAndLoad(data.session.user, 'Sessione valida, ma verifica dell’autorizzazione amministrativa non riuscita.');
     } catch (error) {
       reportError('Inizializzazione autenticazione', error);
       showConnectionProblem();
@@ -154,17 +198,27 @@
     const button = loginForm.querySelector('button[type=submit]');
     button.disabled = true;
     tools.setMessage(authMessage, 'Accesso in corso…');
+    let result;
     try {
-      const { data, error } = await withTimeout(client.auth.signInWithPassword({ email, password }), 'Accesso');
-      if (error || !data.user) {
-        if (error) reportError('Accesso rifiutato', error);
-        return tools.setMessage(authMessage, 'Credenziali non valide oppure accesso non disponibile.', 'error');
-      }
-      await verifyAuthorization(data.user);
+      result = await withTimeout(client.auth.signInWithPassword({ email, password }), 'Autenticazione');
     } catch (error) {
-      reportError('Accesso amministratore', error);
+      reportError('autenticazione', error);
       tools.setMessage(authMessage, 'Servizio di accesso temporaneamente non raggiungibile. Riprova.', 'error');
-    } finally { button.disabled = false; }
+      button.disabled = false;
+      return;
+    }
+    if (result.error || !result.data?.user) {
+      const error = result.error || new Error('Supabase Auth non ha restituito un utente.');
+      reportError('autenticazione', error);
+      tools.setMessage(authMessage, authenticationMessage(error), 'error');
+      button.disabled = false;
+      return;
+    }
+    await authorizeAndLoad(
+      result.data.user,
+      'Autenticazione riuscita, ma verifica dell’autorizzazione amministrativa non riuscita.'
+    );
+    button.disabled = false;
   });
 
   recoveryForm.addEventListener('submit', async (event) => {
@@ -213,6 +267,7 @@
     const { data, error } = await client.from('media_assets').select('*').order('created_at', { ascending: false });
     if (error) throw error;
     state.media = await Promise.all((data || []).map(async (media) => {
+      if (media.external_url) return { ...media, preview_url: media.external_url };
       const { data: signed, error: signedError } = await client.storage.from('portfolio-media').createSignedUrl(media.object_path, 1800);
       return { ...media, preview_url: signedError ? '' : signed.signedUrl };
     }));
@@ -224,14 +279,36 @@
     state.settings = data || [];
   }
 
+  async function loadPlacementsAndMessages() {
+    const [placementsResult, messagesResult, repliesResult] = await Promise.all([
+      client.from('media_placements').select('*').order('sort_order'),
+      client.from('contact_messages').select('*').order('created_at', { ascending: false }),
+      client.from('message_replies').select('*').order('created_at')
+    ]);
+    const missingMigration = [placementsResult, messagesResult, repliesResult].find((result) => result.error?.code === '42P01');
+    if (missingMigration) {
+      state.placements = []; state.messages = []; state.replies = [];
+      return;
+    }
+    if (placementsResult.error) throw placementsResult.error;
+    if (messagesResult.error) throw messagesResult.error;
+    if (repliesResult.error) throw repliesResult.error;
+    state.placements = placementsResult.data || [];
+    state.messages = messagesResult.data || [];
+    state.replies = repliesResult.data || [];
+  }
+
   async function refreshAll() {
     try {
-      await Promise.all([loadItems(), loadMedia(), loadSettings()]);
+      await Promise.all([loadItems(), loadMedia(), loadSettings(), loadPlacementsAndMessages()]);
       renderDashboard();
       renderContent();
+      fillSelect(document.querySelector('[data-media-section-filter]'), [['', 'Tutte'], ...sectionKeys.map((key) => [key, labels[key]])], document.querySelector('[data-media-section-filter]').value);
       renderMedia();
       populateMediaSelect();
       renderSettings();
+      renderSectionMedia();
+      renderMessages();
     } catch (error) {
       reportError('Caricamento dati amministrativi', error);
       notify('Impossibile caricare i dati. Verifica migrazioni e policy RLS.', 'error');
@@ -301,6 +378,11 @@
       return option;
     }));
     select.value = current;
+    const posterSelect = mediaForm.elements.poster_media_id;
+    const posterCurrent = posterSelect.value;
+    const noPoster = tools.make('option', { text: 'Nessun poster' }); noPoster.value = '';
+    posterSelect.replaceChildren(noPoster, ...state.media.filter((media) => media.media_type === 'image' || media.mime_type.startsWith('image/')).map((media) => { const option = tools.make('option', { text: media.title_internal || media.original_name }); option.value = media.id; return option; }));
+    posterSelect.value = posterCurrent;
   }
 
   function resetContentForm() {
@@ -310,6 +392,7 @@
     contentForm.elements.data.value = '{}';
     contentForm.elements.sort_order.value = String(Math.max(0, ...state.items.filter((item) => item.content_type === state.currentType).map((item) => item.sort_order)) + 10);
     document.querySelector('[data-editor-title]').textContent = 'Nuovo contenuto';
+    renderSectionMedia();
   }
 
   function editContent(item) {
@@ -319,6 +402,7 @@
     contentForm.elements.data.value = JSON.stringify(item.data || {}, null, 2);
     contentForm.elements.media_id.value = item.data?.media_id || '';
     contentForm.elements.public_url.value = item.data?.public_url || item.data?.url || '';
+    renderSectionMedia();
     contentForm.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth' });
   }
 
@@ -434,19 +518,30 @@
   function publicMediaUrl(media) { return media.preview_url || ''; }
 
   function renderMedia() {
-    mediaList.replaceChildren(...state.media.map((media) => {
+    const search = document.querySelector('[data-media-search]').value.trim().toLowerCase();
+    const type = document.querySelector('[data-media-type-filter]').value;
+    const section = document.querySelector('[data-media-section-filter]').value;
+    const filtered = state.media.filter((media) => {
+      const haystack = `${media.title_internal || ''} ${media.original_name} ${media.alt_it} ${media.alt_en}`.toLowerCase();
+      const sections = state.placements.filter((placement) => placement.media_id === media.id).map((placement) => placement.section_key);
+      return (!search || haystack.includes(search)) && (!type || media.media_type === type) && (!section || sections.includes(section));
+    });
+    mediaList.replaceChildren(...filtered.map((media) => {
       const card = tools.make('article', { className: 'media-card' });
       const preview = tools.make('div', { className: 'media-card-preview' });
       if (media.mime_type.startsWith('image/')) {
         const image = tools.make('img'); image.src = publicMediaUrl(media); image.alt = media.alt_it; image.loading = 'lazy'; preview.append(image);
-      } else preview.append(tools.make('strong', { text: 'PDF' }));
+      } else if (media.mime_type.startsWith('video/')) {
+        const video = tools.make('video'); video.src = publicMediaUrl(media); video.muted = true; video.preload = 'metadata'; video.controls = true; preview.append(video);
+      } else preview.append(tools.make('strong', { text: 'Documento PDF legacy' }));
       const body = tools.make('div', { className: 'media-card-body' });
-      body.append(statusBadge(media.status), tools.make('h2', { text: media.original_name }), tools.make('p', { text: `${media.mime_type} · ${bytes(media.size_bytes)}` }));
+      const usage = state.placements.filter((placement) => placement.media_id === media.id).map((placement) => labels[placement.section_key] || placement.section_key);
+      body.append(statusBadge(media.status), tools.make('h2', { text: media.title_internal || media.original_name }), tools.make('p', { text: `${media.mime_type} · ${bytes(media.size_bytes)}` }), tools.make('p', { text: usage.length ? `Usato in: ${[...new Set(usage)].join(', ')}` : 'Non assegnato' }));
       const actions = tools.make('div', { className: 'item-actions' });
       actions.append(actionButton('Modifica / sostituisci', 'replace-media', media.id), actionButton('Elimina', 'delete-media', media.id));
       body.append(actions); card.append(preview, body); return card;
     }));
-    if (!state.media.length) mediaList.append(tools.make('p', { text: 'Nessun media caricato.' }));
+    if (!filtered.length) mediaList.append(tools.make('p', { text: 'Nessun media corrisponde ai filtri.' }));
   }
 
   mediaForm.elements.file.addEventListener('change', () => {
@@ -457,6 +552,7 @@
     if (state.uploadUrl) URL.revokeObjectURL(state.uploadUrl);
     state.uploadUrl = URL.createObjectURL(file);
     if (file.type.startsWith('image/')) { const image = tools.make('img'); image.src = state.uploadUrl; image.alt = 'Anteprima locale'; preview.append(image); }
+    else if (file.type.startsWith('video/')) { const video = tools.make('video'); video.src = state.uploadUrl; video.muted = true; video.controls = true; preview.append(video); }
     else preview.append(tools.make('strong', { text: `${file.name} · ${bytes(file.size)}` }));
   });
 
@@ -464,7 +560,7 @@
     mediaForm.reset();
     mediaForm.elements.id.value = '';
     mediaForm.elements.existing_path.value = '';
-    mediaForm.elements.file.required = true;
+    mediaForm.elements.file.required = false;
     document.querySelector('[data-cancel-media]').hidden = true;
     document.querySelector('[data-upload-preview]').replaceChildren(tools.make('span', { text: 'Nessun file selezionato' }));
     if (state.uploadUrl) URL.revokeObjectURL(state.uploadUrl);
@@ -481,6 +577,10 @@
       mediaForm.elements.existing_path.value = media.object_path;
       mediaForm.elements.alt_it.value = media.alt_it;
       mediaForm.elements.alt_en.value = media.alt_en;
+      mediaForm.elements.title_internal.value = media.title_internal || media.original_name;
+      mediaForm.elements.caption.value = media.caption || '';
+      mediaForm.elements.external_url.value = media.external_url || '';
+      mediaForm.elements.poster_media_id.value = media.poster_media_id || '';
       mediaForm.elements.status.value = media.status;
       mediaForm.elements.file.required = false;
       document.querySelector('[data-cancel-media]').hidden = false;
@@ -489,10 +589,15 @@
     }
     if (button.dataset.action === 'delete-media') {
       if (!await confirmAction('Eliminare il file?', 'Il file e i relativi metadati verranno rimossi. Verifica prima che non sia associato a contenuti pubblicati.')) return;
-      const used = state.items.some((item) => item.data?.media_id === media.id);
-      if (used) return notify('Il file è associato a un contenuto. Rimuovi prima l’associazione.', 'error');
-      const { error: storageError } = await client.storage.from('portfolio-media').remove([media.object_path]);
-      if (storageError) return notify('File non eliminato dallo Storage.', 'error');
+      const usedByItems = state.items.filter((item) => item.data?.media_id === media.id).map((item) => labels[item.content_type]);
+      const usedByPlacements = state.placements.filter((item) => item.media_id === media.id).map((item) => labels[item.section_key]);
+      const usedAsPoster = state.media.filter((item) => item.poster_media_id === media.id).map((item) => `poster di ${item.title_internal || item.original_name}`);
+      const used = [...new Set([...usedByItems, ...usedByPlacements, ...usedAsPoster].filter(Boolean))];
+      if (used.length) return notify(`Il file è usato in: ${used.join(', ')}. Rimuovi prima le associazioni.`, 'error');
+      if (!media.external_url) {
+        const { error: storageError } = await client.storage.from('portfolio-media').remove([media.object_path]);
+        if (storageError) return notify('File non eliminato dallo Storage.', 'error');
+      }
       const { error } = await client.from('media_assets').delete().eq('id', media.id);
       if (error) return notify('Metadati non eliminati.', 'error');
       await refreshAll(); notify('Media eliminato.');
@@ -504,17 +609,28 @@
     if (!mediaForm.reportValidity()) return;
     const file = mediaForm.elements.file.files[0];
     const id = mediaForm.elements.id.value;
-    const allowed = ['image/jpeg','image/png','image/webp','application/pdf'];
-    if (!file && !id) return notify('Seleziona un file.', 'error');
+    const externalUrl = String(mediaForm.elements.external_url.value || '').trim();
+    const allowed = ['image/jpeg','image/png','image/webp','video/mp4','video/webm'];
+    if (!file && !id && !externalUrl) return notify('Seleziona un file o indica un URL video HTTPS.', 'error');
+    if (externalUrl && (!tools.validHttpUrl(externalUrl) || new URL(externalUrl).protocol !== 'https:' || !/\.(mp4|webm)(?:$|[?#])/i.test(new URL(externalUrl).pathname))) return notify('L’URL esterno deve essere HTTPS e puntare a un file MP4 o WebM.', 'error');
     if (file && !allowed.includes(file.type)) return notify('Formato file non consentito.', 'error');
-    if (file && file.size > 8388608) return notify('Il file supera il limite di 8 MB.', 'error');
+    if (file && file.size > (file.type.startsWith('video/') ? 104857600 : 12582912)) return notify('Il file supera il limite consentito.', 'error');
     if (mediaForm.elements.status.value === 'published' && !await confirmAction('Pubblicare il media?', 'Dopo il salvataggio il file potrà essere usato dalla pagina pubblica tramite URL firmato.')) return;
     try {
       const altIt = tools.safeText(mediaForm.elements.alt_it.value, 300);
       const altEn = tools.safeText(mediaForm.elements.alt_en.value, 300);
+      const titleInternal = tools.safeText(mediaForm.elements.title_internal.value, 180);
+      const caption = tools.safeText(mediaForm.elements.caption.value, 500);
+      const posterMediaId = mediaForm.elements.poster_media_id.value || null;
       if (altIt.length < 2 || altEn.length < 2) throw new Error('Alt text italiano e inglese sono obbligatori.');
+      if (!file && !id && externalUrl) {
+        const externalId = crypto.randomUUID();
+        const { error } = await client.from('media_assets').insert({ object_path: `media/external/${externalId}.url`, original_name: `video-esterno-${externalId}.url`, mime_type: 'video/mp4', size_bytes: 1, media_type: 'video', title_internal: titleInternal, caption, external_url: externalUrl, poster_media_id: posterMediaId, alt_it: altIt, alt_en: altEn, status: mediaForm.elements.status.value });
+        if (error) throw new Error('Metadati del video esterno non salvati.');
+        resetMediaForm(); await refreshAll(); notify('Video esterno aggiunto.'); return;
+      }
       if (!file && id) {
-        const { error } = await client.from('media_assets').update({ alt_it: altIt, alt_en: altEn, status: mediaForm.elements.status.value }).eq('id', id);
+        const { error } = await client.from('media_assets').update({ alt_it: altIt, alt_en: altEn, title_internal: titleInternal, caption, external_url: externalUrl || null, poster_media_id: posterMediaId, status: mediaForm.elements.status.value }).eq('id', id);
         if (error) throw new Error('Metadati non salvati.');
         resetMediaForm(); await refreshAll(); notify('Media aggiornato.'); return;
       }
@@ -523,34 +639,196 @@
       const objectPath = `media/${new Date().getFullYear()}/${crypto.randomUUID()}-${safeName}.${extension}`;
       const { error: uploadError } = await client.storage.from('portfolio-media').upload(objectPath, file, { cacheControl: '3600', upsert: false });
       if (uploadError) throw new Error('Upload non riuscito.');
-      const payload = { object_path: objectPath, original_name: file.name, mime_type: file.type, size_bytes: file.size, alt_it: altIt, alt_en: altEn, status: mediaForm.elements.status.value };
+      const payload = { object_path: objectPath, original_name: file.name, mime_type: file.type, size_bytes: file.size, media_type: file.type.startsWith('video/') ? 'video' : 'image', title_internal: titleInternal, caption, external_url: externalUrl || null, poster_media_id: posterMediaId, alt_it: altIt, alt_en: altEn, status: mediaForm.elements.status.value };
       const { error } = id ? await client.from('media_assets').update(payload).eq('id', id) : await client.from('media_assets').insert(payload);
       if (error) { await client.storage.from('portfolio-media').remove([objectPath]); throw new Error('Metadati non salvati.'); }
       const oldPath = mediaForm.elements.existing_path.value;
-      if (id && oldPath && oldPath !== objectPath) await client.storage.from('portfolio-media').remove([oldPath]);
+      const previous = state.media.find((item) => item.id === id);
+      if (id && oldPath && oldPath !== objectPath && !previous?.external_url) await client.storage.from('portfolio-media').remove([oldPath]);
       resetMediaForm(); await refreshAll(); notify(id ? 'Media sostituito.' : 'Media caricato.');
     } catch (error) { reportError('Gestione media', error); notify(error.message, 'error'); }
   });
   document.querySelector('[data-cancel-media]').addEventListener('click', resetMediaForm);
+  document.querySelectorAll('[data-media-search],[data-media-type-filter],[data-media-section-filter]').forEach((control) => control.addEventListener('input', renderMedia));
+
+  const sectionKeys = Object.keys(labels);
+  const placementDialog = document.querySelector('[data-placement-dialog]');
+  const placementForm = document.querySelector('[data-placement-form]');
+  const sectionMediaList = document.querySelector('[data-section-media-list]');
+
+  function fillSelect(select, entries, selected = '') {
+    select.replaceChildren(...entries.map(([value, text]) => { const option = tools.make('option', { text }); option.value = value; return option; }));
+    select.value = selected;
+  }
+
+  function renderSectionMedia() {
+    const contentId = contentForm.elements.id.value;
+    const placements = state.placements.filter((placement) => placement.section_key === state.currentType && (!contentId || placement.content_item_id === contentId)).sort((a, b) => a.sort_order - b.sort_order);
+    sectionMediaList.replaceChildren(...placements.map((placement) => {
+      const media = state.media.find((item) => item.id === placement.media_id);
+      const row = tools.make('article', { className: 'placement-row' });
+      const copy = tools.make('div');
+      copy.append(statusBadge(placement.is_visible ? 'published' : 'hidden'), tools.make('strong', { text: media?.title_internal || media?.original_name || 'Media non disponibile' }), tools.make('small', { text: `${placement.aspect_ratio} · ${placement.fit} · ordine ${placement.sort_order}` }));
+      const actions = tools.make('div', { className: 'item-actions' });
+      actions.append(actionButton('Configura', 'edit-placement', placement.id), actionButton(placement.is_visible ? 'Nascondi' : 'Pubblica', 'toggle-placement', placement.id), actionButton('Elimina', 'delete-placement', placement.id));
+      row.append(copy, actions); return row;
+    }));
+    if (!placements.length) sectionMediaList.append(tools.make('p', { className: 'help-copy', text: contentId ? 'Nessun media assegnato a questo elemento.' : 'Salva il contenuto per poter assegnare media.' }));
+  }
+
+  function placementPayload(form) {
+    const value = (name) => form.elements[name].value;
+    const numberOrNull = (name) => value(name) === '' ? null : Number(value(name));
+    const autoplay = form.elements.autoplay.checked;
+    const muted = form.elements.muted.checked;
+    if (autoplay && !muted) throw new Error('L’autoplay è consentito soltanto con audio disattivato.');
+    return { media_id: value('media_id'), section_key: value('section_key'), content_item_id: value('content_item_id') || null, sort_order: Number(value('sort_order')), is_visible: value('is_visible') === 'true', aspect_ratio: value('aspect_ratio'), fit: value('fit'), position_x: Number(value('position_x')), position_y: Number(value('position_y')), focal_x: Number(value('focal_x')), focal_y: Number(value('focal_y')), max_width: numberOrNull('max_width'), max_height: numberOrNull('max_height'), border_radius: Number(value('border_radius')), opacity: Number(value('opacity')), overlay: tools.safeText(value('overlay'), 80), desktop_behavior: value('desktop_behavior'), mobile_behavior: value('mobile_behavior'), autoplay, loop: form.elements.loop.checked, muted, controls: form.elements.controls.checked, preload: value('preload') };
+  }
+
+  function renderPlacementPreview() {
+    let payload;
+    try { payload = placementPayload(placementForm); } catch (error) { return; }
+    const media = state.media.find((item) => item.id === payload.media_id);
+    document.querySelectorAll('[data-placement-preview]').forEach((box) => {
+      box.replaceChildren();
+      if (!media) return box.append(tools.make('span', { text: 'Seleziona un media' }));
+      const hidden = box.dataset.placementPreview === 'mobile' ? payload.mobile_behavior === 'hide' : payload.desktop_behavior === 'hide';
+      if (hidden) return box.append(tools.make('span', { text: 'Nascosto su questo dispositivo' }));
+      const element = media.media_type === 'video' ? tools.make('video') : tools.make('img');
+      element.src = publicMediaUrl(media); element.alt = media.alt_it || '';
+      if (element instanceof HTMLVideoElement) { element.muted = true; element.controls = true; }
+      element.style.cssText = `width:100%;height:100%;object-fit:${payload.fit === 'natural' ? 'contain' : payload.fit};object-position:${payload.focal_x}% ${payload.focal_y}%;border-radius:${payload.border_radius}px;opacity:${payload.opacity}`;
+      box.style.aspectRatio = payload.aspect_ratio === 'auto' ? '16 / 9' : payload.aspect_ratio;
+      box.append(element);
+    });
+  }
+
+  function openPlacement(placement = null) {
+    placementForm.reset();
+    fillSelect(placementForm.elements.media_id, state.media.filter((media) => ['image','video'].includes(media.media_type)).map((media) => [media.id, media.title_internal || media.original_name]), placement?.media_id || '');
+    fillSelect(placementForm.elements.section_key, sectionKeys.map((key) => [key, labels[key]]), placement?.section_key || state.currentType);
+    placementForm.elements.id.value = placement?.id || '';
+    placementForm.elements.content_item_id.value = placement?.content_item_id || contentForm.elements.id.value || '';
+    const defaults = { sort_order: 0, is_visible: false, aspect_ratio: 'auto', fit: 'cover', position_x: 50, position_y: 50, focal_x: 50, focal_y: 50, max_width: '', max_height: '', border_radius: 12, opacity: 1, overlay: '', desktop_behavior: 'show', mobile_behavior: 'show', preload: 'metadata' };
+    Object.entries({ ...defaults, ...(placement || {}) }).forEach(([key, value]) => { if (placementForm.elements[key] && !['autoplay','loop','muted','controls'].includes(key)) placementForm.elements[key].value = String(value ?? ''); });
+    ['autoplay','loop','muted','controls'].forEach((key) => { placementForm.elements[key].checked = placement ? Boolean(placement[key]) : ['muted','controls'].includes(key); });
+    document.querySelector('[data-duplicate-placement]').hidden = !placement;
+    renderPlacementPreview(); placementDialog.showModal();
+  }
+
+  document.querySelector('[data-add-placement]').addEventListener('click', () => {
+    if (!contentForm.elements.id.value) return notify('Salva prima il contenuto.', 'error');
+    if (!state.media.length) return notify('Carica prima un elemento nella libreria Media.', 'error');
+    openPlacement();
+  });
+  placementForm.addEventListener('input', renderPlacementPreview);
+  placementForm.addEventListener('submit', async (event) => {
+    event.preventDefault(); if (!placementForm.reportValidity()) return;
+    try {
+      const payload = placementPayload(placementForm);
+      const media = state.media.find((item) => item.id === payload.media_id);
+      if (payload.is_visible && media?.status !== 'published') throw new Error('Pubblica prima il media nella libreria.');
+      const id = placementForm.elements.id.value;
+      const { error } = id ? await client.from('media_placements').update(payload).eq('id', id) : await client.from('media_placements').insert(payload);
+      if (error) throw error;
+      placementDialog.close(); await refreshAll(); notify('Configurazione media salvata.');
+    } catch (error) { reportError('Configurazione media', error); notify(error.message, 'error'); }
+  });
+  document.querySelector('[data-duplicate-placement]').addEventListener('click', async () => {
+    try { const payload = placementPayload(placementForm); payload.sort_order += 1; const { error } = await client.from('media_placements').insert(payload); if (error) throw error; placementDialog.close(); await refreshAll(); notify('Configurazione duplicata.'); } catch (error) { notify(error.message, 'error'); }
+  });
+  sectionMediaList.addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-action]'); if (!button) return;
+    const placement = state.placements.find((item) => item.id === button.dataset.id); if (!placement) return;
+    if (button.dataset.action === 'edit-placement') return openPlacement(placement);
+    if (button.dataset.action === 'toggle-placement') { const media = state.media.find((item) => item.id === placement.media_id); if (!placement.is_visible && media?.status !== 'published') return notify('Pubblica prima il media nella libreria.', 'error'); const { error } = await client.from('media_placements').update({ is_visible: !placement.is_visible }).eq('id', placement.id); if (error) return notify('Stato non aggiornato.', 'error'); await refreshAll(); }
+    if (button.dataset.action === 'delete-placement') { if (!await confirmAction('Rimuovere l’associazione?', 'Il file resterà nella libreria Media.')) return; const { error } = await client.from('media_placements').delete().eq('id', placement.id); if (error) return notify('Associazione non rimossa.', 'error'); await refreshAll(); }
+  });
+
+  function renderMessages() {
+    const filter = document.querySelector('[data-message-filter]').value;
+    const list = document.querySelector('[data-message-list]');
+    const messages = state.messages.filter((message) => !filter || message.status === filter);
+    list.replaceChildren(...messages.map((message) => {
+      const button = tools.make('button', { className: `message-row ${message.status === 'new' ? 'is-new' : ''}`, type: 'button' }); button.dataset.messageId = message.id;
+      button.append(statusBadge(message.status === 'replied' ? 'published' : message.status === 'new' ? 'draft' : 'hidden'), tools.make('strong', { text: message.subject }), tools.make('span', { text: `${message.sender_name} · ${formatDate(message.created_at)}` })); return button;
+    }));
+    if (!messages.length) list.append(tools.make('p', { text: 'Nessun messaggio.' }));
+    const unread = state.messages.filter((message) => message.status === 'new').length;
+    const badge = document.querySelector('[data-unread-count]'); badge.hidden = !unread; badge.textContent = String(unread);
+  }
+
+  async function openMessage(message) {
+    if (message.status === 'new') { await client.from('contact_messages').update({ status: 'read', read_at: new Date().toISOString() }).eq('id', message.id); message.status = 'read'; renderMessages(); }
+    const detail = document.querySelector('[data-message-detail]'); detail.replaceChildren();
+    const title = tools.make('h2', { text: message.subject });
+    const meta = tools.make('p', { className: 'message-meta', text: `${message.sender_name} <${message.sender_email}> · ${formatDate(message.created_at)}${message.company ? ` · ${message.company}` : ''}` });
+    const original = tools.make('div', { className: 'message-original', text: message.message_text });
+    const history = tools.make('div', { className: 'reply-history' });
+    state.replies.filter((reply) => reply.message_id === message.id).forEach((reply) => { const item = tools.make('article'); item.append(statusBadge(reply.status === 'sent' ? 'published' : reply.status === 'failed' ? 'draft' : 'hidden'), tools.make('time', { text: formatDate(reply.created_at) }), tools.make('p', { text: reply.reply_text })); if (reply.status === 'failed') item.append(actionButton('Riprova invio', 'retry-reply', reply.id)); history.append(item); });
+    const form = tools.make('form', { className: 'reply-form' }); form.dataset.replyForm = message.id;
+    const label = tools.make('label', { text: 'Risposta' }); const textarea = tools.make('textarea'); textarea.name = 'reply'; textarea.rows = 9; textarea.required = true; textarea.maxLength = 10000; label.append(textarea);
+    const preview = tools.make('div', { className: 'reply-preview' }); preview.append(tools.make('strong', { text: `Re: ${message.subject}` }), tools.make('p', { text: 'Anteprima della risposta' }), tools.make('small', { text: 'Gaetano Russo – IT Specialist' }));
+    textarea.addEventListener('input', () => { preview.querySelector('p').textContent = textarea.value || 'Anteprima della risposta'; state.replyDraftDirty = Boolean(textarea.value.trim()); });
+    const actions = tools.make('div', { className: 'form-actions' }); const send = tools.make('button', { className: 'button primary', type: 'submit', text: 'Invia risposta' }); actions.append(send, actionButton('Archivia', 'archive-message', message.id), actionButton('Elimina', 'delete-message', message.id));
+    form.append(label, preview, actions); detail.append(title, meta, original, tools.make('h3', { text: 'Storico risposte' }), history, form);
+  }
+
+  document.querySelector('[data-message-filter]').addEventListener('change', renderMessages);
+  document.querySelector('[data-message-list]').addEventListener('click', (event) => { const row = event.target.closest('[data-message-id]'); const message = state.messages.find((item) => item.id === row?.dataset.messageId); if (message) openMessage(message); });
+  document.querySelector('[data-message-detail]').addEventListener('click', async (event) => {
+    const button = event.target.closest('[data-action]'); if (!button) return;
+    if (button.dataset.action === 'archive-message') { await client.from('contact_messages').update({ status: 'archived', archived_at: new Date().toISOString() }).eq('id', button.dataset.id); await refreshAll(); }
+    if (button.dataset.action === 'delete-message') { if (!await confirmAction('Eliminare il messaggio?', 'Verranno eliminate anche tutte le risposte associate.')) return; await client.from('contact_messages').delete().eq('id', button.dataset.id); document.querySelector('[data-message-detail]').innerHTML = '<p>Messaggio eliminato.</p>'; await refreshAll(); }
+    if (button.dataset.action === 'retry-reply') return sendReply(state.replies.find((item) => item.id === button.dataset.id));
+  });
+  document.querySelector('[data-message-detail]').addEventListener('submit', async (event) => {
+    const form = event.target.closest('[data-reply-form]'); if (!form) return; event.preventDefault(); if (!form.reportValidity()) return;
+    const token = crypto.randomUUID(); const replyText = tools.safeText(form.elements.reply.value, 10000);
+    const { data, error } = await client.from('message_replies').insert({ message_id: form.dataset.replyForm, reply_text: replyText, client_token: token }).select().single();
+    if (error) return notify('Risposta non salvata.', 'error'); form.querySelector('button[type=submit]').disabled = true; await sendReply(data); state.replyDraftDirty = false;
+  });
+  async function sendReply(reply) {
+    if (!reply) return;
+    try { const { data } = await client.auth.getSession(); const response = await fetch('/api/reply-message', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${data.session?.access_token || ''}` }, body: JSON.stringify({ replyId: reply.id }) }); const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Invio non riuscito'); await refreshAll(); const message = state.messages.find((item) => item.id === reply.message_id); if (message) openMessage(message); notify('Risposta inviata.'); } catch (error) { await client.from('message_replies').update({ status: 'failed', error_code: 'endpoint_unavailable' }).eq('id', reply.id).neq('status', 'sent'); await refreshAll(); notify(`${error.message}. Verifica endpoint e variabili email.`, 'error'); }
+  }
+  window.addEventListener('beforeunload', (event) => { if (!state.replyDraftDirty) return; event.preventDefault(); event.returnValue = ''; });
 
   async function generateQr(url) {
-    if (!tools.validHttpUrl(url)) throw new Error('Inserisci un URL pubblico HTTP o HTTPS valido.');
+    if (!tools.validHttpUrl(url)) throw new Error('Inserisci un URL pubblico valido.');
     const parsed = new URL(url);
+    if (parsed.protocol !== 'https:' || ['localhost','127.0.0.1','::1'].includes(parsed.hostname)) throw new Error('L’URL definitivo deve usare HTTPS e non può essere localhost.');
     if (parsed.pathname.toLowerCase().includes('/admin') || [...parsed.searchParams.keys()].some((key) => /token|key|auth|session|code/i.test(key))) throw new Error('Il QR può contenere soltanto l’URL pubblico del portfolio.');
     const qrCode = window.QRCode;
     if (!qrCode?.toCanvas || !qrCode?.toString) throw new Error('Libreria QR locale non disponibile. Ricarica la pagina.');
     const canvas = document.querySelector('[data-qr-canvas]');
     await qrCode.toCanvas(canvas, parsed.href, { width: 1024, margin: 4, color: { dark: '#07111fff', light: '#ffffffff' }, errorCorrectionLevel: 'H' });
     state.qrSvg = await qrCode.toString(parsed.href, { type: 'svg', width: 1024, margin: 4, color: { dark: '#07111fff', light: '#ffffffff' }, errorCorrectionLevel: 'H' });
+    state.qrUrl = parsed.href;
     document.querySelector('[data-qr-url]').textContent = parsed.href;
+    document.querySelector('[data-qr-warning]').textContent = 'Anteprima pronta: questo è l’URL realmente codificato.';
+    document.querySelectorAll('[data-download-png],[data-download-svg]').forEach((button) => { button.disabled = false; });
   }
 
   const qrForm = document.querySelector('[data-qr-form]');
-  qrForm.elements.url.value = backend?.config.publicSiteUrl || new URL('../', location.href).href;
-  qrForm.addEventListener('submit', async (event) => { event.preventDefault(); try { await generateQr(qrForm.elements.url.value); notify('QR Code rigenerato. Verifica la scansione con un dispositivo reale prima della stampa.'); } catch (error) { reportError('Generazione QR Code', error); notify(error.message, 'error'); } });
+  qrForm.elements.url.value = '';
+  qrForm.addEventListener('submit', async (event) => { event.preventDefault(); try { await generateQr(qrForm.elements.url.value); const { error } = await client.from('site_settings').upsert({ key: 'site.public_url', value: state.qrUrl, is_public: true }, { onConflict: 'key' }); if (error) throw error; await loadSettings(); renderSettings(); notify('URL salvato e QR Code rigenerato. Verifica la scansione prima della stampa.'); } catch (error) { state.qrUrl = ''; document.querySelectorAll('[data-download-png],[data-download-svg]').forEach((button) => { button.disabled = true; }); document.querySelector('[data-qr-warning]').textContent = error.message; reportError('Generazione QR Code', error); notify(error.message, 'error'); } });
   function downloadBlob(blob, fileName) { const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = fileName; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
-  document.querySelector('[data-download-png]').addEventListener('click', () => document.querySelector('[data-qr-canvas]').toBlob((blob) => { if (blob) downloadBlob(blob, 'gaetano-russo-portfolio-qr.png'); }, 'image/png'));
-  document.querySelector('[data-download-svg]').addEventListener('click', () => { if (state.qrSvg) downloadBlob(new Blob([state.qrSvg], { type: 'image/svg+xml' }), 'gaetano-russo-portfolio-qr.svg'); else notify('Genera prima il QR Code.', 'error'); });
+  function cardGeometry(format) { return format === 'portrait' ? { width: 1080, height: 1920, qr: 720, x: 180, y: 590 } : format === 'landscape' ? { width: 1920, height: 1080, qr: 650, x: 1130, y: 220 } : { width: 1600, height: 1600, qr: 780, x: 410, y: 470 }; }
+  function cardTextLayout(format) { return format === 'landscape' ? { logoX: 120, logoY: 170, nameX: 120, nameY: 360, roleY: 430, copyY: 620, urlY: 770 } : { logoX: 120, logoY: 150, nameX: 280, nameY: 190, roleY: 250, copyY: format === 'portrait' ? 1450 : 1330, urlY: format === 'portrait' ? 1530 : 1410 }; }
+  function drawRoundRect(context, x, y, width, height, radius) { context.beginPath(); context.roundRect(x, y, width, height, radius); context.fill(); }
+  function createCardCanvas() {
+    if (!state.qrUrl) throw new Error('Configura prima un URL pubblico valido.');
+    const format = qrForm.elements.format.value; const geometry = cardGeometry(format); const textLayout = cardTextLayout(format);
+    const canvas = document.createElement('canvas'); canvas.width = geometry.width; canvas.height = geometry.height; const context = canvas.getContext('2d');
+    const gradient = context.createLinearGradient(0, 0, geometry.width, geometry.height); gradient.addColorStop(0, '#07111f'); gradient.addColorStop(1, '#12283d'); context.fillStyle = gradient; context.fillRect(0, 0, geometry.width, geometry.height);
+    context.fillStyle = '#e1b765'; drawRoundRect(context, textLayout.logoX, textLayout.logoY, 120, 120, 22); context.fillStyle = '#07111f'; context.font = '800 54px system-ui'; context.textAlign = 'center'; context.fillText('GR', textLayout.logoX + 60, textLayout.logoY + 78);
+    context.textAlign = 'left'; context.fillStyle = '#edf3f6'; context.font = '800 62px system-ui'; context.fillText('Gaetano Russo', textLayout.nameX, textLayout.nameY); context.fillStyle = '#e1b765'; context.font = '600 34px system-ui'; context.fillText('IT Specialist', textLayout.nameX, textLayout.roleY);
+    context.fillStyle = '#ffffff'; drawRoundRect(context, geometry.x - 36, geometry.y - 36, geometry.qr + 72, geometry.qr + 72, 28); context.drawImage(document.querySelector('[data-qr-canvas]'), geometry.x, geometry.y, geometry.qr, geometry.qr);
+    context.fillStyle = '#edf3f6'; context.font = '600 34px system-ui'; context.fillText('Scansiona per visitare il mio portfolio', textLayout.logoX, textLayout.copyY); context.fillStyle = '#9eacb7'; context.font = '26px system-ui'; context.fillText(state.qrUrl.slice(0, 74), textLayout.logoX, textLayout.urlY); return canvas;
+  }
+  document.querySelector('[data-download-png]').addEventListener('click', () => { try { createCardCanvas().toBlob((blob) => { if (blob) downloadBlob(blob, `gaetano-russo-${qrForm.elements.format.value}.png`); }, 'image/png'); } catch (error) { notify(error.message, 'error'); } });
+  document.querySelector('[data-download-svg]').addEventListener('click', () => { if (!state.qrSvg || !state.qrUrl) return notify('Genera prima il QR Code.', 'error'); const format = qrForm.elements.format.value; const g = cardGeometry(format); const t = cardTextLayout(format); const encodedQr = btoa(unescape(encodeURIComponent(state.qrSvg))); const safeUrl = state.qrUrl.replace(/[&<>"']/g, (character) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;' }[character])); const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}" viewBox="0 0 ${g.width} ${g.height}"><defs><linearGradient id="bg"><stop stop-color="#07111f"/><stop offset="1" stop-color="#12283d"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#bg)"/><rect x="${t.logoX}" y="${t.logoY}" width="120" height="120" rx="22" fill="#e1b765"/><text x="${t.logoX + 60}" y="${t.logoY + 79}" text-anchor="middle" font-family="system-ui" font-size="54" font-weight="800" fill="#07111f">GR</text><text x="${t.nameX}" y="${t.nameY}" font-family="system-ui" font-size="62" font-weight="800" fill="#edf3f6">Gaetano Russo</text><text x="${t.nameX}" y="${t.roleY}" font-family="system-ui" font-size="34" font-weight="600" fill="#e1b765">IT Specialist</text><rect x="${g.x - 36}" y="${g.y - 36}" width="${g.qr + 72}" height="${g.qr + 72}" rx="28" fill="#fff"/><image href="data:image/svg+xml;base64,${encodedQr}" x="${g.x}" y="${g.y}" width="${g.qr}" height="${g.qr}"/><text x="${t.logoX}" y="${t.copyY}" font-family="system-ui" font-size="34" font-weight="600" fill="#edf3f6">Scansiona per visitare il mio portfolio</text><text x="${t.logoX}" y="${t.urlY}" font-family="system-ui" font-size="26" fill="#9eacb7">${safeUrl}</text></svg>`; downloadBlob(new Blob([svg], { type: 'image/svg+xml' }), `gaetano-russo-${format}.svg`); });
 
   function settingValue(key, fallback) {
     const setting = state.settings.find((item) => item.key === key);
@@ -560,18 +838,28 @@
   function renderSettings() {
     const form = document.querySelector('[data-settings-form]');
     form.elements.language.value = settingValue('site.language.default', 'it');
-    form.elements.theme.value = settingValue('site.theme.default', 'system');
     form.elements.public_url.value = settingValue('site.public_url', '');
     const order = settingValue('sections.order', []);
     form.elements.section_order.value = Array.isArray(order) ? order.join(',') : '';
-    if (!backend?.config.publicSiteUrl && form.elements.public_url.value) qrForm.elements.url.value = form.elements.public_url.value;
+    const configuredUrl = String(form.elements.public_url.value || '');
+    const runtimeUrl = String(backend?.config.publicSiteUrl || '');
+    const candidate = configuredUrl || runtimeUrl;
+    try {
+      const parsed = new URL(candidate);
+      if (parsed.protocol === 'https:' && !['localhost','127.0.0.1','::1'].includes(parsed.hostname)) qrForm.elements.url.value = parsed.href;
+      else throw new Error('development URL');
+    } catch (error) {
+      qrForm.elements.url.value = '';
+      document.querySelector('[data-qr-warning]').textContent = 'Configura un URL pubblico HTTPS per abilitare anteprima e download.';
+      document.querySelectorAll('[data-download-png],[data-download-svg]').forEach((button) => { button.disabled = true; });
+    }
   }
 
   document.querySelector('[data-settings-form]').addEventListener('submit', async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
     const publicUrl = String(form.elements.public_url.value || '').trim();
-    if (publicUrl && !tools.validHttpUrl(publicUrl)) return notify('URL pubblico non valido.', 'error');
+    if (publicUrl && (!tools.validHttpUrl(publicUrl) || new URL(publicUrl).protocol !== 'https:' || ['localhost','127.0.0.1','::1'].includes(new URL(publicUrl).hostname))) return notify('L’URL pubblico deve essere HTTPS e non può essere localhost.', 'error');
     let order;
     try {
       order = String(form.elements.section_order.value || '').split(',').map((item) => tools.safeText(item, 50)).filter(Boolean);
@@ -579,7 +867,6 @@
     } catch (error) { return notify(error.message, 'error'); }
     const rows = [
       { key: 'site.language.default', value: form.elements.language.value, is_public: true },
-      { key: 'site.theme.default', value: form.elements.theme.value, is_public: true },
       { key: 'site.public_url', value: publicUrl, is_public: true },
       { key: 'sections.order', value: order, is_public: true }
     ];
@@ -592,14 +879,13 @@
     document.querySelectorAll('[data-panel]').forEach((panel) => { panel.hidden = panel.dataset.panel !== view; });
     document.querySelectorAll('[data-view]').forEach((button) => button.classList.toggle('is-active', button === trigger));
     if (view === 'content') { state.currentType = contentType; resetContentForm(); contentForm.hidden = true; renderContent(); }
-    if (view === 'qr' && !state.qrSvg) generateQr(qrForm.elements.url.value).catch(() => {});
+    if (view === 'qr' && !state.qrSvg && qrForm.elements.url.value) generateQr(qrForm.elements.url.value).catch((error) => { document.querySelector('[data-qr-warning]').textContent = error.message; });
     document.querySelector('[data-sidebar]').classList.remove('is-open');
     document.querySelector('[data-menu-toggle]').setAttribute('aria-expanded', 'false');
   }
 
   document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => openView(button.dataset.view, button.dataset.contentType, button)));
   document.querySelector('[data-menu-toggle]').addEventListener('click', (event) => { const sidebar = document.querySelector('[data-sidebar]'); const open = sidebar.classList.toggle('is-open'); event.currentTarget.setAttribute('aria-expanded', String(open)); });
-  document.querySelector('[data-theme-toggle]').addEventListener('click', () => applyTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark'));
   const localeSelect = document.querySelector('[data-admin-locale]');
   localeSelect.value = state.locale;
   localeSelect.addEventListener('change', () => {

@@ -1,6 +1,7 @@
 import { createServer } from 'node:http';
 import { createReadStream, existsSync, readFileSync, statSync } from 'node:fs';
 import { extname, join, normalize, resolve, sep } from 'node:path';
+import { createRequire } from 'node:module';
 
 const root = resolve(process.cwd());
 const rootPrefix = `${root}${sep}`;
@@ -30,18 +31,33 @@ function loadLocalEnvironment() {
   return values;
 }
 
+const localEnvironment = loadLocalEnvironment();
+Object.entries(localEnvironment).forEach(([key, value]) => { if (!process.env[key]) process.env[key] = value; });
+const require = createRequire(import.meta.url);
+const replyMessageHandler = require('../api/reply-message.js');
+
 function runtimeConfig() {
   const local = loadLocalEnvironment();
   const config = {
-    supabaseUrl: process.env.SUPABASE_URL || local.SUPABASE_URL || '',
-    supabaseAnonKey: process.env.SUPABASE_ANON_KEY || local.SUPABASE_ANON_KEY || '',
+    supabaseUrl: local.SUPABASE_URL || process.env.SUPABASE_URL || '',
+    supabaseAnonKey: local.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '',
     publicSiteUrl: process.env.PUBLIC_SITE_URL || local.PUBLIC_SITE_URL || `http://127.0.0.1:${port}/`
   };
   return `window.PORTFOLIO_CONFIG = Object.freeze(${JSON.stringify(config)});`;
 }
 
-createServer((request, response) => {
+createServer(async (request, response) => {
   const urlPath = decodeURIComponent(new URL(request.url, `http://${request.headers.host}`).pathname);
+  if (urlPath === '/api/reply-message') {
+    let body = '';
+    for await (const chunk of request) {
+      body += chunk;
+      if (body.length > 32768) { response.writeHead(413); response.end(); return; }
+    }
+    try { request.body = body ? JSON.parse(body) : {}; } catch (error) { response.writeHead(400); response.end('{"error":"JSON non valido"}'); return; }
+    await replyMessageHandler(request, response);
+    return;
+  }
   if (urlPath === '/runtime-config.js') {
     const body = runtimeConfig();
     response.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Length': Buffer.byteLength(body) });

@@ -68,7 +68,7 @@ returns boolean
 language sql
 stable
 security definer
-set search_path = public, auth
+set search_path = ''
 as $$
   select exists (
     select 1
@@ -87,14 +87,14 @@ create or replace function public.grant_portfolio_admin(target_email text)
 returns uuid
 language plpgsql
 security definer
-set search_path = public, auth
+set search_path = ''
 as $$
 declare target_id uuid;
 begin
   if lower(trim(target_email)) <> 'g.russomacteanimo@gmail.com' then
     raise exception 'Email not allowed for portfolio administration';
   end if;
-  select id into target_id from auth.users where lower(email) = lower(target_email) limit 1;
+  select id into target_id from auth.users where lower(email) = lower(trim(target_email)) limit 1;
   if target_id is null then raise exception 'Auth user not found'; end if;
   insert into public.admin_users (user_id, is_active) values (target_id, true)
   on conflict (user_id) do update set is_active = true, updated_at = now();
@@ -106,7 +106,7 @@ revoke all on function public.grant_portfolio_admin(text) from public, anon, aut
 grant execute on function public.grant_portfolio_admin(text) to postgres, service_role;
 
 create or replace function public.set_portfolio_audit_fields()
-returns trigger language plpgsql set search_path = public as $$
+returns trigger language plpgsql set search_path = '' as $$
 begin
   new.updated_at = now();
   new.updated_by = auth.uid();
@@ -116,13 +116,16 @@ end;
 $$;
 
 create or replace function public.set_site_settings_audit_fields()
-returns trigger language plpgsql set search_path = public as $$
+returns trigger language plpgsql set search_path = '' as $$
 begin
   new.updated_at = now();
   new.updated_by = auth.uid();
   return new;
 end;
 $$;
+
+revoke all on function public.set_portfolio_audit_fields() from public, anon, authenticated;
+revoke all on function public.set_site_settings_audit_fields() from public, anon, authenticated;
 
 drop trigger if exists content_items_audit on public.content_items;
 create trigger content_items_audit before insert or update on public.content_items

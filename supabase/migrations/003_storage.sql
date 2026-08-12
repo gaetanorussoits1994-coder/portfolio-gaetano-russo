@@ -13,6 +13,7 @@ create policy "public reads portfolio media" on storage.objects for select
 to anon, authenticated using (
   bucket_id = 'portfolio-media'
   and name like 'media/%'
+  and name !~ '\.\.'
   and (
     public.is_portfolio_admin()
     or exists (
@@ -25,7 +26,10 @@ to anon, authenticated using (
 drop policy if exists "admins upload portfolio media" on storage.objects;
 create policy "admins upload portfolio media" on storage.objects for insert
 to authenticated with check (
-  bucket_id = 'portfolio-media' and name like 'media/%' and public.is_portfolio_admin()
+  bucket_id = 'portfolio-media'
+  and name like 'media/%'
+  and name !~ '\.\.'
+  and public.is_portfolio_admin()
 );
 
 drop policy if exists "admins update portfolio media" on storage.objects;
@@ -33,7 +37,10 @@ create policy "admins update portfolio media" on storage.objects for update
 to authenticated using (
   bucket_id = 'portfolio-media' and public.is_portfolio_admin()
 ) with check (
-  bucket_id = 'portfolio-media' and name like 'media/%' and public.is_portfolio_admin()
+  bucket_id = 'portfolio-media'
+  and name like 'media/%'
+  and name !~ '\.\.'
+  and public.is_portfolio_admin()
 );
 
 drop policy if exists "admins delete portfolio media" on storage.objects;

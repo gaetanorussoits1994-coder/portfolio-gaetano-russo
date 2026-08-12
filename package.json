@@ -8,7 +8,7 @@
     "dev": "node tools/serve.mjs",
     "prebuild": "npm run vendor",
     "build": "node tools/build.mjs",
-    "check": "node --check js/portfolio-data.js && node --check js/home.js && node --check js/contact.js && node --check js/site.js && node --check js/i18n.js && node --check js/supabase-client.js && node --check js/content-service.js && node --check admin/common.js && node --check admin/app.js && node --check admin/reset-password.js && node --check tools/vendor.mjs && node --check tools/serve.mjs && node --check tools/build.mjs"
+    "check": "node --check js/portfolio-data.js && node --check js/home.js && node --check js/contact.js && node --check js/site.js && node --check js/i18n.js && node --check js/supabase-client.js && node --check js/content-service.js && node --check admin/common.js && node --check admin/app.js && node --check admin/reset-password.js && node --check api/reply-message.js && node --check tools/vendor.mjs && node --check tools/serve.mjs && node --check tools/build.mjs"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.112.1",

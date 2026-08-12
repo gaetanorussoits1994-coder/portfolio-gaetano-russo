@@ -6,7 +6,7 @@
   <meta name="robots" content="noindex, nofollow, noarchive">
   <meta name="theme-color" content="#07111f">
   <title>Amministrazione portfolio | Gaetano Russo</title>
-  <script>try{document.documentElement.dataset.theme=localStorage.getItem('site-theme')||'dark'}catch(e){document.documentElement.dataset.theme='dark'}</script>
+  <script>document.documentElement.dataset.theme='dark'</script>
   <script>
     window.__adminBootTimeout = window.setTimeout(function () {
       var loading = document.querySelector('[data-auth-loading]');
@@ -63,7 +63,6 @@
       <div class="topbar-actions">
         <label class="locale-picker">Lingua contenuti<select data-admin-locale aria-label="Lingua dei contenuti amministrativi"><option value="it">IT</option><option value="en">EN</option></select></label>
         <span class="user-chip" data-user-email></span>
-        <button class="icon-button" type="button" data-theme-toggle aria-label="Cambia tema">◐</button>
         <button class="button compact" type="button" data-logout>Logout</button>
       </div>
     </header>
@@ -84,6 +83,7 @@
         <button type="button" data-view="content" data-content-type="section">Ordine sezioni</button>
         <button type="button" data-view="settings">Impostazioni generali</button>
         <button type="button" data-view="media">Media</button>
+        <button type="button" data-view="messages">Messaggi <span class="nav-count" data-unread-count hidden></span></button>
         <button type="button" data-view="qr">QR Code</button>
         <button type="button" data-view="account">Account</button>
       </nav>
@@ -123,6 +123,11 @@
           </div>
           <label>Dati strutturati JSON<textarea name="data" rows="8" spellcheck="false">{}</textarea><small>Solo JSON valido. Script, markup HTML e URL javascript: vengono rifiutati.</small></label>
           <div class="form-actions"><button class="button primary" type="submit">Salva</button><button class="button" type="button" data-preview-form>Anteprima</button><button class="button" type="button" data-cancel-edit>Annulla</button></div>
+          <section class="section-media panel-inset" aria-labelledby="section-media-title">
+            <div class="editor-heading"><div><p class="eyebrow">Componente condiviso</p><h3 id="section-media-title">Immagini e video della sezione</h3></div><button class="button" type="button" data-add-placement>Associa media</button></div>
+            <p class="help-copy">Salva prima il contenuto, poi assegna e configura uno o più elementi della libreria.</p>
+            <div data-section-media-list></div>
+          </section>
         </form>
         <div class="content-list" data-content-list></div>
       </section>
@@ -131,21 +136,30 @@
         <div class="view-heading"><div><p class="eyebrow">Supabase Storage</p><h1>Media</h1></div></div>
         <form class="panel media-form" data-media-form novalidate>
           <input type="hidden" name="id"><input type="hidden" name="existing_path">
-          <div class="form-grid"><label>File *<input name="file" type="file" accept="image/jpeg,image/png,image/webp,application/pdf" required></label><label>Stato<select name="status"><option value="draft">Bozza</option><option value="published">Pubblicato</option><option value="hidden">Nascosto</option></select></label></div>
+          <div class="media-toolbar"><label>Cerca<input type="search" data-media-search placeholder="Titolo, file o alt text"></label><label>Tipo<select data-media-type-filter><option value="">Tutti</option><option value="image">Immagini</option><option value="video">Video</option><option value="document">Documenti legacy</option></select></label><label>Sezione<select data-media-section-filter><option value="">Tutte</option></select></label></div>
+          <div class="form-grid"><label>File<input name="file" type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm"></label><label>URL video esterno HTTPS<input name="external_url" type="url" inputmode="url" placeholder="https://"></label></div>
+          <div class="form-grid"><label>Titolo interno *<input name="title_internal" required maxlength="180"></label><label>Stato<select name="status"><option value="draft">Bozza</option><option value="published">Pubblicato</option><option value="hidden">Nascosto</option></select></label></div>
+          <label>Poster video<select name="poster_media_id"><option value="">Nessun poster</option></select></label>
           <div class="language-grid"><label>Alt text italiano *<input name="alt_it" required maxlength="300"></label><label>Alt text English *<input name="alt_en" required maxlength="300"></label></div>
+          <label>Didascalia facoltativa<input name="caption" maxlength="500"></label>
           <div class="media-preview" data-upload-preview><span>Nessun file selezionato</span></div>
           <div class="form-actions"><button class="button primary" type="submit">Carica media</button><button class="button" type="button" data-cancel-media hidden>Annulla sostituzione</button></div>
-          <small>Formati: JPEG, PNG, WebP, PDF. Dimensione massima: 8 MB. Ogni file caricato nel bucket è destinato alla pubblicazione.</small>
+          <small>Immagini JPEG/PNG/WebP fino a 12 MB; video MP4/WebM fino a 100 MB. Per pubblicare sono obbligatori gli alt text. Gli URL esterni devono usare HTTPS.</small>
         </form>
         <div class="media-grid" data-media-list></div>
       </section>
 
       <section class="admin-view" data-panel="qr" hidden>
         <div class="view-heading"><div><p class="eyebrow">Condivisione</p><h1>QR Code</h1></div></div>
-        <div class="qr-layout panel">
-          <form data-qr-form><label>URL pubblico del portfolio<input name="url" type="url" required inputmode="url"></label><button class="button primary" type="submit">Rigenera QR</button><p>Il QR Code rimanda esclusivamente alla pagina pubblica del portfolio.</p></form>
-          <div class="qr-preview"><canvas width="1024" height="1024" data-qr-canvas aria-label="Anteprima QR Code"></canvas><code data-qr-url></code><div class="form-actions"><button class="button" type="button" data-download-png>Download PNG</button><button class="button" type="button" data-download-svg>Download SVG</button></div></div>
+        <div class="qr-layout">
+          <div class="digital-card-wrap"><article class="digital-card" data-qr-card><header><span class="card-monogram">GR</span><div><strong>Gaetano Russo</strong><span>IT Specialist</span></div></header><div class="qr-square"><canvas width="1024" height="1024" data-qr-canvas aria-label="Anteprima QR Code"></canvas></div><div class="card-copy"><p>Scansiona per visitare il mio portfolio</p><code data-qr-url>Nessun URL pubblico configurato</code></div></article></div>
+          <form class="panel qr-settings" data-qr-form novalidate><label>URL pubblico del portfolio<input name="url" type="url" required inputmode="url" placeholder="https://portfolio.example"></label><p class="form-status" data-qr-warning role="status"></p><label>Formato download<select name="format"><option value="square">Quadrato</option><option value="portrait">Verticale / Stories</option><option value="landscape">Orizzontale / biglietto</option></select></label><button class="button primary" type="submit">Salva e genera anteprima</button><div class="form-actions"><button class="button" type="button" data-download-png disabled>Download PNG HD</button><button class="button" type="button" data-download-svg disabled>Download SVG</button></div><small>L’URL viene salvato nelle impostazioni. Localhost e indirizzi di sviluppo non vengono mai accettati come URL definitivo.</small></form>
         </div>
+      </section>
+
+      <section class="admin-view" data-panel="messages" hidden>
+        <div class="view-heading"><div><p class="eyebrow">Posta in arrivo</p><h1>Messaggi</h1></div><label>Stato<select data-message-filter><option value="">Tutti</option><option value="new">Nuovi</option><option value="read">Letti</option><option value="replied">Risposti</option><option value="archived">Archiviati</option></select></label></div>
+        <div class="messages-layout"><div class="message-list panel" data-message-list></div><section class="message-detail panel" data-message-detail aria-live="polite"><p>Seleziona un messaggio per leggerlo e rispondere.</p></section></div>
       </section>
 
       <section class="admin-view" data-panel="settings" hidden>
@@ -153,7 +167,6 @@
         <form class="panel" data-settings-form novalidate>
           <div class="form-grid">
             <label>Lingua predefinita<select name="language"><option value="it">Italiano</option><option value="en">English</option></select></label>
-            <label>Tema predefinito<select name="theme"><option value="system">Sistema</option><option value="light">Chiaro</option><option value="dark">Scuro</option></select></label>
           </div>
           <label>URL pubblico del portfolio<input name="public_url" type="url" inputmode="url" placeholder="https://"></label>
           <label>Ordine sezioni<input name="section_order" type="text" placeholder="hero,profile,case-study,skills"><small>Elenco di slug separati da virgola. La visibilità e l’ordine effettivo sono gestibili anche nella sezione “Ordine sezioni”.</small></label>
@@ -169,6 +182,7 @@
   </div>
 
   <dialog class="preview-dialog" data-preview-dialog><button class="icon-button close-dialog" type="button" data-close-dialog aria-label="Chiudi">×</button><p class="eyebrow" data-preview-type></p><h2 data-preview-title></h2><p data-preview-summary></p><div class="preview-body" data-preview-body></div></dialog>
+  <dialog class="preview-dialog placement-dialog" data-placement-dialog><button class="icon-button close-dialog" type="button" data-close-dialog aria-label="Chiudi">×</button><p class="eyebrow">Immagini e video della sezione</p><h2>Configura media</h2><form data-placement-form novalidate><input type="hidden" name="id"><input type="hidden" name="content_item_id"><div class="form-grid"><label>Media *<select name="media_id" required></select></label><label>Sezione *<select name="section_key" required></select></label><label>Ordine<input name="sort_order" type="number" min="-10000" max="10000" value="0"></label><label>Visibilità<select name="is_visible"><option value="false">Nascosto</option><option value="true">Pubblicato</option></select></label><label>Proporzione<select name="aspect_ratio"><option value="auto">Naturale</option><option value="1/1">1:1</option><option value="4/3">4:3</option><option value="3/2">3:2</option><option value="16/9">16:9</option><option value="9/16">9:16</option><option value="21/9">21:9</option></select></label><label>Adattamento<select name="fit"><option value="cover">Cover</option><option value="contain">Contain</option><option value="natural">Dimensione naturale</option></select></label><label>Posizione orizzontale<input name="position_x" type="range" min="0" max="100" value="50"></label><label>Posizione verticale<input name="position_y" type="range" min="0" max="100" value="50"></label><label>Punto focale X<input name="focal_x" type="range" min="0" max="100" value="50"></label><label>Punto focale Y<input name="focal_y" type="range" min="0" max="100" value="50"></label><label>Larghezza massima px<input name="max_width" type="number" min="120" max="3840"></label><label>Altezza massima px<input name="max_height" type="number" min="120" max="2160"></label><label>Angoli arrotondati px<input name="border_radius" type="number" min="0" max="200" value="12"></label><label>Opacità<input name="opacity" type="range" min="0" max="1" step=".05" value="1"></label><label>Overlay CSS<input name="overlay" maxlength="80" placeholder="#07111f80"></label><label>Desktop<select name="desktop_behavior"><option value="show">Mostra</option><option value="hide">Nascondi</option></select></label><label>Mobile<select name="mobile_behavior"><option value="show">Mostra</option><option value="hide">Nascondi</option></select></label></div><fieldset class="video-options"><legend>Video</legend><div class="check-grid"><label><input name="autoplay" type="checkbox"> Autoplay</label><label><input name="loop" type="checkbox"> Loop</label><label><input name="muted" type="checkbox" checked> Audio disattivato</label><label><input name="controls" type="checkbox" checked> Controlli</label></div><label>Preload<select name="preload"><option value="none">Nessuno</option><option value="metadata">Metadati</option><option value="auto">Auto</option></select></label></fieldset><div class="responsive-preview"><div><span>Desktop</span><div data-placement-preview="desktop"></div></div><div><span>Mobile</span><div data-placement-preview="mobile"></div></div></div><div class="form-actions"><button class="button primary" type="submit">Salva configurazione</button><button class="button" type="button" data-duplicate-placement hidden>Duplica</button></div></form></dialog>
   <dialog class="confirm-dialog" data-confirm-dialog><h2 data-confirm-title>Conferma operazione</h2><p data-confirm-text></p><div class="form-actions"><button class="button danger" type="button" data-confirm-yes>Conferma</button><button class="button" type="button" data-confirm-no>Annulla</button></div></dialog>
 
   <script src="../vendor/supabase.js"></script>

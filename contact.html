@@ -61,6 +61,9 @@
         <div class="form-row reveal">
           <label for="company">Azienda (opzionale)</label>
           <input id="company" name="company" type="text" placeholder="Nome azienda" />
+          <label for="subject">Oggetto *</label>
+          <input id="subject" name="subject" type="text" maxlength="180" required aria-required="true" />
+          <label class="honeypot" aria-hidden="true">Sito web<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
         </div>
         <div class="form-row reveal">
           <label for="message" data-i18n-it="Messaggio *" data-i18n-en="Message *">Messaggio *</label>

@@ -56,6 +56,7 @@ async function handleContactFormSubmit(event) {
   const nameInput = form.querySelector('#name');
   const emailInput = form.querySelector('#email');
   const companyInput = form.querySelector('#company');
+  const subjectInput = form.querySelector('#subject');
   const messageInput = form.querySelector('#message');
   const privacyConsent = form.querySelector('#privacyConsent');
 
@@ -67,6 +68,7 @@ async function handleContactFormSubmit(event) {
   const fromName = nameInput.value.trim();
   const fromEmail = emailInput.value.trim();
   const rawMessage = messageInput.value.trim();
+  const subject = subjectInput?.value.trim() || contactText('Richiesta dal portfolio', 'Portfolio enquiry');
   [nameInput, emailInput, messageInput, privacyConsent].filter(Boolean).forEach((field) => field.removeAttribute('aria-invalid'));
 
   const firstEmptyField = !fromName ? nameInput : (!fromEmail ? emailInput : (!rawMessage ? messageInput : null));
@@ -111,6 +113,7 @@ async function handleContactFormSubmit(event) {
     from_name: fromName,
     from_email: fromEmail,
     company: companyLabel,
+    subject: subject,
     message: formattedMessage,
     raw_message: rawMessage,
     reply_to: fromEmail,
@@ -125,6 +128,18 @@ async function handleContactFormSubmit(event) {
   }
 
   try {
+    const backendClient = window.portfolioBackend?.getClient?.();
+    if (backendClient) {
+      const { error: storageError } = await backendClient.rpc('submit_contact_message', {
+        submitted_name: fromName,
+        submitted_email: fromEmail,
+        submitted_company: companyInput.value.trim(),
+        submitted_subject: subject,
+        submitted_message: rawMessage,
+        website: form.querySelector('[name=website]')?.value || ''
+      });
+      if (storageError) throw new Error(storageError.message?.includes('Rate limit') ? 'rate-limit' : 'message-storage');
+    }
     const response = await emailjs.send(
       EMAILJS_CONFIG.SERVICE_ID,
       EMAILJS_CONFIG.TEMPLATE_ID,
@@ -140,7 +155,8 @@ async function handleContactFormSubmit(event) {
       updateDebugStatus(contactText('Invio non riuscito.', 'Sending failed.'), true);
     }
   } catch (error) {
-    showMessage(messageContainer, contactText('Invio non riuscito. Riprova più tardi.', 'Sending failed. Please try again later.'), 'error');
+    const rateLimited = error?.message === 'rate-limit';
+    showMessage(messageContainer, rateLimited ? contactText('Hai effettuato troppi invii. Attendi 15 minuti e riprova.', 'Too many submissions. Wait 15 minutes and try again.') : contactText('Invio non riuscito. Riprova più tardi.', 'Sending failed. Please try again later.'), 'error');
     updateDebugStatus(contactText('Invio non riuscito.', 'Sending failed.'), true);
   } finally {
     if (submitButton) {
