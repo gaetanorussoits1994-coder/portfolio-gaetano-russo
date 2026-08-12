@@ -1,18 +1,14 @@
-/**
- * Sistema di contatto con EmailJS
- * Gestisce l'invio dei messaggi dal modulo di contatto
- * a gaetano.russoits1994@gmail.com
- * EmailJS template parameters:
- * {{from_name}}, {{from_email}}, {{company}}, {{message}}, {{reply_to}}
- * EmailJS Reply-To should be configured as: {{from_email}}
- */
+/** EmailJS browser identifiers are injected by runtime-config.js at build time. */
+const EMAILJS_CONFIG = Object.freeze({
+  publicKey: String(window.PORTFOLIO_CONFIG?.emailJsPublicKey || ''),
+  serviceId: String(window.PORTFOLIO_CONFIG?.emailJsServiceId || ''),
+  contactTemplateId: String(window.PORTFOLIO_CONFIG?.emailJsContactTemplateId || ''),
+  contactEmail: String(window.PORTFOLIO_CONFIG?.contactEmail || '')
+});
 
-const EMAILJS_CONFIG = {
-  PUBLIC_KEY: 'LVIQKRE0XckbgqZNr',
-  SERVICE_ID: 'service_n51cthn',
-  TEMPLATE_ID: 'template_pr1yfvy',
-  RECIPIENT_EMAIL: 'gaetano.russoits1994@gmail.com'
-};
+function emailJsConfigured() {
+  return Boolean(EMAILJS_CONFIG.publicKey && EMAILJS_CONFIG.serviceId && EMAILJS_CONFIG.contactTemplateId && EMAILJS_CONFIG.contactEmail);
+}
 
 function updateDebugStatus(message, isError) {
   const debugStatus = document.getElementById('debugStatus');
@@ -25,7 +21,7 @@ function updateDebugStatus(message, isError) {
 }
 
 function initEmailJS() {
-  if (typeof emailjs === 'undefined') {
+  if (typeof emailjs === 'undefined' || !emailJsConfigured()) {
     updateDebugStatus(contactText('Il servizio di invio non è disponibile.', 'The sending service is unavailable.'), true);
     return false;
   }
@@ -34,7 +30,7 @@ function initEmailJS() {
     updateDebugStatus('Attenzione: sei su file://. Servi la pagina via HTTP/HTTPS o abilita "API access from non-browser environments" in EmailJS.', true);
   }
 
-  emailjs.init(EMAILJS_CONFIG.PUBLIC_KEY);
+  emailjs.init(EMAILJS_CONFIG.publicKey);
   updateDebugStatus(contactText('Modulo pronto.', 'Form ready.'));
   return true;
 }
@@ -117,7 +113,7 @@ async function handleContactFormSubmit(event) {
     message: formattedMessage,
     raw_message: rawMessage,
     reply_to: fromEmail,
-    to_email: EMAILJS_CONFIG.RECIPIENT_EMAIL
+    to_email: EMAILJS_CONFIG.contactEmail
   };
 
   const submitButton = form.querySelector('button[type="submit"]');
@@ -128,6 +124,7 @@ async function handleContactFormSubmit(event) {
   }
 
   try {
+    if (!emailJsConfigured()) throw new Error('emailjs-not-configured');
     const backendClient = window.portfolioBackend?.getClient?.();
     if (backendClient) {
       const { error: storageError } = await backendClient.rpc('submit_contact_message', {
@@ -141,8 +138,8 @@ async function handleContactFormSubmit(event) {
       if (storageError) throw new Error(storageError.message?.includes('Rate limit') ? 'rate-limit' : 'message-storage');
     }
     const response = await emailjs.send(
-      EMAILJS_CONFIG.SERVICE_ID,
-      EMAILJS_CONFIG.TEMPLATE_ID,
+      EMAILJS_CONFIG.serviceId,
+      EMAILJS_CONFIG.contactTemplateId,
       formData
     );
 

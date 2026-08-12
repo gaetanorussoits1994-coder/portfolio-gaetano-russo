@@ -29,7 +29,7 @@ async function supabaseRequest(path, token, options = {}) {
 
 module.exports = async function handler(request, response) {
   if (request.method !== 'POST') return json(response, 405, { error: 'Metodo non consentito.' });
-  const required = ['SUPABASE_URL','SUPABASE_ANON_KEY','EMAILJS_PUBLIC_KEY','EMAILJS_PRIVATE_KEY','EMAILJS_SERVICE_ID','EMAILJS_REPLY_TEMPLATE_ID'];
+  const required = ['SUPABASE_URL','SUPABASE_ANON_KEY','PUBLIC_EMAILJS_PUBLIC_KEY','EMAILJS_PRIVATE_KEY','PUBLIC_EMAILJS_SERVICE_ID','EMAILJS_REPLY_TEMPLATE_ID'];
   if (required.some((key) => !process.env[key])) return json(response, 503, { error: 'Servizio email non configurato.' });
   const token = String(request.headers.authorization || '').replace(/^Bearer\s+/i, '');
   const replyId = String(request.body?.replyId || '');
@@ -59,9 +59,9 @@ module.exports = async function handler(request, response) {
     const providerResponse = await fetch('https://api.emailjs.com/api/v1.0/email/send', {
       method: 'POST', headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        service_id: process.env.EMAILJS_SERVICE_ID,
+        service_id: process.env.PUBLIC_EMAILJS_SERVICE_ID,
         template_id: process.env.EMAILJS_REPLY_TEMPLATE_ID,
-        user_id: process.env.EMAILJS_PUBLIC_KEY,
+        user_id: process.env.PUBLIC_EMAILJS_PUBLIC_KEY,
         accessToken: process.env.EMAILJS_PRIVATE_KEY,
         template_params: {
           to_email: message.sender_email,

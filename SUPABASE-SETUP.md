@@ -11,23 +11,20 @@ Creare un progetto Supabase dedicato, quindi applicare in ordine i file presenti
 3. `003_storage.sql`
 4. `004_seed_current_content.sql`
 5. `005_media_messages_and_replies.sql`
+6. `006_remove_hardcoded_admin_email.sql`
 
 È possibile usare Supabase CLI oppure SQL Editor. Le migrazioni creano schema, funzioni, trigger, RLS, bucket Storage e seed iniziale. Non copiare la service role key nel browser o in `.env.local`.
 
 ## 2. Creare o invitare l’unico utente amministratore
 
-In Supabase Dashboard aprire Authentication > Users e invitare o creare manualmente l’account autorizzato:
-
-`g.russomacteanimo@gmail.com`
-
-Non aggiungere password a file SQL o documentazione. Se si usa l’invito, completare il primo accesso dal link ricevuto. Disabilitare la registrazione pubblica se il progetto non la utilizza per altre funzioni.
+In Supabase Dashboard aprire Authentication > Users e invitare o creare manualmente l’account amministrativo scelto dal proprietario. Non inserire l’indirizzo personale in migrazioni o documentazione versionata. Non aggiungere password a file SQL o documentazione. Se si usa l’invito, completare il primo accesso dal link ricevuto. Disabilitare la registrazione pubblica se il progetto non la utilizza per altre funzioni.
 
 ## 3. Autorizzare l’utente nel database
 
 Dopo che l’utente esiste in `auth.users`, eseguire in SQL Editor con un ruolo privilegiato:
 
 ```sql
-select public.grant_portfolio_admin('g.russomacteanimo@gmail.com');
+select public.grant_portfolio_admin('INDIRIZZO_ADMIN_NON_VERSIONATO');
 ```
 
 La procedura non è eseguibile da `anon` o `authenticated`. Le policy non si basano sul solo confronto dell’email nel frontend: verificano `auth.uid()` nella tabella `admin_users`.
@@ -37,7 +34,7 @@ Per revocare l’accesso senza eliminare l’utente:
 ```sql
 update public.admin_users
 set is_active = false, updated_at = now()
-where user_id = (select id from auth.users where lower(email) = lower('g.russomacteanimo@gmail.com'));
+where user_id = 'UUID_UTENTE_ADMIN';
 ```
 
 ## 4. Redirect URL di Supabase Auth
@@ -74,6 +71,12 @@ Quando verrà autorizzato il deploy, aggiungere nelle impostazioni del progetto 
 - `SUPABASE_URL`
 - `SUPABASE_ANON_KEY`
 - `PUBLIC_SITE_URL`
+- `PUBLIC_EMAILJS_PUBLIC_KEY`
+- `PUBLIC_EMAILJS_SERVICE_ID`
+- `PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID`
+- `PUBLIC_CONTACT_EMAIL`
+- `EMAILJS_PRIVATE_KEY`
+- `EMAILJS_REPLY_TEMPLATE_ID`
 
 Impostare `PUBLIC_SITE_URL` sull’URL pubblico definitivo. Non usare `127.0.0.1` in produzione. Il comando `npm run build` crea la cartella `dist/` includendo soltanto i file pubblici necessari e genera il runtime config dai valori dell’ambiente.
 
@@ -122,13 +125,15 @@ Creare in EmailJS un template dedicato alle risposte con questi parametri: `to_e
 Configurare localmente e nell’hosting, senza esporle nel frontend:
 
 ```text
-EMAILJS_PUBLIC_KEY=
+PUBLIC_EMAILJS_PUBLIC_KEY=
+PUBLIC_EMAILJS_SERVICE_ID=
+PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID=
+PUBLIC_CONTACT_EMAIL=
 EMAILJS_PRIVATE_KEY=
-EMAILJS_SERVICE_ID=
 EMAILJS_REPLY_TEMPLATE_ID=
 ```
 
-`EMAILJS_PRIVATE_KEY` deve esistere soltanto nell’ambiente server. Per il deploy Vercel, impostare le variabili nelle impostazioni del progetto; `vercel.json` mantiene `dist` come output statico e la cartella root `api/` come funzione serverless.
+Le variabili con prefisso `PUBLIC_` vengono inserite intenzionalmente in `runtime-config.js` perché il browser deve inizializzare EmailJS e conoscere il destinatario pubblico. `EMAILJS_PRIVATE_KEY` e `EMAILJS_REPLY_TEMPLATE_ID` devono esistere soltanto nell’ambiente server. Per il deploy Vercel, impostare le variabili nelle impostazioni del progetto; `vercel.json` mantiene `dist` come output statico e la cartella root `api/` come funzione serverless. Dopo l’assegnazione del dominio Vercel, aggiungerlo alle origini autorizzate nel pannello EmailJS.
 
 ## 12. Fallback pubblico
 

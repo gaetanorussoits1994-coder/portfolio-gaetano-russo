@@ -32,7 +32,11 @@ const env = readEnvironment();
 const runtime = {
   supabaseUrl: env.SUPABASE_URL || '',
   supabaseAnonKey: env.SUPABASE_ANON_KEY || '',
-  publicSiteUrl: env.PUBLIC_SITE_URL || ''
+  publicSiteUrl: env.PUBLIC_SITE_URL || '',
+  emailJsPublicKey: env.PUBLIC_EMAILJS_PUBLIC_KEY || '',
+  emailJsServiceId: env.PUBLIC_EMAILJS_SERVICE_ID || '',
+  emailJsContactTemplateId: env.PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID || '',
+  contactEmail: env.PUBLIC_CONTACT_EMAIL || ''
 };
 writeFileSync(join(output, 'runtime-config.js'), `window.PORTFOLIO_CONFIG = Object.freeze(${JSON.stringify(runtime)});\n`, 'utf8');
 

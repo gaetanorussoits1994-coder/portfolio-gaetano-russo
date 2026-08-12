@@ -17,10 +17,8 @@ as $$
   select exists (
     select 1
     from public.admin_users as administrator
-    join auth.users as account on account.id = administrator.user_id
     where administrator.user_id = auth.uid()
       and administrator.is_active = true
-      and lower(account.email) = 'g.russomacteanimo@gmail.com'
   );
 $$;
 
@@ -35,9 +33,6 @@ set search_path = ''
 as $$
 declare target_id uuid;
 begin
-  if lower(trim(target_email)) <> 'g.russomacteanimo@gmail.com' then
-    raise exception 'Email not allowed for portfolio administration';
-  end if;
   select id into target_id
   from auth.users
   where lower(email) = lower(trim(target_email))

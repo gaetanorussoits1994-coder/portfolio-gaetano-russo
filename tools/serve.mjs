@@ -41,7 +41,11 @@ function runtimeConfig() {
   const config = {
     supabaseUrl: local.SUPABASE_URL || process.env.SUPABASE_URL || '',
     supabaseAnonKey: local.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '',
-    publicSiteUrl: process.env.PUBLIC_SITE_URL || local.PUBLIC_SITE_URL || `http://127.0.0.1:${port}/`
+    publicSiteUrl: process.env.PUBLIC_SITE_URL || local.PUBLIC_SITE_URL || `http://127.0.0.1:${port}/`,
+    emailJsPublicKey: process.env.PUBLIC_EMAILJS_PUBLIC_KEY || local.PUBLIC_EMAILJS_PUBLIC_KEY || '',
+    emailJsServiceId: process.env.PUBLIC_EMAILJS_SERVICE_ID || local.PUBLIC_EMAILJS_SERVICE_ID || '',
+    emailJsContactTemplateId: process.env.PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID || local.PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID || '',
+    contactEmail: process.env.PUBLIC_CONTACT_EMAIL || local.PUBLIC_CONTACT_EMAIL || ''
   };
   return `window.PORTFOLIO_CONFIG = Object.freeze(${JSON.stringify(config)});`;
 }
