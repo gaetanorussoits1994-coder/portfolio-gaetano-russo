@@ -60,7 +60,7 @@ SUPABASE_ANON_KEY=ANON-KEY-PUBBLICA
 PUBLIC_SITE_URL=http://127.0.0.1:4173/
 ```
 
-Riavviare `npm.cmd run dev`. Il server genera in memoria `runtime-config.js`; `.env.local` non viene servito e risulta escluso da Git.
+Riavviare `npm.cmd run dev`. Il server espone la configurazione pubblica tramite `/api/public-config`; `.env.local` non viene servito e risulta escluso da Git.
 
 Non inserire mai `SUPABASE_SERVICE_ROLE_KEY`, password o token amministrativi.
 
@@ -78,7 +78,7 @@ Quando verrà autorizzato il deploy, aggiungere nelle impostazioni del progetto 
 - `EMAILJS_PRIVATE_KEY`
 - `EMAILJS_REPLY_TEMPLATE_ID`
 
-Impostare `PUBLIC_SITE_URL` sull’URL pubblico definitivo. Non usare `127.0.0.1` in produzione. Il comando `npm run build` crea la cartella `dist/` includendo soltanto i file pubblici necessari e genera il runtime config dai valori dell’ambiente.
+Impostare `PUBLIC_SITE_URL` sull’URL pubblico definitivo. Non usare `127.0.0.1` in produzione. Il comando `npm run build` crea la cartella `dist/` includendo soltanto i file pubblici necessari; la configurazione browser viene fornita a runtime da `/api/public-config` tramite una whitelist.
 
 ## 7. Login, logout e account non autorizzato
 
@@ -133,7 +133,7 @@ EMAILJS_PRIVATE_KEY=
 EMAILJS_REPLY_TEMPLATE_ID=
 ```
 
-Le variabili con prefisso `PUBLIC_` vengono inserite intenzionalmente in `runtime-config.js` perché il browser deve inizializzare EmailJS e conoscere il destinatario pubblico. `EMAILJS_PRIVATE_KEY` e `EMAILJS_REPLY_TEMPLATE_ID` devono esistere soltanto nell’ambiente server. Per il deploy Vercel, impostare le variabili nelle impostazioni del progetto; `vercel.json` mantiene `dist` come output statico e la cartella root `api/` come funzione serverless. Dopo l’assegnazione del dominio Vercel, aggiungerlo alle origini autorizzate nel pannello EmailJS.
+Le variabili con prefisso `PUBLIC_` vengono restituite intenzionalmente da `/api/public-config` perché il browser deve inizializzare EmailJS e conoscere il destinatario pubblico. Anche `SUPABASE_URL` e `SUPABASE_ANON_KEY` sono inclusi nella whitelist per il client Supabase. `EMAILJS_PRIVATE_KEY` e `EMAILJS_REPLY_TEMPLATE_ID` devono esistere soltanto nell’ambiente server. Per il deploy Vercel, impostare le variabili nelle impostazioni del progetto; `vercel.json` mantiene `dist` come output statico e la cartella root `api/` come funzione serverless. Dopo l’assegnazione del dominio Vercel, aggiungerlo alle origini autorizzate nel pannello EmailJS.
 
 ## 12. Fallback pubblico
 

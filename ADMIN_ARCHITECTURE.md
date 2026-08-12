@@ -4,7 +4,7 @@
 
 L’area amministrativa è ora disponibile in `/admin/` senza trasformare il portfolio statico in Next.js. L’interfaccia usa `admin/index.html`, `admin/admin.css`, `admin/common.js` e `admin/app.js`; il recupero password usa `admin/reset-password.html` e `admin/reset-password.js`.
 
-Il client Supabase è inizializzato da `js/supabase-client.js` soltanto quando `runtime-config.js` contiene URL e anon key. Il server locale genera questa configurazione in memoria leggendo `.env.local`; la build la genera da variabili d’ambiente. La homepage usa `js/content-service.js` come adapter e conserva `js/portfolio-data.js` come fallback.
+Il client Supabase è inizializzato da `js/supabase-client.js` soltanto quando `/api/public-config` fornisce URL e anon key. In locale il server carica `.env.local`; su Vercel la funzione legge le variabili d'ambiente a runtime e restituisce esclusivamente i valori autorizzati per il browser. La homepage usa `js/content-service.js` come adapter e conserva `js/portfolio-data.js` come fallback.
 
 Supabase JS e QR Code sono dipendenze npm trasformate in script browser locali dal task `vendor`, eseguito automaticamente prima di sviluppo e build. L'avvio dell'admin mantiene tutte le viste protette nascoste, limita temporalmente le verifiche di sessione e autorizzazione e chiude sempre lo stato di caricamento con una schermata esplicita di configurazione, accesso o indisponibilità temporanea.
 

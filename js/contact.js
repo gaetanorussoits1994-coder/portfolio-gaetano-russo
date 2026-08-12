@@ -1,4 +1,4 @@
-/** EmailJS browser identifiers are injected by runtime-config.js at build time. */
+/** EmailJS browser identifiers are injected by the public runtime configuration endpoint. */
 const EMAILJS_CONFIG = Object.freeze({
   publicKey: String(window.PORTFOLIO_CONFIG?.emailJsPublicKey || ''),
   serviceId: String(window.PORTFOLIO_CONFIG?.emailJsServiceId || ''),

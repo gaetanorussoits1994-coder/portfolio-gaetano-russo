@@ -35,23 +35,14 @@ const localEnvironment = loadLocalEnvironment();
 Object.entries(localEnvironment).forEach(([key, value]) => { if (!process.env[key]) process.env[key] = value; });
 const require = createRequire(import.meta.url);
 const replyMessageHandler = require('../api/reply-message.js');
-
-function runtimeConfig() {
-  const local = loadLocalEnvironment();
-  const config = {
-    supabaseUrl: local.SUPABASE_URL || process.env.SUPABASE_URL || '',
-    supabaseAnonKey: local.SUPABASE_ANON_KEY || process.env.SUPABASE_ANON_KEY || '',
-    publicSiteUrl: process.env.PUBLIC_SITE_URL || local.PUBLIC_SITE_URL || `http://127.0.0.1:${port}/`,
-    emailJsPublicKey: process.env.PUBLIC_EMAILJS_PUBLIC_KEY || local.PUBLIC_EMAILJS_PUBLIC_KEY || '',
-    emailJsServiceId: process.env.PUBLIC_EMAILJS_SERVICE_ID || local.PUBLIC_EMAILJS_SERVICE_ID || '',
-    emailJsContactTemplateId: process.env.PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID || local.PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID || '',
-    contactEmail: process.env.PUBLIC_CONTACT_EMAIL || local.PUBLIC_CONTACT_EMAIL || ''
-  };
-  return `window.PORTFOLIO_CONFIG = Object.freeze(${JSON.stringify(config)});`;
-}
+const publicConfigHandler = require('../api/public-config.js');
 
 createServer(async (request, response) => {
   const urlPath = decodeURIComponent(new URL(request.url, `http://${request.headers.host}`).pathname);
+  if (urlPath === '/api/public-config') {
+    await publicConfigHandler(request, response);
+    return;
+  }
   if (urlPath === '/api/reply-message') {
     let body = '';
     for await (const chunk of request) {
@@ -60,12 +51,6 @@ createServer(async (request, response) => {
     }
     try { request.body = body ? JSON.parse(body) : {}; } catch (error) { response.writeHead(400); response.end('{"error":"JSON non valido"}'); return; }
     await replyMessageHandler(request, response);
-    return;
-  }
-  if (urlPath === '/runtime-config.js') {
-    const body = runtimeConfig();
-    response.writeHead(200, { 'Content-Type': 'text/javascript; charset=utf-8', 'Cache-Control': 'no-store', 'Content-Length': Buffer.byteLength(body) });
-    response.end(request.method === 'HEAD' ? undefined : body);
     return;
   }
   const cleanPath = urlPath.replace(/^\/+/, '');
