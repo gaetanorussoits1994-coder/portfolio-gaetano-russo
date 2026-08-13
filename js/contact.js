@@ -163,16 +163,17 @@ async function handleContactFormSubmit(event) {
   try {
     const backendClient = window.portfolioBackend?.getClient?.();
     if (!backendClient) throw new Error('message-storage-not-configured');
-    const { data: messageId, error: storageError } = await backendClient.rpc('submit_contact_message', {
+    const { data: submissionResult, error: storageError } = await backendClient.rpc('submit_contact_message', {
       submitted_name: fromName,
       submitted_email: fromEmail,
       submitted_company: company,
       submitted_subject: subject,
       submitted_message: rawMessage,
+      submitted_privacy_consent: true,
       website: honeypot
     });
     if (storageError) throw new Error(storageError.message?.includes('Rate limit') ? 'rate-limit' : 'message-storage');
-    if (!/^[0-9a-f-]{36}$/i.test(String(messageId || ''))) throw new Error('message-storage');
+    if (submissionResult?.accepted !== true) throw new Error('message-storage');
 
     let notificationSent = false;
     try {
