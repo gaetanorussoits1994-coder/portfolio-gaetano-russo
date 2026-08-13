@@ -256,13 +256,13 @@
         <form id="contactForm" class="contact-form reveal" novalidate aria-label="Modulo di contatto" data-i18n-label-it="Modulo di contatto" data-i18n-label-en="Contact form">
           <p class="required-note" data-i18n-it="I campi contrassegnati con * sono obbligatori." data-i18n-en="Fields marked with * are required.">I campi contrassegnati con * sono obbligatori.</p>
           <div class="field-pair">
-            <label for="name"><span><span data-i18n-it="Nome" data-i18n-en="Name">Nome</span> <b class="required-mark" aria-hidden="true">*</b></span><input id="name" name="name" type="text" autocomplete="name" required aria-required="true"></label>
-            <label for="email"><span>Email <b class="required-mark" aria-hidden="true">*</b></span><input id="email" name="email" type="email" autocomplete="email" required aria-required="true"></label>
+            <label for="name"><span><span data-i18n-it="Nome" data-i18n-en="Name">Nome</span> <b class="required-mark" aria-hidden="true">*</b></span><input id="name" name="name" type="text" autocomplete="name" minlength="2" maxlength="120" required aria-required="true"></label>
+            <label for="email"><span>Email <b class="required-mark" aria-hidden="true">*</b></span><input id="email" name="email" type="email" autocomplete="email" maxlength="254" required aria-required="true"></label>
           </div>
-          <label for="company"><span data-i18n-it="Azienda (opzionale)" data-i18n-en="Company (optional)">Azienda (opzionale)</span><input id="company" name="company" type="text" autocomplete="organization"></label>
+          <label for="company"><span data-i18n-it="Azienda (opzionale)" data-i18n-en="Company (optional)">Azienda (opzionale)</span><input id="company" name="company" type="text" autocomplete="organization" maxlength="160"></label>
           <label for="subject"><span data-i18n-it="Oggetto" data-i18n-en="Subject">Oggetto</span><input id="subject" name="subject" type="text" maxlength="180" required></label>
           <label class="honeypot" aria-hidden="true">Sito web<input name="website" type="text" tabindex="-1" autocomplete="off"></label>
-          <label for="message"><span><span data-i18n-it="Messaggio" data-i18n-en="Message">Messaggio</span> <b class="required-mark" aria-hidden="true">*</b></span><textarea id="message" name="message" rows="4" required aria-required="true"></textarea></label>
+          <label for="message"><span><span data-i18n-it="Messaggio" data-i18n-en="Message">Messaggio</span> <b class="required-mark" aria-hidden="true">*</b></span><textarea id="message" name="message" rows="4" minlength="10" maxlength="5000" required aria-required="true"></textarea></label>
           <label class="consent-row" for="privacyConsent"><input id="privacyConsent" name="privacy_consent" type="checkbox" required aria-required="true"><span><span data-i18n-it="Ho letto e accetto la" data-i18n-en="I have read and accept the">Ho letto e accetto la</span> <a href="privacy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a> <span data-i18n-it="e l’informativa sul" data-i18n-en="and the notice on">e l’informativa sul</span> <a href="trattamento-dati.html" target="_blank" rel="noopener noreferrer" data-i18n-it="trattamento dati" data-i18n-en="data processing">trattamento dati</a>. <b class="required-mark" aria-hidden="true">*</b></span></label>
           <div class="form-footer"><button class="button button-primary" type="submit" data-i18n-it="Invia messaggio" data-i18n-en="Send message">Invia messaggio</button><span id="formMessage" class="form-message" aria-live="polite"></span></div>
         </form>
@@ -308,7 +308,7 @@
   <script src="js/supabase-client.js?v=1" defer></script>
   <script src="js/content-service.js?v=2" defer></script>
   <script src="js/i18n.js?v=privacy-i18n-2" defer></script>
-  <script src="js/contact.js?v=privacy-i18n-2" defer></script>
+  <script src="js/contact.js?v=contact-flow-1" defer></script>
   <script src="js/site.js?v=mobile-menu-1" defer></script>
   <script src="js/home.js?v=3" defer></script>
 </body>

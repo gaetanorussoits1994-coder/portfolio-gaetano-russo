@@ -52,22 +52,22 @@
         <p class="required-note" data-i18n-it="I campi contrassegnati con * sono obbligatori." data-i18n-en="Fields marked with * are required.">I campi contrassegnati con * sono obbligatori.</p>
         <div class="form-row reveal">
           <label for="name" data-i18n-it="Nome *" data-i18n-en="Name *">Nome *</label>
-          <input id="name" name="name" type="text" placeholder="Il tuo nome" required aria-required="true" />
+          <input id="name" name="name" type="text" placeholder="Il tuo nome" autocomplete="name" minlength="2" maxlength="120" required aria-required="true" />
         </div>
         <div class="form-row reveal">
           <label for="email">Email *</label>
-          <input id="email" name="email" type="email" placeholder="tua@email.com" required aria-required="true" />
+          <input id="email" name="email" type="email" placeholder="tua@email.com" autocomplete="email" maxlength="254" required aria-required="true" />
         </div>
         <div class="form-row reveal">
           <label for="company">Azienda (opzionale)</label>
-          <input id="company" name="company" type="text" placeholder="Nome azienda" />
+          <input id="company" name="company" type="text" placeholder="Nome azienda" autocomplete="organization" maxlength="160" />
           <label for="subject">Oggetto *</label>
           <input id="subject" name="subject" type="text" maxlength="180" required aria-required="true" />
           <label class="honeypot" aria-hidden="true">Sito web<input name="website" type="text" tabindex="-1" autocomplete="off" /></label>
         </div>
         <div class="form-row reveal">
           <label for="message" data-i18n-it="Messaggio *" data-i18n-en="Message *">Messaggio *</label>
-          <textarea id="message" name="message" rows="6" placeholder="Descrivi il motivo del contatto" required aria-required="true"></textarea>
+          <textarea id="message" name="message" rows="6" placeholder="Descrivi il motivo del contatto" minlength="10" maxlength="5000" required aria-required="true"></textarea>
         </div>
         <div class="form-row privacy-consent reveal">
           <input id="privacyConsent" name="privacy_consent" type="checkbox" required aria-required="true" />
@@ -111,7 +111,7 @@
   <script src="/api/public-config"></script>
   <script src="js/supabase-client.js?v=1" defer></script>
   <script src="js/i18n.js?v=privacy-i18n-2" defer></script>
-  <script src="js/contact.js?v=privacy-i18n-2" defer></script>
+  <script src="js/contact.js?v=contact-flow-1" defer></script>
   <script src="js/site.js?v=mobile-menu-1" defer></script>
 </body>
 </html>
