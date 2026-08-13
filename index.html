@@ -17,7 +17,7 @@
     document.documentElement.classList.add('js');
     try { document.documentElement.dataset.theme = localStorage.getItem('site-theme') || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); } catch (e) { document.documentElement.dataset.theme = 'light'; }
   </script>
-  <link rel="stylesheet" href="css/home.css?v=2">
+  <link rel="stylesheet" href="css/home.css?v=3">
   <script type="application/ld+json">{"@context":"https://schema.org","@type":"Person","name":"Gaetano Russo","jobTitle":"IT Infrastructure Specialist","url":"https://gaetanorussoits1994-coder.github.io/portfolio-gaetano-russo/","sameAs":["https://www.linkedin.com/in/gaetano-russo-b11664220/"],"address":{"@type":"PostalAddress","addressLocality":"Padova","addressCountry":"IT"}}</script>
 </head>
 <body class="enhanced-home">
@@ -30,20 +30,32 @@
         <span>Gaetano Russo</span>
       </a>
       <button class="nav-toggle" id="navToggle" type="button" aria-label="Apri il menu" aria-expanded="false" aria-controls="primaryNavigation"><span></span><span></span><span></span></button>
-      <nav class="nav" id="primaryNavigation" aria-label="Navigazione principale" data-i18n-label-it="Navigazione principale" data-i18n-label-en="Primary navigation">
-        <a href="#profilo" data-i18n-it="Profilo" data-i18n-en="Profile">Profilo</a>
-        <a href="#case-study" data-i18n-it="Case study" data-i18n-en="Case studies">Case study</a>
-        <a href="#technical-lab">Technical Lab</a>
-        <a href="#esperienze" data-i18n-it="Esperienze" data-i18n-en="Experience">Esperienze</a>
-        <a href="#contatti" data-i18n-it="Contatti" data-i18n-en="Contact">Contatti</a>
-      </nav>
-      <div class="header-tools">
-        <div class="language-switcher" role="group" aria-label="Lingua del sito" data-i18n-label-it="Lingua del sito" data-i18n-label-en="Site language">
-          <button type="button" data-lang="it" data-detailed-language aria-pressed="true"><span class="lang-code">IT</span><span class="lang-name">Italiano</span></button>
-          <span class="language-divider" aria-hidden="true">|</span>
-          <button type="button" data-lang="en" data-detailed-language aria-pressed="false"><span class="lang-code">EN</span><span class="lang-name">English</span></button>
+      <div class="mobile-menu" id="primaryNavigation" data-mobile-menu aria-label="Menu di navigazione" data-i18n-label-it="Menu di navigazione" data-i18n-label-en="Navigation menu">
+        <div class="mobile-menu__header">
+          <span class="mobile-menu__brand"><span class="brand-mark" aria-hidden="true">GR</span><strong>Gaetano Russo</strong></span>
+          <div class="header-tools">
+            <div class="language-switcher" role="group" aria-label="Lingua del sito" data-i18n-label-it="Lingua del sito" data-i18n-label-en="Site language">
+              <button type="button" data-lang="it" data-detailed-language aria-pressed="true"><span class="lang-code">IT</span><span class="lang-name">Italiano</span></button>
+              <span class="language-divider" aria-hidden="true">|</span>
+              <button type="button" data-lang="en" data-detailed-language aria-pressed="false"><span class="lang-code">EN</span><span class="lang-name">English</span></button>
+            </div>
+            <button class="theme-toggle" id="darkToggle" type="button" aria-label="Attiva tema scuro" aria-pressed="false"><span aria-hidden="true">◐</span></button>
+          </div>
+          <button class="mobile-menu__close" type="button" data-menu-close aria-label="Chiudi il menu" data-i18n-label-it="Chiudi il menu" data-i18n-label-en="Close menu"><span aria-hidden="true">×</span></button>
         </div>
-        <button class="theme-toggle" id="darkToggle" type="button" aria-label="Attiva tema scuro" aria-pressed="false"><span aria-hidden="true">◐</span></button>
+        <nav class="nav" aria-label="Navigazione principale" data-i18n-label-it="Navigazione principale" data-i18n-label-en="Primary navigation">
+          <a href="#profilo" data-i18n-it="Profilo" data-i18n-en="Profile">Profilo</a>
+          <a href="#case-study" data-i18n-it="Case study" data-i18n-en="Case studies">Case study</a>
+          <a href="#technical-lab">Technical Lab</a>
+          <a href="#esperienze" data-i18n-it="Esperienze" data-i18n-en="Experience">Esperienze</a>
+          <a href="#contatti" data-i18n-it="Contatti" data-i18n-en="Contact">Contatti</a>
+        </nav>
+        <div class="mobile-menu__actions" aria-label="Azioni principali" data-i18n-label-it="Azioni principali" data-i18n-label-en="Primary actions">
+          <a class="button button-primary" href="#case-study" data-select-track="it" data-i18n-it="Esplora il profilo IT" data-i18n-en="Explore the IT profile">Esplora il profilo IT</a>
+          <a class="button button-secondary" href="#case-study" data-select-track="web" data-i18n-it="Esplora i progetti tecnici" data-i18n-en="Explore technical projects">Esplora i progetti tecnici</a>
+          <a class="button button-quiet" href="#contatti" data-i18n-it="Contattami" data-i18n-en="Contact me">Contattami</a>
+          <button class="button button-quiet" type="button" data-open-cv data-i18n-it="Consulta il CV ↗" data-i18n-en="View CV ↗">Consulta il CV ↗</button>
+        </div>
       </div>
     </div>
   </header>
@@ -294,10 +306,10 @@
   <script src="/api/public-config"></script>
   <script src="js/portfolio-data.js?v=1" defer></script>
   <script src="js/supabase-client.js?v=1" defer></script>
-  <script src="js/content-service.js?v=1" defer></script>
+  <script src="js/content-service.js?v=2" defer></script>
   <script src="js/i18n.js?v=privacy-i18n-2" defer></script>
   <script src="js/contact.js?v=privacy-i18n-2" defer></script>
-  <script src="js/site.js?v=agency-1" defer></script>
-  <script src="js/home.js?v=2" defer></script>
+  <script src="js/site.js?v=mobile-menu-1" defer></script>
+  <script src="js/home.js?v=3" defer></script>
 </body>
 </html>

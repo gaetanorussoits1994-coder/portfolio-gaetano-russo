@@ -62,14 +62,35 @@
   function applySections(rows) {
     const main = document.querySelector('main');
     if (!main || !rows.length) return;
-    rows.sort((a, b) => a.sort_order - b.sort_order).forEach((row) => {
+    const children = Array.from(main.children);
+    const hero = document.querySelector('#home');
+    const orderedSections = [];
+    const managedSections = new Set();
+    [...rows].sort((a, b) => a.sort_order - b.sort_order).forEach((row) => {
       const selector = row.data?.selector;
       if (typeof selector !== 'string') return;
-      const section = document.querySelector(selector);
+      let section;
+      try { section = document.querySelector(selector); } catch (error) { return; }
       if (!section || section.parentElement !== main) return;
+      if (section === hero) {
+        section.hidden = false;
+        return;
+      }
       section.hidden = row.data?.visible === false;
-      main.append(section);
+      if (managedSections.has(section)) return;
+      managedSections.add(section);
+      orderedSections.push(section);
     });
+
+    let orderedIndex = 0;
+    const finalOrder = children.map((child) => managedSections.has(child) ? orderedSections[orderedIndex++] : child);
+    if (hero?.parentElement === main) {
+      hero.hidden = false;
+      const heroIndex = finalOrder.indexOf(hero);
+      if (heroIndex >= 0) finalOrder.splice(heroIndex, 1);
+      if (main.firstElementChild !== hero) main.prepend(hero);
+    }
+    main.append(...finalOrder);
   }
 
   function renderManagedMedia(placements, mediaMap) {

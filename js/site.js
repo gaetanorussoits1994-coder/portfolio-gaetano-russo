@@ -39,13 +39,119 @@
 
   function enhanceNavigation() {
     document.querySelectorAll('.nav-toggle__checkbox').forEach(function (toggle) {
-      var nav = toggle.closest('.topbar__inner') && toggle.closest('.topbar__inner').querySelector('.nav');
-      toggle.setAttribute('aria-expanded', toggle.checked ? 'true' : 'false');
-      if (nav && !nav.id) nav.id = 'primary-navigation';
-      if (nav) toggle.setAttribute('aria-controls', nav.id);
-      toggle.addEventListener('change', function () {
-        toggle.setAttribute('aria-expanded', toggle.checked ? 'true' : 'false');
+      var inner = toggle.closest('.topbar__inner');
+      var nav = inner && inner.querySelector('.nav');
+      var languageSwitcher = inner && inner.querySelector('.language-switcher');
+      var themeToggle = inner && inner.querySelector('.dark-toggle');
+      var hamburger = toggle.nextElementSibling;
+      if (!inner || !nav || inner.querySelector('[data-legacy-mobile-menu]')) return;
+      var panel = document.createElement('div');
+      panel.className = 'legacy-mobile-menu';
+      panel.id = 'legacy-primary-navigation';
+      panel.dataset.legacyMobileMenu = 'true';
+      panel.setAttribute('aria-label', text('Menu di navigazione', 'Navigation menu'));
+      var panelHeader = document.createElement('div');
+      panelHeader.className = 'legacy-mobile-menu__header';
+      var panelBrand = document.createElement('strong');
+      panelBrand.className = 'legacy-mobile-menu__brand';
+      panelBrand.textContent = 'Gaetano Russo';
+      var close = document.createElement('button');
+      close.className = 'legacy-mobile-menu__close';
+      close.type = 'button';
+      close.setAttribute('aria-label', text('Chiudi il menu', 'Close menu'));
+      close.textContent = '×';
+      var actions = document.createElement('div');
+      actions.className = 'legacy-mobile-menu__actions';
+      actions.setAttribute('aria-label', text('Azioni principali', 'Primary actions'));
+      actions.innerHTML =
+        '<a href="index.html#case-study" data-site-it="Esplora il profilo IT" data-site-en="Explore the IT profile">Esplora il profilo IT</a>' +
+        '<a href="index.html#case-study" data-site-it="Esplora i progetti tecnici" data-site-en="Explore technical projects">Esplora i progetti tecnici</a>' +
+        '<a href="index.html#contatti" data-site-it="Contattami" data-site-en="Contact me">Contattami</a>' +
+        '<a href="index.html#curriculum" data-site-it="Consulta il CV" data-site-en="View CV">Consulta il CV</a>';
+      inner.insertBefore(panel, nav);
+      panel.appendChild(panelHeader);
+      panelHeader.appendChild(panelBrand);
+      if (languageSwitcher) panelHeader.appendChild(languageSwitcher);
+      if (themeToggle) panelHeader.appendChild(themeToggle);
+      panelHeader.appendChild(close);
+      panel.appendChild(nav);
+      panel.appendChild(actions);
+      toggle.setAttribute('aria-controls', panel.id);
+      toggle.setAttribute('aria-expanded', 'false');
+      var lockedScrollY = 0;
+      var inertElements = [];
+      function isMobile() { return window.matchMedia('(max-width: 768px)').matches; }
+      function setPageInert(inert) {
+        if (!inert) {
+          inertElements.forEach(function (element) { element.inert = false; });
+          inertElements = [];
+          return;
+        }
+        if (inertElements.length) return;
+        inertElements = [document.querySelector('main'), document.querySelector('footer'), inner.querySelector('.brand'), toggle, hamburger].filter(function (element) { return element && !element.inert; });
+        inertElements.forEach(function (element) { element.inert = true; });
+      }
+      function lockScroll() {
+        if (document.body.classList.contains('legacy-nav-open')) return;
+        lockedScrollY = window.scrollY;
+        document.body.classList.add('legacy-nav-open');
+        document.body.style.position = 'fixed';
+        document.body.style.top = '-' + lockedScrollY + 'px';
+        document.body.style.width = '100%';
+      }
+      function unlockScroll(restore) {
+        var wasLocked = document.body.classList.contains('legacy-nav-open');
+        document.body.classList.remove('legacy-nav-open');
+        document.body.style.removeProperty('position');
+        document.body.style.removeProperty('top');
+        document.body.style.removeProperty('width');
+        if (wasLocked && restore !== false) window.scrollTo({ top: lockedScrollY, left: 0, behavior: 'auto' });
+      }
+      function setOpen(open, returnFocus) {
+        open = Boolean(open && isMobile());
+        toggle.checked = open;
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', text(open ? 'Chiudi menu' : 'Apri menu', open ? 'Close menu' : 'Open menu'));
+        panel.classList.toggle('is-open', open);
+        if (isMobile()) {
+          panel.inert = !open;
+          panel.setAttribute('aria-hidden', String(!open));
+          panel.setAttribute('role', 'dialog');
+          panel.setAttribute('aria-modal', 'true');
+        } else {
+          panel.inert = false;
+          panel.removeAttribute('aria-hidden');
+          panel.removeAttribute('role');
+          panel.removeAttribute('aria-modal');
+        }
+        if (open) { lockScroll(); setPageInert(true); requestAnimationFrame(function () { close.focus(); }); }
+        else { setPageInert(false); unlockScroll(); if (returnFocus && isMobile()) toggle.focus(); }
+      }
+      function syncMode() {
+        if (isMobile()) setOpen(panel.classList.contains('is-open'));
+        else { setOpen(false); panel.inert = false; panel.removeAttribute('aria-hidden'); panel.removeAttribute('role'); panel.removeAttribute('aria-modal'); }
+      }
+      toggle.addEventListener('change', function () { setOpen(toggle.checked); });
+      close.addEventListener('click', function () { setOpen(false, true); });
+      panel.querySelectorAll('a[href]').forEach(function (link) { link.addEventListener('click', function () { setOpen(false, true); }); });
+      document.addEventListener('keydown', function (event) {
+        if (!panel.classList.contains('is-open')) return;
+        if (event.key === 'Escape') { event.preventDefault(); setOpen(false, true); return; }
+        if (event.key !== 'Tab') return;
+        var focusable = Array.prototype.slice.call(panel.querySelectorAll('a[href],button:not([disabled]),[tabindex]:not([tabindex="-1"])'));
+        if (!focusable.length) return;
+        var first = focusable[0]; var last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
+        else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
       });
+      window.addEventListener('resize', syncMode, { passive: true });
+      window.addEventListener('pagehide', function () { setPageInert(false); unlockScroll(false); });
+      document.addEventListener('portfolio:languagechange', function () {
+        panel.setAttribute('aria-label', text('Menu di navigazione', 'Navigation menu'));
+        close.setAttribute('aria-label', text('Chiudi il menu', 'Close menu'));
+        toggle.setAttribute('aria-label', text(panel.classList.contains('is-open') ? 'Chiudi menu' : 'Apri menu', panel.classList.contains('is-open') ? 'Close menu' : 'Open menu'));
+      });
+      syncMode();
     });
   }
 
