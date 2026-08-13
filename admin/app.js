@@ -2,6 +2,7 @@
   'use strict';
 
   const tools = window.adminTools;
+  const qrTools = window.portfolioQrTools;
   const backend = window.portfolioBackend;
   let client = null;
   let clientInitialisationError = null;
@@ -20,7 +21,7 @@
   const previewDialog = document.querySelector('[data-preview-dialog]');
   const confirmDialog = document.querySelector('[data-confirm-dialog]');
   const AUTH_TIMEOUT_MS = 8000;
-  const state = { user: null, items: [], media: [], placements: [], messages: [], replies: [], settings: [], currentType: 'hero', qrSvg: '', qrUrl: '', uploadUrl: '', locale: 'it' };
+  const state = { user: null, items: [], media: [], placements: [], messages: [], replies: [], settings: [], currentType: 'hero', qrSvg: '', qrUrl: '', uploadUrl: '', locale: 'it', contentDraftDirty: false, mediaDraftDirty: false, settingsDraftDirty: false, replyDraftDirty: false };
   const labels = {
     hero: 'Hero', profile: 'Profilo', infrastructure_case: 'Case study', web_project: 'Progetti tecnici',
     skill: 'Competenze', technical_lab: 'Technical Lab', experience: 'Esperienze', certificate: 'Attestati',
@@ -135,6 +136,12 @@
     tools.setMessage(globalMessage, message, kind);
     clearTimeout(notify.timer);
     notify.timer = setTimeout(() => tools.setMessage(globalMessage, ''), 5000);
+  }
+
+  function setFormBusy(form, busy) {
+    form.dataset.busy = busy ? 'true' : '';
+    const submit = form.querySelector('button[type=submit]');
+    if (submit) submit.disabled = busy;
   }
 
   async function verifyAuthorization(user) {
@@ -317,7 +324,7 @@
 
   function itemTitle(item) { return state.locale === 'en' ? (item.title_en || item.title_it || item.slug) : (item.title_it || item.title_en || item.slug); }
 
-  function formatDate(value) { return new Date(value).toLocaleString(state.locale === 'en' ? 'en-GB' : 'it-IT'); }
+  function formatDate(value) { return new Date(value).toLocaleString(state.locale === 'en' ? 'en-GB' : 'it-IT', { timeZone: 'Europe/Rome' }); }
 
   function renderDashboard() {
     document.querySelector('[data-count-all]').textContent = state.items.length;
@@ -340,10 +347,11 @@
     return tools.make('span', { className: `status ${status}`, text: status === 'published' ? 'Pubblicato' : status === 'draft' ? 'Bozza' : 'Nascosto' });
   }
 
-  function actionButton(label, action, id) {
+  function actionButton(label, action, id, ariaLabel = '') {
     const button = tools.make('button', { text: label, type: 'button' });
     button.dataset.action = action;
     button.dataset.id = id;
+    if (ariaLabel) button.setAttribute('aria-label', ariaLabel);
     return button;
   }
 
@@ -358,8 +366,8 @@
       copy.append(meta, tools.make('h2', { text: itemTitle(item) }), tools.make('p', { text: `${state.locale === 'en' ? 'Updated' : 'Aggiornato'} ${formatDate(item.updated_at)}` }));
       const actions = tools.make('div', { className: 'item-actions' });
       actions.append(actionButton('Modifica', 'edit', item.id), actionButton('Anteprima', 'preview', item.id));
-      if (index > 0) actions.append(actionButton('↑', 'up', item.id));
-      if (index < items.length - 1) actions.append(actionButton('↓', 'down', item.id));
+      if (index > 0) actions.append(actionButton('↑', 'up', item.id, `Sposta ${itemTitle(item)} verso l’alto`));
+      if (index < items.length - 1) actions.append(actionButton('↓', 'down', item.id, `Sposta ${itemTitle(item)} verso il basso`));
       actions.append(actionButton(item.status === 'published' ? 'Nascondi' : 'Pubblica', 'toggle', item.id), actionButton('Elimina', 'delete', item.id));
       card.append(copy, actions);
       return card;
@@ -392,6 +400,7 @@
     contentForm.elements.data.value = '{}';
     contentForm.elements.sort_order.value = String(Math.max(0, ...state.items.filter((item) => item.content_type === state.currentType).map((item) => item.sort_order)) + 10);
     document.querySelector('[data-editor-title]').textContent = 'Nuovo contenuto';
+    state.contentDraftDirty = false;
     renderSectionMedia();
   }
 
@@ -456,7 +465,8 @@
 
   contentForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (!contentForm.reportValidity()) return;
+    if (!contentForm.reportValidity() || contentForm.dataset.busy === 'true') return;
+    setFormBusy(contentForm, true);
     try {
       const fields = new FormData(contentForm);
       const slug = tools.safeText(fields.get('slug'), 100);
@@ -497,7 +507,7 @@
     } catch (error) {
       reportError('Salvataggio contenuto', error);
       notify(error.message.includes('duplicate') ? 'Slug già utilizzato in questa sezione.' : error.message, 'error');
-    }
+    } finally { setFormBusy(contentForm, false); }
   });
 
   document.querySelector('[data-new-content]').addEventListener('click', () => { resetContentForm(); contentForm.hidden = false; contentForm.elements.slug.focus(); });
@@ -565,6 +575,7 @@
     document.querySelector('[data-upload-preview]').replaceChildren(tools.make('span', { text: 'Nessun file selezionato' }));
     if (state.uploadUrl) URL.revokeObjectURL(state.uploadUrl);
     state.uploadUrl = '';
+    state.mediaDraftDirty = false;
   }
 
   mediaList.addEventListener('click', async (event) => {
@@ -606,7 +617,7 @@
 
   mediaForm.addEventListener('submit', async (event) => {
     event.preventDefault();
-    if (!mediaForm.reportValidity()) return;
+    if (!mediaForm.reportValidity() || mediaForm.dataset.busy === 'true') return;
     const file = mediaForm.elements.file.files[0];
     const id = mediaForm.elements.id.value;
     const externalUrl = String(mediaForm.elements.external_url.value || '').trim();
@@ -616,6 +627,7 @@
     if (file && !allowed.includes(file.type)) return notify('Formato file non consentito.', 'error');
     if (file && file.size > (file.type.startsWith('video/') ? 104857600 : 12582912)) return notify('Il file supera il limite consentito.', 'error');
     if (mediaForm.elements.status.value === 'published' && !await confirmAction('Pubblicare il media?', 'Dopo il salvataggio il file potrà essere usato dalla pagina pubblica tramite URL firmato.')) return;
+    setFormBusy(mediaForm, true);
     try {
       const altIt = tools.safeText(mediaForm.elements.alt_it.value, 300);
       const altEn = tools.safeText(mediaForm.elements.alt_en.value, 300);
@@ -646,7 +658,7 @@
       const previous = state.media.find((item) => item.id === id);
       if (id && oldPath && oldPath !== objectPath && !previous?.external_url) await client.storage.from('portfolio-media').remove([oldPath]);
       resetMediaForm(); await refreshAll(); notify(id ? 'Media sostituito.' : 'Media caricato.');
-    } catch (error) { reportError('Gestione media', error); notify(error.message, 'error'); }
+    } catch (error) { reportError('Gestione media', error); notify(error.message, 'error'); } finally { setFormBusy(mediaForm, false); }
   });
   document.querySelector('[data-cancel-media]').addEventListener('click', resetMediaForm);
   document.querySelectorAll('[data-media-search],[data-media-type-filter],[data-media-section-filter]').forEach((control) => control.addEventListener('input', renderMedia));
@@ -784,51 +796,115 @@
   });
   document.querySelector('[data-message-detail]').addEventListener('submit', async (event) => {
     const form = event.target.closest('[data-reply-form]'); if (!form) return; event.preventDefault(); if (!form.reportValidity()) return;
-    const token = crypto.randomUUID(); const replyText = tools.safeText(form.elements.reply.value, 10000);
-    const { data, error } = await client.from('message_replies').insert({ message_id: form.dataset.replyForm, reply_text: replyText, client_token: token }).select().single();
-    if (error) return notify('Risposta non salvata.', 'error'); form.querySelector('button[type=submit]').disabled = true; await sendReply(data); state.replyDraftDirty = false;
+    const submitButton = form.querySelector('button[type=submit]');
+    if (submitButton.disabled) return;
+    submitButton.disabled = true;
+    try {
+      const token = crypto.randomUUID(); const replyText = tools.safeText(form.elements.reply.value, 10000);
+      const { data, error } = await client.from('message_replies').insert({ message_id: form.dataset.replyForm, reply_text: replyText, client_token: token }).select().single();
+      if (error) return notify('Risposta non salvata.', 'error');
+      await sendReply(data); state.replyDraftDirty = false;
+    } catch (error) { reportError('Preparazione risposta', error); notify(error.message, 'error'); } finally { if (document.contains(submitButton)) submitButton.disabled = false; }
   });
   async function sendReply(reply) {
     if (!reply) return;
     try { const { data } = await client.auth.getSession(); const response = await fetch('/api/reply-message', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${data.session?.access_token || ''}` }, body: JSON.stringify({ replyId: reply.id }) }); const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Invio non riuscito'); await refreshAll(); const message = state.messages.find((item) => item.id === reply.message_id); if (message) openMessage(message); notify('Risposta inviata.'); } catch (error) { await client.from('message_replies').update({ status: 'failed', error_code: 'endpoint_unavailable' }).eq('id', reply.id).neq('status', 'sent'); await refreshAll(); notify(`${error.message}. Verifica endpoint e variabili email.`, 'error'); }
   }
-  window.addEventListener('beforeunload', (event) => { if (!state.replyDraftDirty) return; event.preventDefault(); event.returnValue = ''; });
+  contentForm.addEventListener('input', (event) => { if (event.target.matches('[name]')) state.contentDraftDirty = true; });
+  mediaForm.addEventListener('input', (event) => { if (event.target.matches('[name]')) state.mediaDraftDirty = true; });
+  document.querySelector('[data-settings-form]').addEventListener('input', (event) => { if (event.target.matches('[name]')) state.settingsDraftDirty = true; });
+  window.addEventListener('beforeunload', (event) => { if (!state.replyDraftDirty && !state.contentDraftDirty && !state.mediaDraftDirty && !state.settingsDraftDirty) return; event.preventDefault(); event.returnValue = ''; });
+
+  function configuredPublicOrigin() {
+    try { return qrTools.normalizePublicUrl(backend?.config.publicSiteUrl || ''); } catch (error) { return ''; }
+  }
+
+  function normalizeQrUrl(value) {
+    if (!qrTools) throw new Error('Strumenti QR locali non disponibili. Ricarica la pagina.');
+    const normalized = qrTools.normalizePublicUrl(value);
+    const configured = configuredPublicOrigin();
+    if (configured && normalized !== configured) throw new Error('L’URL deve coincidere con PUBLIC_SITE_URL configurato per il portfolio.');
+    return normalized;
+  }
+
+  function mountQrPreview(svgText) {
+    const parsed = new DOMParser().parseFromString(svgText, 'image/svg+xml');
+    const svg = parsed.documentElement;
+    if (svg.nodeName.toLowerCase() !== 'svg' || parsed.querySelector('parsererror')) throw new Error('Anteprima SVG non valida.');
+    document.querySelector('[data-qr-preview]').replaceChildren(document.importNode(svg, true));
+  }
 
   async function generateQr(url) {
-    if (!tools.validHttpUrl(url)) throw new Error('Inserisci un URL pubblico valido.');
-    const parsed = new URL(url);
-    if (parsed.protocol !== 'https:' || ['localhost','127.0.0.1','::1'].includes(parsed.hostname)) throw new Error('L’URL definitivo deve usare HTTPS e non può essere localhost.');
-    if (parsed.pathname.toLowerCase().includes('/admin') || [...parsed.searchParams.keys()].some((key) => /token|key|auth|session|code/i.test(key))) throw new Error('Il QR può contenere soltanto l’URL pubblico del portfolio.');
+    const normalized = normalizeQrUrl(url);
     const qrCode = window.QRCode;
-    if (!qrCode?.toCanvas || !qrCode?.toString) throw new Error('Libreria QR locale non disponibile. Ricarica la pagina.');
-    const canvas = document.querySelector('[data-qr-canvas]');
-    await qrCode.toCanvas(canvas, parsed.href, { width: 1024, margin: 4, color: { dark: '#07111fff', light: '#ffffffff' }, errorCorrectionLevel: 'H' });
-    state.qrSvg = await qrCode.toString(parsed.href, { type: 'svg', width: 1024, margin: 4, color: { dark: '#07111fff', light: '#ffffffff' }, errorCorrectionLevel: 'H' });
-    state.qrUrl = parsed.href;
-    document.querySelector('[data-qr-url]').textContent = parsed.href;
+    if (!qrCode?.create || !qrCode?.toCanvas || !qrCode?.toString) throw new Error('Libreria QR locale non disponibile. Ricarica la pagina.');
+    state.qrSvg = qrTools.responsiveSvg(await qrCode.toString(normalized, { type: 'svg', margin: qrTools.QUIET_ZONE_MODULES, color: { dark: '#07111fff', light: '#ffffffff' }, errorCorrectionLevel: 'H' }));
+    state.qrUrl = normalized;
+    mountQrPreview(state.qrSvg);
+    document.querySelector('[data-qr-preview]').setAttribute('aria-label', `QR Code completo per ${normalized}`);
+    document.querySelector('[data-qr-url]').textContent = normalized;
     document.querySelector('[data-qr-warning]').textContent = 'Anteprima pronta: questo è l’URL realmente codificato.';
     document.querySelectorAll('[data-download-png],[data-download-svg]').forEach((button) => { button.disabled = false; });
   }
 
   const qrForm = document.querySelector('[data-qr-form]');
   qrForm.elements.url.value = '';
-  qrForm.addEventListener('submit', async (event) => { event.preventDefault(); try { await generateQr(qrForm.elements.url.value); const { error } = await client.from('site_settings').upsert({ key: 'site.public_url', value: state.qrUrl, is_public: true }, { onConflict: 'key' }); if (error) throw error; await loadSettings(); renderSettings(); notify('URL salvato e QR Code rigenerato. Verifica la scansione prima della stampa.'); } catch (error) { state.qrUrl = ''; document.querySelectorAll('[data-download-png],[data-download-svg]').forEach((button) => { button.disabled = true; }); document.querySelector('[data-qr-warning]').textContent = error.message; reportError('Generazione QR Code', error); notify(error.message, 'error'); } });
+  qrForm.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const button = qrForm.querySelector('button[type=submit]');
+    if (button.disabled) return;
+    button.disabled = true;
+    try {
+      await generateQr(qrForm.elements.url.value);
+      const { error } = await client.from('site_settings').upsert({ key: 'site.public_url', value: state.qrUrl, is_public: true }, { onConflict: 'key' });
+      if (error) throw error;
+      await loadSettings(); renderSettings();
+      notify('URL salvato e QR Code rigenerato. Verifica la scansione prima della stampa.');
+    } catch (error) {
+      state.qrUrl = ''; state.qrSvg = '';
+      document.querySelector('[data-qr-preview]').replaceChildren();
+      document.querySelectorAll('[data-download-png],[data-download-svg]').forEach((downloadButton) => { downloadButton.disabled = true; });
+      document.querySelector('[data-qr-warning]').textContent = error.message;
+      reportError('Generazione QR Code', error); notify(error.message, 'error');
+    } finally { button.disabled = false; }
+  });
   function downloadBlob(blob, fileName) { const url = URL.createObjectURL(blob); const link = document.createElement('a'); link.href = url; link.download = fileName; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
-  function cardGeometry(format) { return format === 'portrait' ? { width: 1080, height: 1920, qr: 720, x: 180, y: 590 } : format === 'landscape' ? { width: 1920, height: 1080, qr: 650, x: 1130, y: 220 } : { width: 1600, height: 1600, qr: 780, x: 410, y: 470 }; }
-  function cardTextLayout(format) { return format === 'landscape' ? { logoX: 120, logoY: 170, nameX: 120, nameY: 360, roleY: 430, copyY: 620, urlY: 770 } : { logoX: 120, logoY: 150, nameX: 280, nameY: 190, roleY: 250, copyY: format === 'portrait' ? 1450 : 1330, urlY: format === 'portrait' ? 1530 : 1410 }; }
   function drawRoundRect(context, x, y, width, height, radius) { context.beginPath(); context.roundRect(x, y, width, height, radius); context.fill(); }
-  function createCardCanvas() {
+  async function renderExportQr(maximumSize) {
+    const qrCode = window.QRCode;
+    const moduleCount = qrCode.create(state.qrUrl, { errorCorrectionLevel: 'H' }).modules.size;
+    const render = qrTools.integerRenderSize(moduleCount, maximumSize);
+    const canvas = document.createElement('canvas');
+    await qrCode.toCanvas(canvas, state.qrUrl, { scale: render.scale, margin: qrTools.QUIET_ZONE_MODULES, color: { dark: '#07111fff', light: '#ffffffff' }, errorCorrectionLevel: 'H' });
+    canvas.getContext('2d').imageSmoothingEnabled = false;
+    return canvas;
+  }
+  async function createCardCanvas() {
     if (!state.qrUrl) throw new Error('Configura prima un URL pubblico valido.');
-    const format = qrForm.elements.format.value; const geometry = cardGeometry(format); const textLayout = cardTextLayout(format);
+    if (document.fonts?.ready) await document.fonts.ready;
+    const format = qrTools.formatName(qrForm.elements.format.value); const geometry = qrTools.cardGeometry(format); const textLayout = qrTools.cardTextLayout(format);
     const canvas = document.createElement('canvas'); canvas.width = geometry.width; canvas.height = geometry.height; const context = canvas.getContext('2d');
+    context.imageSmoothingEnabled = false;
     const gradient = context.createLinearGradient(0, 0, geometry.width, geometry.height); gradient.addColorStop(0, '#07111f'); gradient.addColorStop(1, '#12283d'); context.fillStyle = gradient; context.fillRect(0, 0, geometry.width, geometry.height);
     context.fillStyle = '#e1b765'; drawRoundRect(context, textLayout.logoX, textLayout.logoY, 120, 120, 22); context.fillStyle = '#07111f'; context.font = '800 54px system-ui'; context.textAlign = 'center'; context.fillText('GR', textLayout.logoX + 60, textLayout.logoY + 78);
     context.textAlign = 'left'; context.fillStyle = '#edf3f6'; context.font = '800 62px system-ui'; context.fillText('Gaetano Russo', textLayout.nameX, textLayout.nameY); context.fillStyle = '#e1b765'; context.font = '600 34px system-ui'; context.fillText('IT Specialist', textLayout.nameX, textLayout.roleY);
-    context.fillStyle = '#ffffff'; drawRoundRect(context, geometry.x - 36, geometry.y - 36, geometry.qr + 72, geometry.qr + 72, 28); context.drawImage(document.querySelector('[data-qr-canvas]'), geometry.x, geometry.y, geometry.qr, geometry.qr);
+    const qrCanvas = await renderExportQr(geometry.qr); const qrX = geometry.x + Math.floor((geometry.qr - qrCanvas.width) / 2); const qrY = geometry.y + Math.floor((geometry.qr - qrCanvas.height) / 2);
+    context.fillStyle = '#ffffff'; drawRoundRect(context, geometry.x - 36, geometry.y - 36, geometry.qr + 72, geometry.qr + 72, 28); context.drawImage(qrCanvas, qrX, qrY);
     context.fillStyle = '#edf3f6'; context.font = '600 34px system-ui'; context.fillText('Scansiona per visitare il mio portfolio', textLayout.logoX, textLayout.copyY); context.fillStyle = '#9eacb7'; context.font = '26px system-ui'; context.fillText(state.qrUrl.slice(0, 74), textLayout.logoX, textLayout.urlY); return canvas;
   }
-  document.querySelector('[data-download-png]').addEventListener('click', () => { try { createCardCanvas().toBlob((blob) => { if (blob) downloadBlob(blob, `gaetano-russo-${qrForm.elements.format.value}.png`); }, 'image/png'); } catch (error) { notify(error.message, 'error'); } });
-  document.querySelector('[data-download-svg]').addEventListener('click', () => { if (!state.qrSvg || !state.qrUrl) return notify('Genera prima il QR Code.', 'error'); const format = qrForm.elements.format.value; const g = cardGeometry(format); const t = cardTextLayout(format); const encodedQr = btoa(unescape(encodeURIComponent(state.qrSvg))); const safeUrl = state.qrUrl.replace(/[&<>"']/g, (character) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&apos;' }[character])); const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${g.width}" height="${g.height}" viewBox="0 0 ${g.width} ${g.height}"><defs><linearGradient id="bg"><stop stop-color="#07111f"/><stop offset="1" stop-color="#12283d"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#bg)"/><rect x="${t.logoX}" y="${t.logoY}" width="120" height="120" rx="22" fill="#e1b765"/><text x="${t.logoX + 60}" y="${t.logoY + 79}" text-anchor="middle" font-family="system-ui" font-size="54" font-weight="800" fill="#07111f">GR</text><text x="${t.nameX}" y="${t.nameY}" font-family="system-ui" font-size="62" font-weight="800" fill="#edf3f6">Gaetano Russo</text><text x="${t.nameX}" y="${t.roleY}" font-family="system-ui" font-size="34" font-weight="600" fill="#e1b765">IT Specialist</text><rect x="${g.x - 36}" y="${g.y - 36}" width="${g.qr + 72}" height="${g.qr + 72}" rx="28" fill="#fff"/><image href="data:image/svg+xml;base64,${encodedQr}" x="${g.x}" y="${g.y}" width="${g.qr}" height="${g.qr}"/><text x="${t.logoX}" y="${t.copyY}" font-family="system-ui" font-size="34" font-weight="600" fill="#edf3f6">Scansiona per visitare il mio portfolio</text><text x="${t.logoX}" y="${t.urlY}" font-family="system-ui" font-size="26" fill="#9eacb7">${safeUrl}</text></svg>`; downloadBlob(new Blob([svg], { type: 'image/svg+xml' }), `gaetano-russo-${format}.svg`); });
+  function canvasBlob(canvas) { return new Promise((resolve, reject) => canvas.toBlob((blob) => blob ? resolve(blob) : reject(new Error('Esportazione PNG non riuscita.')), 'image/png')); }
+  async function runQrDownload(button, task) { if (button.disabled || button.dataset.busy) return; button.dataset.busy = 'true'; button.disabled = true; try { await task(); } catch (error) { reportError('Esportazione QR', error); notify(error.message, 'error'); } finally { delete button.dataset.busy; button.disabled = !state.qrUrl; } }
+  document.querySelector('[data-download-png]').addEventListener('click', (event) => runQrDownload(event.currentTarget, async () => { const format = qrTools.formatName(qrForm.elements.format.value); const canvas = await createCardCanvas(); downloadBlob(await canvasBlob(canvas), qrTools.downloadName(format, 'png')); }));
+  document.querySelector('[data-download-svg]').addEventListener('click', (event) => runQrDownload(event.currentTarget, async () => {
+    if (!state.qrSvg || !state.qrUrl) throw new Error('Genera prima il QR Code.');
+    if (document.fonts?.ready) await document.fonts.ready;
+    const format = qrTools.formatName(qrForm.elements.format.value);
+    const svg = qrTools.buildCardSvg(format, state.qrSvg, state.qrUrl);
+    downloadBlob(new Blob([svg], { type: 'image/svg+xml' }), qrTools.downloadName(format, 'svg'));
+  }));
+  function updateQrPreviewFormat() { const format = qrTools.formatName(qrForm.elements.format.value); document.querySelector('[data-qr-card]').dataset.format = format; }
+  qrForm.elements.format.addEventListener('change', updateQrPreviewFormat);
+  updateQrPreviewFormat();
 
   function settingValue(key, fallback) {
     const setting = state.settings.find((item) => item.key === key);
@@ -841,13 +917,12 @@
     form.elements.public_url.value = settingValue('site.public_url', '');
     const order = settingValue('sections.order', []);
     form.elements.section_order.value = Array.isArray(order) ? order.join(',') : '';
+    state.settingsDraftDirty = false;
     const configuredUrl = String(form.elements.public_url.value || '');
     const runtimeUrl = String(backend?.config.publicSiteUrl || '');
-    const candidate = configuredUrl || runtimeUrl;
+    const candidate = runtimeUrl || configuredUrl;
     try {
-      const parsed = new URL(candidate);
-      if (parsed.protocol === 'https:' && !['localhost','127.0.0.1','::1'].includes(parsed.hostname)) qrForm.elements.url.value = parsed.href;
-      else throw new Error('development URL');
+      qrForm.elements.url.value = qrTools.normalizePublicUrl(candidate);
     } catch (error) {
       qrForm.elements.url.value = '';
       document.querySelector('[data-qr-warning]').textContent = 'Configura un URL pubblico HTTPS per abilitare anteprima e download.';
@@ -858,8 +933,14 @@
   document.querySelector('[data-settings-form]').addEventListener('submit', async (event) => {
     event.preventDefault();
     const form = event.currentTarget;
-    const publicUrl = String(form.elements.public_url.value || '').trim();
-    if (publicUrl && (!tools.validHttpUrl(publicUrl) || new URL(publicUrl).protocol !== 'https:' || ['localhost','127.0.0.1','::1'].includes(new URL(publicUrl).hostname))) return notify('L’URL pubblico deve essere HTTPS e non può essere localhost.', 'error');
+    if (form.dataset.busy === 'true') return;
+    const submittedPublicUrl = String(form.elements.public_url.value || '').trim();
+    let publicUrl = '';
+    try {
+      publicUrl = submittedPublicUrl ? qrTools.normalizePublicUrl(submittedPublicUrl) : '';
+      const configured = configuredPublicOrigin();
+      if (publicUrl && configured && publicUrl !== configured) throw new Error('L’URL pubblico deve coincidere con PUBLIC_SITE_URL.');
+    } catch (error) { return notify(error.message, 'error'); }
     let order;
     try {
       order = String(form.elements.section_order.value || '').split(',').map((item) => tools.safeText(item, 50)).filter(Boolean);
@@ -870,12 +951,24 @@
       { key: 'site.public_url', value: publicUrl, is_public: true },
       { key: 'sections.order', value: order, is_public: true }
     ];
-    const { error } = await client.from('site_settings').upsert(rows, { onConflict: 'key' });
-    if (error) { reportError('Salvataggio impostazioni', error); return notify('Impostazioni non salvate.', 'error'); }
-    await loadSettings(); renderSettings(); notify('Impostazioni salvate.');
+    setFormBusy(form, true);
+    try {
+      const { error } = await client.from('site_settings').upsert(rows, { onConflict: 'key' });
+      if (error) { reportError('Salvataggio impostazioni', error); return notify('Impostazioni non salvate.', 'error'); }
+      await loadSettings(); renderSettings(); notify('Impostazioni salvate.');
+    } finally { setFormBusy(form, false); }
   });
 
-  function openView(view, contentType, trigger) {
+  async function openView(view, contentType, trigger) {
+    const currentPanel = document.querySelector('[data-panel]:not([hidden])')?.dataset.panel;
+    const changingContentType = currentPanel === 'content' && view === 'content' && contentType !== state.currentType;
+    const leavingDirtyView = (currentPanel === 'content' && state.contentDraftDirty)
+      || (currentPanel === 'media' && state.mediaDraftDirty)
+      || (currentPanel === 'settings' && state.settingsDraftDirty);
+    if ((currentPanel !== view || changingContentType) && leavingDirtyView) {
+      if (!await confirmAction('Modifiche non salvate', 'Continuando perderai le modifiche non ancora salvate in questa sezione.')) return;
+      state.contentDraftDirty = false; state.mediaDraftDirty = false; state.settingsDraftDirty = false;
+    }
     document.querySelectorAll('[data-panel]').forEach((panel) => { panel.hidden = panel.dataset.panel !== view; });
     document.querySelectorAll('[data-view]').forEach((button) => button.classList.toggle('is-active', button === trigger));
     if (view === 'content') { state.currentType = contentType; resetContentForm(); contentForm.hidden = true; renderContent(); }
@@ -884,7 +977,7 @@
     document.querySelector('[data-menu-toggle]').setAttribute('aria-expanded', 'false');
   }
 
-  document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => openView(button.dataset.view, button.dataset.contentType, button)));
+  document.querySelectorAll('[data-view]').forEach((button) => button.addEventListener('click', () => { openView(button.dataset.view, button.dataset.contentType, button).catch((error) => { reportError('Navigazione admin', error); notify('Impossibile cambiare sezione.', 'error'); }); }));
   document.querySelector('[data-menu-toggle]').addEventListener('click', (event) => { const sidebar = document.querySelector('[data-sidebar]'); const open = sidebar.classList.toggle('is-open'); event.currentTarget.setAttribute('aria-expanded', String(open)); });
   const localeSelect = document.querySelector('[data-admin-locale]');
   localeSelect.value = state.locale;

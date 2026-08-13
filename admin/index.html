@@ -21,7 +21,7 @@
     }, 10000);
   </script>
   <link rel="icon" href="../favicon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="admin.css?v=1">
+  <link rel="stylesheet" href="admin.css?v=2">
 </head>
 <body>
   <a class="skip-link" href="#admin-main">Vai al contenuto</a>
@@ -152,7 +152,7 @@
       <section class="admin-view" data-panel="qr" hidden>
         <div class="view-heading"><div><p class="eyebrow">Condivisione</p><h1>QR Code</h1></div></div>
         <div class="qr-layout">
-          <div class="digital-card-wrap"><article class="digital-card" data-qr-card><header><span class="card-monogram">GR</span><div><strong>Gaetano Russo</strong><span>IT Specialist</span></div></header><div class="qr-square"><canvas width="1024" height="1024" data-qr-canvas aria-label="Anteprima QR Code"></canvas></div><div class="card-copy"><p>Scansiona per visitare il mio portfolio</p><code data-qr-url>Nessun URL pubblico configurato</code></div></article></div>
+          <div class="digital-card-wrap"><article class="digital-card" data-qr-card data-format="square"><header><span class="card-monogram">GR</span><div><strong>Gaetano Russo</strong><span>IT Specialist</span></div></header><div class="qr-square"><div class="qr-preview-surface" data-qr-preview role="img" aria-label="Anteprima QR Code completo"></div></div><div class="card-copy"><p>Scansiona per visitare il mio portfolio</p><code data-qr-url>Nessun URL pubblico configurato</code></div></article></div>
           <form class="panel qr-settings" data-qr-form novalidate><label>URL pubblico del portfolio<input name="url" type="url" required inputmode="url" placeholder="https://portfolio.example"></label><p class="form-status" data-qr-warning role="status"></p><label>Formato download<select name="format"><option value="square">Quadrato</option><option value="portrait">Verticale / Stories</option><option value="landscape">Orizzontale / biglietto</option></select></label><button class="button primary" type="submit">Salva e genera anteprima</button><div class="form-actions"><button class="button" type="button" data-download-png disabled>Download PNG HD</button><button class="button" type="button" data-download-svg disabled>Download SVG</button></div><small>L’URL viene salvato nelle impostazioni. Localhost e indirizzi di sviluppo non vengono mai accettati come URL definitivo.</small></form>
         </div>
       </section>
@@ -190,6 +190,7 @@
   <script src="/api/public-config"></script>
   <script src="../js/supabase-client.js"></script>
   <script src="common.js" defer></script>
-  <script src="app.js" defer></script>
+  <script src="qr-tools.js?v=1" defer></script>
+  <script src="app.js?v=2" defer></script>
 </body>
 </html>
