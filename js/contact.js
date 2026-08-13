@@ -187,12 +187,8 @@ async function handleContactFormSubmit(event) {
     }
 
     form.reset();
-    if (notificationSent) {
-      showMessage(messageContainer, contactText('Messaggio inviato correttamente. Ti risponderò appena possibile.', 'Message sent successfully. I will reply as soon as possible.'), 'success');
-      updateDebugStatus('Supabase: messaggio registrato. EmailJS: notifica inviata.');
-    } else {
-      showMessage(messageContainer, contactText('Il messaggio è stato ricevuto correttamente. La notifica email ha riscontrato un problema temporaneo, ma la richiesta è disponibile nell’area amministrativa.', 'Your message was received correctly. The email notification encountered a temporary problem, but your request is available in the administration area.'), 'success');
-    }
+    showMessage(messageContainer, contactText('Messaggio inviato correttamente. Ti risponderò appena possibile.', 'Message sent successfully. I’ll get back to you as soon as possible.'), 'success');
+    updateDebugStatus(notificationSent ? 'Supabase: messaggio registrato. EmailJS: notifica inviata.' : 'Supabase: messaggio registrato. EmailJS: notifica non inviata.', !notificationSent);
     focusMessage(messageContainer);
   } catch (error) {
     const rateLimited = error?.message === 'rate-limit';

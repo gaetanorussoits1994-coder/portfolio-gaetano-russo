@@ -132,8 +132,12 @@
     });
   }
 
-  function notify(message, kind = 'success') {
+  function notify(message, kind = 'success', moveFocus = false) {
     tools.setMessage(globalMessage, message, kind);
+    if (moveFocus) {
+      globalMessage.setAttribute('tabindex', '-1');
+      globalMessage.focus({ preventScroll: false });
+    }
     clearTimeout(notify.timer);
     notify.timer = setTimeout(() => tools.setMessage(globalMessage, ''), 5000);
   }
@@ -792,23 +796,52 @@
     const button = event.target.closest('[data-action]'); if (!button) return;
     if (button.dataset.action === 'archive-message') { await client.from('contact_messages').update({ status: 'archived', archived_at: new Date().toISOString() }).eq('id', button.dataset.id); await refreshAll(); }
     if (button.dataset.action === 'delete-message') { if (!await confirmAction('Eliminare il messaggio?', 'Verranno eliminate anche tutte le risposte associate.')) return; await client.from('contact_messages').delete().eq('id', button.dataset.id); document.querySelector('[data-message-detail]').innerHTML = '<p>Messaggio eliminato.</p>'; await refreshAll(); }
-    if (button.dataset.action === 'retry-reply') return sendReply(state.replies.find((item) => item.id === button.dataset.id));
+    if (button.dataset.action === 'retry-reply') {
+      if (button.disabled) return;
+      const originalText = button.textContent;
+      button.disabled = true;
+      button.textContent = 'Invio in corso…';
+      try { await sendReply(state.replies.find((item) => item.id === button.dataset.id)); }
+      finally { if (document.contains(button)) { button.disabled = false; button.textContent = originalText; } }
+    }
   });
   document.querySelector('[data-message-detail]').addEventListener('submit', async (event) => {
     const form = event.target.closest('[data-reply-form]'); if (!form) return; event.preventDefault(); if (!form.reportValidity()) return;
     const submitButton = form.querySelector('button[type=submit]');
     if (submitButton.disabled) return;
+    const originalText = submitButton.textContent;
     submitButton.disabled = true;
+    submitButton.textContent = 'Invio in corso…';
     try {
       const token = crypto.randomUUID(); const replyText = tools.safeText(form.elements.reply.value, 10000);
       const { data, error } = await client.from('message_replies').insert({ message_id: form.dataset.replyForm, reply_text: replyText, client_token: token }).select().single();
       if (error) return notify('Risposta non salvata.', 'error');
-      await sendReply(data); state.replyDraftDirty = false;
-    } catch (error) { reportError('Preparazione risposta', error); notify(error.message, 'error'); } finally { if (document.contains(submitButton)) submitButton.disabled = false; }
+      if (await sendReply(data)) state.replyDraftDirty = false;
+    } catch (error) { reportError('Preparazione risposta', error); notify('Risposta non inviata. Riprova.', 'error', true); }
+    finally { if (document.contains(submitButton)) { submitButton.disabled = false; submitButton.textContent = originalText; } }
   });
   async function sendReply(reply) {
-    if (!reply) return;
-    try { const { data } = await client.auth.getSession(); const response = await fetch('/api/reply-message', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${data.session?.access_token || ''}` }, body: JSON.stringify({ replyId: reply.id }) }); const result = await response.json().catch(() => ({})); if (!response.ok) throw new Error(result.error || 'Invio non riuscito'); await refreshAll(); const message = state.messages.find((item) => item.id === reply.message_id); if (message) openMessage(message); notify('Risposta inviata.'); } catch (error) { await client.from('message_replies').update({ status: 'failed', error_code: 'endpoint_unavailable' }).eq('id', reply.id).neq('status', 'sent'); await refreshAll(); notify(`${error.message}. Verifica endpoint e variabili email.`, 'error'); }
+    if (!reply) return false;
+    try {
+      const { data } = await client.auth.getSession();
+      const response = await fetch('/api/reply-message', { method: 'POST', headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${data.session?.access_token || ''}` }, body: JSON.stringify({ replyId: reply.id }) });
+      const result = await response.json().catch(() => ({}));
+      if (!response.ok || result.ok !== true) {
+        const error = new Error(result.error || 'Risposta non inviata.');
+        error.code = result.code || `HTTP_${response.status}`;
+        error.requestId = result.requestId || response.headers.get('X-Request-Id') || '';
+        throw error;
+      }
+      await refreshAll();
+      const message = state.messages.find((item) => item.id === reply.message_id);
+      if (message) openMessage(message);
+      notify('Risposta inviata correttamente.', 'success', true);
+      return true;
+    } catch (error) {
+      reportError('Invio risposta email', { name: error.code || 'reply_error', message: error.requestId ? `${error.message} Request ID: ${error.requestId}` : error.message });
+      notify(error.message || 'Risposta non inviata. Puoi riprovare.', 'error', true);
+      return false;
+    }
   }
   contentForm.addEventListener('input', (event) => { if (event.target.matches('[name]')) state.contentDraftDirty = true; });
   mediaForm.addEventListener('input', (event) => { if (event.target.matches('[name]')) state.mediaDraftDirty = true; });

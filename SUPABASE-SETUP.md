@@ -118,9 +118,9 @@ L’interfaccia Media accetta JPEG, PNG e WebP fino a 12 MB e MP4/WebM fino a 10
 
 ## 11. Risposte email dall’admin
 
-Il form pubblico continua a usare EmailJS e, dopo la migrazione 005, registra anche il messaggio in Supabase tramite una funzione con rate limit. Le risposte admin passano esclusivamente da `api/reply-message.js`, che verifica il JWT Supabase e l’amministratore attivo prima dell’invio.
+Il form pubblico continua a usare EmailJS e, dopo la migrazione 007, registra prima il messaggio in Supabase tramite una funzione con rate limit. Le risposte admin passano esclusivamente da `api/reply-message.js`, che verifica il JWT Supabase e l’amministratore attivo prima dell’invio.
 
-Creare in EmailJS un template dedicato alle risposte con questi parametri: `to_email`, `to_name`, `subject`, `reply_text`, `original_subject`, `original_message`, `signature`. Configurare il destinatario su `{{to_email}}` e l’oggetto su `{{subject}}`. Non inserire HTML non escapato nel template.
+La configurazione completa dei template di contatto e risposta, inclusi campi e nomi esatti delle variabili, è in `EMAILJS-TEMPLATES.md`.
 
 Configurare localmente e nell’hosting, senza esporle nel frontend:
 
@@ -129,6 +129,7 @@ PUBLIC_EMAILJS_PUBLIC_KEY=
 PUBLIC_EMAILJS_SERVICE_ID=
 PUBLIC_EMAILJS_CONTACT_TEMPLATE_ID=
 PUBLIC_CONTACT_EMAIL=
+PUBLIC_SITE_URL=
 EMAILJS_PRIVATE_KEY=
 EMAILJS_REPLY_TEMPLATE_ID=
 ```
